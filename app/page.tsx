@@ -62,11 +62,23 @@ export default function CalendarioDefinitivo() {
   }
 
   const handleEliminar = async () => {
-    const { error } = await supabase.from('actividades').delete().eq('id', showConfirm.id)
-    if (!error) {
-      setShowConfirm({ show: false, id: '' })
-      setSelectedEvent(null)
-      fetchEventos()
+    const idABorrar = showConfirm.id;
+
+    // 1. Cerramos el modal de confirmación de inmediato para dar sensación de rapidez
+    setShowConfirm({ show: false, id: '' });
+    setSelectedEvent(null);
+
+    const { error } = await supabase
+      .from('actividades')
+      .delete()
+      .eq('id', idABorrar);
+
+    if (error) {
+      alert("Error al eliminar: " + error.message);
+      // Opcional: podrías volver a llamar a fetchEventos() si falló para restaurar el evento
+    } else {
+      // 2. Refrescamos la lista de eventos desde Supabase
+      await fetchEventos();
     }
   }
 
