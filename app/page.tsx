@@ -62,36 +62,57 @@ export default function CalendarioDefinitivo() {
   }
 
   const handleEliminar = async () => {
-    // 1. Intentamos borrar
+    if (!showConfirm.id) return;
+
     const { error } = await supabase
       .from('actividades')
       .delete()
       .eq('id', showConfirm.id);
 
-    if (error) {
-      // Si hay error de permisos o de ID, esto te lo dirá
-      alert("Error de Supabase: " + error.message);
-    } else {
-      // 2. Si no hay error, cerramos todo y refrescamos
+    if (!error) {
       setShowConfirm({ show: false, id: '' });
       setSelectedEvent(null);
-      await fetchEventos(); // Esto recarga el calendario
-      alert("Actividad eliminada con éxito");
+      await fetchEventos(); // Refresca los datos
+    } else {
+      alert("Error al eliminar: " + error.message);
     }
   };
 
   const handleGuardar = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const datos = {
       titulo: form.titulo,
-      fecha_inicio: form.fecha || new Date().toISOString(),
+      fecha_inicio: form.fecha,
       ministerio_cargo: form.ministerio,
       descripcion: form.descripcion
     };
-    if (isEditing) await supabase.from('actividades').update(datos).eq('id', form.id);
-    else await supabase.from('actividades').insert([datos]);
-    setShowCreate(false); setIsEditing(false); setSelectedEvent(null); fetchEventos();
-  }
+
+    let error;
+    if (isEditing && form.id) {
+      // EDICIÓN
+      const { error: updateError } = await supabase
+        .from('actividades')
+        .update(datos)
+        .eq('id', form.id);
+      error = updateError;
+    } else {
+      // CREACIÓN
+      const { error: insertError } = await supabase
+        .from('actividades')
+        .insert([datos]);
+      error = insertError;
+    }
+
+    if (!error) {
+      setShowCreate(false);
+      setIsEditing(false);
+      setSelectedEvent(null);
+      await fetchEventos();
+    } else {
+      alert("Error al guardar: " + error.message);
+    }
+  };
 
   return (
     <main className={`min-h-screen transition-colors duration-500 ${darkMode ? 'bg-[#0f172a] text-slate-200' : 'bg-slate-50 text-slate-800'}`}>
