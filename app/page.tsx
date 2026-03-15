@@ -47,7 +47,7 @@ export default function CalendarioDefinitivo() {
           id: ev.id,
           title: ev.titulo,
           start: ev.fecha_inicio,
-          extendedProps: { descripcion: ev.descripcion, ministerio: min, id_db: ev.id },
+          extendedProps: { descripcion: ev.descripcion, ministerio: min, id_db: ev.id, fecha_raw: ev.fecha_inicio },
           backgroundColor: color,
           borderColor: color,
           textColor: '#ffffff'
@@ -90,7 +90,6 @@ export default function CalendarioDefinitivo() {
 
     const datos = {
       titulo: form.titulo,
-      // Reemplazamos la 'T' por un espacio para evitar el desfase de zona horaria UTC
       fecha_inicio: form.fecha.replace('T', ' '),
       ministerio_cargo: form.ministerio,
       descripcion: form.descripcion
@@ -208,14 +207,28 @@ export default function CalendarioDefinitivo() {
 
             <div className={`text-[9px] font-bold uppercase border-t pt-4 flex justify-between ${darkMode ? 'border-slate-800 text-slate-400' : 'border-slate-100 text-slate-500'}`}>
               <span>
-                {new Date(selectedEvent.start).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                {/* Formateamos la fecha sin que JavaScript le reste horas */}
+                {new Date(selectedEvent.extendedProps.fecha_raw + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
               </span>
               <span className="text-indigo-500">
-                {/* Si la hora es 00:00, asumimos que es opcional/todo el día */}
-                {new Date(selectedEvent.start).getHours() === 0 && new Date(selectedEvent.start).getMinutes() === 0
-                  ? "Todo el día"
-                  : new Date(selectedEvent.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
-                }
+                {(() => {
+                  const fechaCorta = selectedEvent.extendedProps.fecha_raw; // Ejemplo: "2024-10-20 10:00:00"
+                  if (!fechaCorta) return "Todo el día";
+
+                  const partes = fechaCorta.split(' ');
+                  if (partes.length < 2) return "Todo el día";
+
+                  const horaCompleta = partes[1]; // "10:00:00"
+                  const [h, m] = horaCompleta.split(':');
+
+                  const horaNum = parseInt(h);
+                  if (horaNum === 0 && parseInt(m) === 0) return "Todo el día";
+
+                  // Convertir a formato 12h (AM/PM) manualmente
+                  const ampm = horaNum >= 12 ? 'PM' : 'AM';
+                  const hora12 = horaNum % 12 || 12;
+                  return `${hora12}:${m} ${ampm}`;
+                })()}
               </span>
             </div>
 
