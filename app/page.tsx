@@ -81,38 +81,37 @@ export default function CalendarioDefinitivo() {
   const handleGuardar = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Si el usuario no elige hora, el input datetime-local a veces falla. 
+    // Aseguramos un valor.
+    if (!form.fecha) {
+      alert("Por favor selecciona una fecha");
+      return;
+    }
+
     const datos = {
       titulo: form.titulo,
-      fecha_inicio: form.fecha,
+      // Reemplazamos la 'T' por un espacio para evitar el desfase de zona horaria UTC
+      fecha_inicio: form.fecha.replace('T', ' '),
       ministerio_cargo: form.ministerio,
       descripcion: form.descripcion
     };
 
     let error;
     if (isEditing && form.id) {
-      // EDICIÓN
-      const { error: updateError } = await supabase
-        .from('actividades')
-        .update(datos)
-        .eq('id', form.id);
+      const { error: updateError } = await supabase.from('actividades').update(datos).eq('id', form.id);
       error = updateError;
     } else {
-      // CREACIÓN
-      const { error: insertError } = await supabase
-        .from('actividades')
-        .insert([datos]);
+      const { error: insertError } = await supabase.from('actividades').insert([datos]);
       error = insertError;
     }
 
     if (!error) {
-      setShowCreate(false);
-      setIsEditing(false);
-      setSelectedEvent(null);
+      setShowCreate(false); setIsEditing(false); setSelectedEvent(null);
       await fetchEventos();
     } else {
-      alert("Error al guardar: " + error.message);
+      alert("Error: " + error.message);
     }
-  };
+  }
 
   return (
     <main className={`min-h-screen transition-colors duration-500 ${darkMode ? 'bg-[#0f172a] text-slate-200' : 'bg-slate-50 text-slate-800'}`}>
@@ -208,8 +207,16 @@ export default function CalendarioDefinitivo() {
             <p className="text-slate-500 text-sm mb-6 italic leading-relaxed">"{selectedEvent.extendedProps.descripcion || "Sin descripción adicional."}"</p>
 
             <div className={`text-[9px] font-bold uppercase border-t pt-4 flex justify-between ${darkMode ? 'border-slate-800 text-slate-400' : 'border-slate-100 text-slate-500'}`}>
-              <span>{new Date(selectedEvent.start).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</span>
-              <span className="text-indigo-500">{new Date(selectedEvent.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+              <span>
+                {new Date(selectedEvent.start).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </span>
+              <span className="text-indigo-500">
+                {/* Si la hora es 00:00, asumimos que es opcional/todo el día */}
+                {new Date(selectedEvent.start).getHours() === 0 && new Date(selectedEvent.start).getMinutes() === 0
+                  ? "Todo el día"
+                  : new Date(selectedEvent.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
+                }
+              </span>
             </div>
 
             <div className="mt-6 md:mt-8 grid grid-cols-2 gap-3">
@@ -238,7 +245,14 @@ export default function CalendarioDefinitivo() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-[8px] font-bold uppercase text-slate-500 ml-1">Fecha y Hora</label>
-                <input type="datetime-local" required className={`w-full ${darkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border rounded-xl p-3 text-xs outline-none`} value={form.fecha} onChange={(e) => setForm({ ...form, fecha: e.target.value })} />
+                <input
+                  type="datetime-local"
+                  required
+                  className={`w-full ${darkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} border rounded-xl p-3 text-xs outline-none`}
+                  value={form.fecha}
+                  onChange={(e) => setForm({ ...form, fecha: e.target.value })}
+                />
+                <p className="text-[7px] text-slate-500 mt-1">* Si no seleccionas hora, se marcará como "Todo el día"</p>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[8px] font-bold uppercase text-slate-500 ml-1">Ministerio</label>
