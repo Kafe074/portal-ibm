@@ -13,19 +13,59 @@ export default function CursosPage() {
     const [loading, setLoading] = useState(true)
 
     // Estados compartidos
-    const [cursoDetalle, setCursoDetalle] = useState<any>(null)
-    const [cargandoCurso, setCargandoCurso] = useState(false)
+    const [cursosAlumno, setCursosAlumno] = useState<any[]>([]) // Ahora es un array
+    const [cargandoContenido, setCargandoContenido] = useState(false)
     const [cursosDocente, setCursosDocente] = useState<any[]>([])
 
-    const cargarContenidoCurso = useCallback(async (cursoId: string) => {
-        setCargandoCurso(true);
-        const { data } = await supabase
-            .from('cursos')
-            .select(`*, modulos (*, materiales (*))`)
-            .eq('id', cursoId)
-            .single();
-        if (data) setCursoDetalle(data);
-        setCargandoCurso(false);
+    // NUEVA FUNCIÓN: Carga todos los cursos donde el alumno está inscrito
+    const cargarCursosAlumno = useCallback(async (alumnoId: string) => {
+        setCargandoContenido(true);
+        try {
+            console.log("Cargando cursos para alumno ID:", alumnoId);
+
+            const { data, error } = await supabase
+                .from('inscripciones')
+                .select(`
+                usuarios_id,
+                cursos:curso_id (
+                    id,
+                    nombre,
+                    descripcion,
+                    modulos (
+                        id,
+                        titulo,
+                        orden,
+                        materiales (
+                            id,
+                            titulo,
+                            tipo,
+                            url
+                        )
+                    )
+                )
+            `)
+                .eq('usuarios_id', alumnoId);
+
+            if (error) {
+                console.error("Error de Supabase en inscripciones:", error.message);
+                throw error;
+            }
+
+            console.log("Data bruta de inscripciones:", data);
+
+            // Extraemos el objeto 'cursos' de cada inscripción
+            const listaCursos = data
+                ?.map((ins: any) => ins.cursos)
+                .filter((c: any) => c !== null) || [];
+
+            console.log("Lista final de cursos procesada:", listaCursos);
+            setCursosAlumno(listaCursos);
+
+        } catch (err) {
+            console.error("Error crítico en cargarCursosAlumno:", err);
+        } finally {
+            setCargandoContenido(false);
+        }
     }, []);
 
     const cargarCursosDocente = useCallback(async (docenteId: string) => {
@@ -38,49 +78,38 @@ export default function CursosPage() {
 
     const checkUser = useCallback(async () => {
         try {
-            console.log("--- Verificando sesión activa ---");
+            setLoading(true);
             const { data: { session } } = await supabase.auth.getSession();
 
             if (!session) {
-                console.log("No hay sesión de Supabase Auth.");
                 setUser(null);
-                setLoading(false);
                 return;
             }
 
             const userEmail = session.user.email;
-            console.log("Sesión iniciada con email:", userEmail);
-            console.log("ID de Auth:", session.user.id);
 
-            // 1. Intentar buscar en la tabla de PROFESORES usando el EMAIL
-            console.log("Buscando en tabla 'profesores'...");
-            const { data: docente, error: errDoc } = await supabase
+            // 1. Buscar en PROFESORES
+            const { data: docente } = await supabase
                 .from('profesores')
                 .select('*')
                 .eq('email', userEmail)
                 .maybeSingle();
 
             if (docente) {
-                console.log("¡ÉXITO! Encontrado en tabla PROFESORES:", docente);
                 setUser({ ...docente, tipo_usuario: 'docente' });
-                // Usamos el ID que tenga en su tabla (sea UUID o serial)
                 await cargarCursosDocente(docente.id);
             } else {
-                console.log("No se encontró en 'profesores'. Buscando en 'usuarios'...");
-
-                // 2. Si no es profesor, buscar en USUARIOS usando el EMAIL
-                const { data: alumno, error: errAlu } = await supabase
+                // 2. Buscar en USUARIOS (Alumnos)
+                const { data: alumno } = await supabase
                     .from('usuarios')
                     .select('*')
                     .eq('email', userEmail)
                     .maybeSingle();
 
                 if (alumno) {
-                    console.log("¡ÉXITO! Encontrado en tabla USUARIOS:", alumno);
                     setUser({ ...alumno, tipo_usuario: 'alumno' });
-                    if (alumno.curso_id) await cargarContenidoCurso(alumno.curso_id);
-                } else {
-                    console.warn("El correo no existe en ninguna de las dos tablas.");
+                    // IMPORTANTE: Cargamos los cursos desde la tabla inscripciones
+                    await cargarCursosAlumno(alumno.id);
                 }
             }
         } catch (err) {
@@ -88,16 +117,17 @@ export default function CursosPage() {
         } finally {
             setLoading(false);
         }
-    }, [cargarCursosDocente, cargarContenidoCurso]);
+    }, [cargarCursosDocente, cargarCursosAlumno]);
 
     useEffect(() => {
         checkUser();
     }, [checkUser]);
 
     const handleLogout = async () => {
-        console.log("Cerrando sesión...");
         await supabase.auth.signOut();
         setUser(null);
+        setCursosAlumno([]);
+        setCursosDocente([]);
     };
 
     if (loading) {
@@ -114,7 +144,6 @@ export default function CursosPage() {
     return (
         <main className={`flex h-screen transition-colors duration-700 overflow-hidden ${darkMode ? 'bg-[#0a0a0a] text-stone-300' : 'bg-[#fafaf9] text-stone-800'}`}>
             <div className="flex-1 flex flex-col overflow-y-auto">
-                {/* NAV BAR */}
                 <nav className={`px-8 py-6 flex justify-between items-center border-b ${darkMode ? 'border-stone-900' : 'border-stone-200'}`}>
                     <div>
                         <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-stone-400">
@@ -140,10 +169,11 @@ export default function CursosPage() {
                     ) : user.tipo_usuario === 'docente' ? (
                         <VistaDocente user={user} cursos={cursosDocente} darkMode={darkMode} />
                     ) : (
+                        /* Pasamos el array de cursos y el estado de carga correcto */
                         <VistaAlumno
                             user={user}
-                            cursoDetalle={cursoDetalle}
-                            cargandoCurso={cargandoCurso}
+                            cursos={cursosAlumno}
+                            cargando={cargandoContenido}
                             darkMode={darkMode}
                         />
                     )}
