@@ -7,32 +7,51 @@ import {
     ChevronLeft,
     ChevronRight,
     ShieldCheck,
-    Heart
+    Heart,
+    Timer,
+    Users,
+    CheckCircle2,
+    Play
 } from 'lucide-react'
 
 export default function Talentos() {
     const [darkMode, setDarkMode] = useState(false)
-    const [currentSlide, setCurrentSlide] = useState(0)
+    
+    // Estados para los mini-carruseles de valores
+    const [slideValor1, setSlideValor1] = useState(0)
+    const [slideValor2, setSlideValor2] = useState(0)
 
-    const fotosCarrusel = [
-        "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200",
-        "https://images.unsplash.com/photo-1510566337590-2fc1f3c71131?q=80&w=1200",
+    const stats = [
+        { label: "Participantes", value: "25+", icon: <Users size={12} /> },
+        { label: "Días de Entrenamiento", value: "Sábados", icon: <Timer size={12} /> },
+        { label: "Categoría", value: "2 categorias", icon: <Trophy size={12} /> },
+    ];
+
+    const requisitos = [
+        "Uniforme de la academia",
+        "Canilleras (obligatorio)",
+        "Hidratación personal",
+        "Puntualidad y respeto"
     ];
 
     const valores = [
         {
             titulo: "Disciplina y Orden",
             subtitulo: "Proverbios 22:6",
-            desc: "Instruimos al joven en la técnica y el respeto como reflejo de su fe.",
+            desc: "Instruimos al joven en disciplina y orden con el fin de formar su carácter .",
             icono: <ShieldCheck size={16} />,
-            img: "/talentos/talentos.jpg"
+            imgs: ["/talentos/talentos_1.jpg", "/talentos/talentos_2.jpg", "/talentos/talentos_5.jpg"],
+            currentSlide: slideValor1,
+            setSlide: setSlideValor1
         },
         {
             titulo: "Corazón de Siervo",
             subtitulo: "1 Corintios 10:31",
-            desc: "Buscamos la excelencia para la gloria de Dios y el compañerismo real.",
+            desc: "Buscamos la excelencia para la gloria de Dios. El fútbol es el campo donde practicamos la humildad y el compañerismo real.",
             icono: <Heart size={16} />,
-            img: "/talentos/talentos_1.jpg"
+            imgs: ["/talentos/talentos_3.jpg", "/talentos/talentos_4.jpg"],
+            currentSlide: slideValor2,
+            setSlide: setSlideValor2
         }
     ];
 
@@ -43,89 +62,143 @@ export default function Talentos() {
 
                 <div className="h-8 md:h-12" />
 
-                <div className="w-full max-w-4xl mx-auto p-6 md:p-12 space-y-20">
+                <div className="w-full max-w-4xl mx-auto p-6 md:p-12 space-y-24">
 
-                    {/* --- HEADER COMPACTO --- */}
-                    <header className="space-y-4 text-center md:text-left">
-                        <span className="text-[8px] uppercase tracking-[0.6em] text-stone-400 font-bold block">
-                            Ministerio de Deporte
-                        </span>
-                        <h2 className={`text-4xl md:text-6xl font-extralight tracking-tighter leading-tight ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>
-                            Academia de <br />
-                            <span className="italic font-serif opacity-40 text-3xl md:text-5xl">Talentos IBM</span>
-                        </h2>
+                    {/* --- HEADER --- */}
+                    <header className="flex flex-col md:flex-row justify-between items-end gap-8">
+                        <div className="space-y-4 text-left">
+                            <span className="text-[8px] uppercase tracking-[0.6em] text-stone-400 font-bold block">
+                                Escuela de Fútbol
+                            </span>
+                            <h2 className={`text-4xl md:text-6xl font-extralight tracking-tighter leading-tight ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>
+                                Academia de <br />
+                                <span className="italic font-serif opacity-40 text-3xl md:text-5xl">Talentos IBM</span>
+                            </h2>
+                        </div>
+                        
+                        <div className="flex gap-8 border-l border-stone-200 dark:border-stone-800 pl-8 pb-2">
+                            {stats.map((stat, i) => (
+                                <div key={i} className="space-y-1">
+                                    <div className="flex items-center gap-2 text-stone-400">
+                                        {stat.icon}
+                                        <span className="text-[7px] uppercase tracking-widest font-bold">{stat.label}</span>
+                                    </div>
+                                    <p className={`text-xl font-serif italic ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{stat.value}</p>
+                                </div>
+                            ))}
+                        </div>
                     </header>
 
-                    {/* --- CARRUSEL REDUCIDO --- */}
+                    {/* --- VIDEO HERO (Primer Carrusel reemplazado) --- */}
                     <div className="relative group">
-                        <div className={`relative h-64 md:h-96 w-full rounded-[2.5rem] overflow-hidden border ${darkMode ? 'border-stone-900 bg-stone-900' : 'border-stone-100 bg-stone-50 shadow-lg'}`}>
-                            <img
-                                src={fotosCarrusel[currentSlide]}
-                                className="w-full h-full object-cover grayscale opacity-80 transition-all duration-700"
-                                alt="Academia"
-                            />
-                            <div className="absolute bottom-4 right-4 flex gap-2">
-                                <button
-                                    onClick={() => setCurrentSlide(currentSlide === 0 ? 1 : 0)}
-                                    className={`p-2 rounded-full border backdrop-blur-md transition-all ${darkMode ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`}
-                                >
-                                    <ChevronLeft size={14} />
-                                </button>
-                                <button
-                                    onClick={() => setCurrentSlide(currentSlide === 0 ? 1 : 0)}
-                                    className={`p-2 rounded-full border backdrop-blur-md transition-all ${darkMode ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`}
-                                >
-                                    <ChevronRight size={14} />
-                                </button>
+                        <div className={`relative h-72 md:h-[450px] w-full rounded-[3rem] overflow-hidden border ${darkMode ? 'border-stone-900 bg-stone-900' : 'border-stone-100 bg-stone-50 shadow-2xl'}`}>
+                            <video
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="w-full h-full object-cover grayscale opacity-60 transition-all duration-700 group-hover:scale-105"
+                            >
+                                <source src="/talentos/talentos_7.mp4" type="video/mp4" />
+                                Tu navegador no soporta videos.
+                            </video>
+                            
+                            {/* Overlay decorativo para el video */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/40 to-transparent pointer-events-none" />
+                            <div className="absolute bottom-8 left-8 flex items-center gap-3">
+                                <div className="p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
+                                    <Play size={12} className="text-white fill-white" />
+                                </div>
+                                <span className="text-[9px] uppercase tracking-[0.3em] text-white/70 font-bold font-sans">Sesión de Entrenamiento</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* --- VALORES REFINADOS --- */}
-                    <div className="space-y-24">
+                    {/* --- REQUISITOS --- */}
+                    <section className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-12 border-y border-stone-200 dark:border-stone-900">
+                        <div>
+                            <h4 className={`text-2xl font-serif italic mb-4 ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Preparación para el juego</h4>
+                            <p className="text-xs opacity-60 leading-relaxed">Fomentamos la responsabilidad desde el momento en que preparan su mochila para el entrenamiento.</p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            {requisitos.map((req, i) => (
+                                <div key={i} className="flex items-start gap-2">
+                                    <CheckCircle2 size={12} className="text-stone-400 mt-1" />
+                                    <span className="text-[10px] font-medium opacity-80 uppercase tracking-wider">{req}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* --- VALORES CON CARRUSEL --- */}
+                    <div className="space-y-32">
                         {valores.map((valor, idx) => (
-                            <div key={idx} className={`flex flex-col ${idx % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} gap-8 md:gap-16 items-center`}>
-                                <div className="flex-1 space-y-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`p-2 rounded-xl ${darkMode ? 'bg-stone-900 text-stone-300' : 'bg-stone-100 text-stone-500'}`}>
+                            <div key={idx} className={`flex flex-col ${idx % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} gap-12 md:gap-20 items-center`}>
+                                <div className={`flex-1 space-y-6 ${idx % 2 !== 0 ? 'md:text-right' : 'text-left'}`}>
+                                    <div className={`flex items-center gap-3 ${idx % 2 !== 0 ? 'md:justify-end' : 'justify-start'}`}>
+                                        <div className={`p-3 rounded-2xl ${darkMode ? 'bg-stone-900 text-stone-300' : 'bg-stone-100 text-stone-500'}`}>
                                             {valor.icono}
                                         </div>
-                                        <span className="text-[9px] font-black uppercase tracking-widest text-stone-400 opacity-60">{valor.subtitulo}</span>
+                                        <span className="text-[9px] font-black uppercase tracking-widest text-stone-400">{valor.subtitulo}</span>
                                     </div>
-                                    <h3 className={`text-2xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>{valor.titulo}</h3>
-                                    <p className="text-xs leading-relaxed opacity-70">
+                                    <h3 className={`text-3xl md:text-4xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>{valor.titulo}</h3>
+                                    <p className="text-[13px] leading-relaxed opacity-70 font-light">
                                         {valor.desc}
                                     </p>
                                 </div>
-                                <div className="flex-1 w-full">
-                                    <div className={`aspect-video rounded-[2rem] overflow-hidden border ${darkMode ? 'border-stone-900' : 'border-stone-100 shadow-md'}`}>
-                                        <img src={valor.img} className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-700" alt="Valor" />
+                                
+                                {/* Mini Carrusel de Imágenes */}
+                                <div className="flex-1 w-full group relative">
+                                    <div className={`aspect-square md:aspect-[4/5] rounded-[3.5rem] overflow-hidden border transition-all duration-700 ${darkMode ? 'border-stone-900' : 'border-stone-100 shadow-xl group-hover:shadow-2xl'}`}>
+                                        <img 
+                                            src={valor.imgs[valor.currentSlide]} 
+                                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-1000" 
+                                            alt={valor.titulo} 
+                                        />
+                                        
+                                        {/* Navegación del Mini Carrusel */}
+                                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button 
+                                                onClick={() => valor.setSlide(prev => (prev === 0 ? valor.imgs.length - 1 : prev - 1))}
+                                                className="p-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white"
+                                            >
+                                                <ChevronLeft size={14} />
+                                            </button>
+                                            <button 
+                                                onClick={() => valor.setSlide(prev => (prev === valor.imgs.length - 1 ? 0 : prev + 1))}
+                                                className="p-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white"
+                                            >
+                                                <ChevronRight size={14} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
 
-                    {/* --- CTA COMPACTO --- */}
-                    <section className={`p-10 md:p-16 rounded-[3rem] text-center space-y-6 border ${darkMode ? 'bg-[#0f0f0f] border-stone-900' : 'bg-white border-stone-100 shadow-sm'}`}>
-                        <div className="space-y-3">
-                            <Trophy className="mx-auto text-stone-400 opacity-20" size={32} strokeWidth={1} />
-                            <h2 className={`text-2xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Únete al equipo</h2>
-                            <p className="text-[9px] uppercase tracking-[0.3em] text-stone-500 font-bold">Niños y jóvenes de 7 a 17 años</p>
+                    {/* --- CTA --- */}
+                    <section className={`p-12 md:p-20 rounded-[4rem] text-center space-y-8 border ${darkMode ? 'bg-[#0f0f0f] border-stone-800' : 'bg-white border-stone-100 shadow-2xl'}`}>
+                        <div className="space-y-4">
+                            <h2 className={`text-3xl md:text-5xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Únete al equipo</h2>
+                            <p className="max-w-xs mx-auto text-[10px] uppercase tracking-[0.3em] text-stone-500 leading-relaxed">
+                                Sábados de 4:00 pm a 6:00 pm <br />
+                                Niños y jóvenes de 7 a 17 años
+                            </p>
                         </div>
 
                         <button
-                            onClick={() => window.open('https://wa.me/tu_numero', '_blank')}
-                            className={`group px-8 py-4 rounded-full inline-flex items-center gap-3 transition-all ${darkMode ? 'bg-stone-100 text-stone-900' : 'bg-stone-900 text-stone-100'}`}
+                            onClick={() => window.open('https://wa.me/51982794302', '_blank')}
+                            className={`group px-10 py-5 rounded-full inline-flex items-center gap-4 transition-all hover:scale-105 active:scale-95 ${darkMode ? 'bg-stone-100 text-stone-900' : 'bg-stone-900 text-stone-100'}`}
                         >
-                            <MessageCircle size={14} className="group-hover:rotate-12 transition-transform" />
-                            <span className="text-[9px] font-black uppercase tracking-[0.2em]">Contactar Entrenador</span>
+                            <MessageCircle size={16} className="group-hover:rotate-12 transition-transform" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Inscribir a mi hijo</span>
                         </button>
                     </section>
 
                     <footer className="py-12 text-center">
                         <p className="text-[8px] uppercase tracking-[0.5em] opacity-30 font-bold italic">
-                            Compañerismo, espiritu y excelencia
+                            Compañerismo, espíritu y excelencia
                         </p>
                     </footer>
 

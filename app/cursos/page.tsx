@@ -1,184 +1,134 @@
 'use client'
-import { useEffect, useState, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useState } from 'react'
 import Sidebar from '@/app/components/sidebar'
-import AuthForm from '@/app/components/AuthForm'
-import VistaAlumno from '@/app/components/VistaAlumno'
-import VistaDocente from '@/app/components/VistaDocente'
-import { LogOut } from 'lucide-react'
+import { BookOpen, Clock, Star, ArrowRight, GraduationCap } from 'lucide-react'
+import Link from 'next/link'
 
-export default function CursosPage() {
+export default function CursosPublico() {
     const [darkMode, setDarkMode] = useState(false)
-    const [user, setUser] = useState<any>(null)
-    const [loading, setLoading] = useState(true)
 
-    // Estados compartidos
-    const [cursosAlumno, setCursosAlumno] = useState<any[]>([]) // Ahora es un array
-    const [cargandoContenido, setCargandoContenido] = useState(false)
-    const [cursosDocente, setCursosDocente] = useState<any[]>([])
-
-    // NUEVA FUNCIÓN: Carga todos los cursos donde el alumno está inscrito
-    const cargarCursosAlumno = useCallback(async (alumnoId: string) => {
-        setCargandoContenido(true);
-        try {
-            console.log("Cargando cursos para alumno ID:", alumnoId);
-
-            const { data, error } = await supabase
-                .from('inscripciones')
-                .select(`
-                usuarios_id,
-                cursos:curso_id (
-                    id,
-                    nombre,
-                    descripcion,
-                    modulos (
-                        id,
-                        titulo,
-                        orden,
-                        materiales (
-                            id,
-                            titulo,
-                            tipo,
-                            url
-                        )
-                    )
-                )
-            `)
-                .eq('usuarios_id', alumnoId);
-
-            if (error) {
-                console.error("Error de Supabase en inscripciones:", error.message);
-                throw error;
-            }
-
-            console.log("Data bruta de inscripciones:", data);
-
-            // Extraemos el objeto 'cursos' de cada inscripción
-            const listaCursos = data
-                ?.map((ins: any) => ins.cursos)
-                .filter((c: any) => c !== null) || [];
-
-            console.log("Lista final de cursos procesada:", listaCursos);
-            setCursosAlumno(listaCursos);
-
-        } catch (err) {
-            console.error("Error crítico en cargarCursosAlumno:", err);
-        } finally {
-            setCargandoContenido(false);
-        }
-    }, []);
-
-    const cargarCursosDocente = useCallback(async (docenteId: string) => {
-        const { data } = await supabase
-            .from('cursos')
-            .select('*, modulos(*, materiales(*))')
-            .eq('profesor_id', docenteId);
-        if (data) setCursosDocente(data);
-    }, []);
-
-    const checkUser = useCallback(async () => {
-        try {
-            setLoading(true);
-            const { data: { session } } = await supabase.auth.getSession();
-
-            if (!session) {
-                setUser(null);
-                return;
-            }
-
-            const userEmail = session.user.email;
-
-            // 1. Buscar en PROFESORES
-            const { data: docente } = await supabase
-                .from('profesores')
-                .select('*')
-                .eq('email', userEmail)
-                .maybeSingle();
-
-            if (docente) {
-                setUser({ ...docente, tipo_usuario: 'docente' });
-                await cargarCursosDocente(docente.id);
-            } else {
-                // 2. Buscar en USUARIOS (Alumnos)
-                const { data: alumno } = await supabase
-                    .from('usuarios')
-                    .select('*')
-                    .eq('email', userEmail)
-                    .maybeSingle();
-
-                if (alumno) {
-                    setUser({ ...alumno, tipo_usuario: 'alumno' });
-                    // IMPORTANTE: Cargamos los cursos desde la tabla inscripciones
-                    await cargarCursosAlumno(alumno.id);
-                }
-            }
-        } catch (err) {
-            console.error("Error crítico en checkUser:", err);
-        } finally {
-            setLoading(false);
-        }
-    }, [cargarCursosDocente, cargarCursosAlumno]);
-
-    useEffect(() => {
-        checkUser();
-    }, [checkUser]);
-
-    const handleLogout = async () => {
-        await supabase.auth.signOut();
-        setUser(null);
-        setCursosAlumno([]);
-        setCursosDocente([]);
-    };
-
-    if (loading) {
-        return (
-            <div className="h-screen flex items-center justify-center bg-stone-50">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-8 h-8 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin"></div>
-                    <p className="font-serif italic text-stone-400">Verificando acceso...</p>
-                </div>
-            </div>
-        )
-    }
+    const cursos = [
+        {
+            titulo: "Los dos reinos",
+            descripcion: "Un recorrido para aprender sobre el reino de los cielos y el reino de las tinieblas, y cómo vivir en la luz.",
+            duracion: "8 Sesiones",
+            categoria: "Discipulado",
+            imagen: "/cursos/cursos_1.jpg"
+        },
+        {
+            titulo: "Libertad Financiera",
+            descripcion: "Aprende a gestionar tus finanzas a la manera del reino de Dios.",
+            duracion: "8 Sesiones",
+            categoria: "Ministerial",
+            imagen: "/cursos/cursos_2.jpeg"
+        },
+        {
+            titulo: "Doctrina Basica 1",
+            descripcion: "Principios bíblicos para el crecimiento espiritual y la vida cristiana.",
+            duracion: "8 Sesiones",
+            categoria: "Discipulado",
+            imagen: "/cursos/cursos_3.jpg"
+        },
+    ]
 
     return (
-        <main className={`flex h-screen transition-colors duration-700 overflow-hidden ${darkMode ? 'bg-[#0a0a0a] text-stone-300' : 'bg-[#fafaf9] text-stone-800'}`}>
-            <div className="flex-1 flex flex-col overflow-y-auto">
-                <nav className={`px-8 py-6 flex justify-between items-center border-b ${darkMode ? 'border-stone-900' : 'border-stone-200'}`}>
-                    <div>
-                        <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-stone-400">
-                            {user?.tipo_usuario === 'docente' ? 'Panel de Instructor' : 'Portal Académico'}
-                        </h2>
-                    </div>
-                    {user && (
-                        <div className="flex items-center gap-6">
-                            <div className="text-right hidden sm:block">
-                                <p className="text-[10px] font-bold uppercase tracking-widest">{user.nombre}</p>
-                                <p className="text-[9px] text-stone-400">{user.email}</p>
-                            </div>
-                            <button onClick={handleLogout} className="p-2 text-stone-400 hover:text-red-500 transition-colors">
-                                <LogOut size={18} />
-                            </button>
-                        </div>
-                    )}
-                </nav>
+        <main className={`flex h-screen transition-colors duration-1000 overflow-hidden ${darkMode ? 'bg-[#0a0a0a] text-stone-400' : 'bg-[#fafaf9] text-stone-600'}`}>
 
-                <div className="p-8 max-w-7xl mx-auto w-full">
-                    {!user ? (
-                        <AuthForm darkMode={darkMode} onAuthSuccess={checkUser} />
-                    ) : user.tipo_usuario === 'docente' ? (
-                        <VistaDocente user={user} cursos={cursosDocente} darkMode={darkMode} />
-                    ) : (
-                        /* Pasamos el array de cursos y el estado de carga correcto */
-                        <VistaAlumno
-                            user={user}
-                            cursos={cursosAlumno}
-                            cargando={cargandoContenido}
-                            darkMode={darkMode}
-                        />
-                    )}
+            <div className="flex-1 flex flex-col overflow-y-auto font-light custom-scrollbar">
+                <div className="h-12 md:h-20" />
+
+                <div className="w-full max-w-5xl mx-auto p-6 md:p-12 space-y-20">
+
+                    {/* Header de la Sección */}
+                    <header className="space-y-6 text-center">
+                        <div className="flex justify-center">
+                            <div className={`p-4 rounded-full border ${darkMode ? 'border-stone-800' : 'border-stone-100 shadow-sm'}`}>
+                                <GraduationCap size={32} className="opacity-40" />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <span className="text-[10px] uppercase tracking-[0.5em] text-stone-400 font-bold block">Cursos IBM</span>
+                            <h1 className={`text-4xl md:text-6xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>
+                                Crecimiento Espiritual
+                            </h1>
+                        </div>
+                        <p className="max-w-xl mx-auto text-sm leading-relaxed opacity-70">
+                            Nuestros cursos están diseñados para equiparte en tu caminar con Cristo.
+                            Infórmate sobre nuestras próximas aperturas y modalidades.
+                        </p>
+                    </header>
+
+                    {/* Grid de Cursos */}
+                    <section className="grid grid-cols-1 md:grid-cols-2 gap-10 pb-20">
+                        {cursos.map((curso, idx) => (
+                            <div
+                                key={idx}
+                                className={`group relative overflow-hidden rounded-[2.5rem] border transition-all duration-500 ${darkMode ? 'border-stone-900 bg-stone-950/50' : 'border-stone-100 bg-white shadow-sm hover:shadow-xl'
+                                    }`}
+                            >
+                                {/* Imagen del Curso */}
+                                <div className="aspect-[16/9] overflow-hidden">
+                                    <img
+                                        src={curso.imagen}
+                                        alt={curso.titulo}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80"
+                                    />
+                                </div>
+
+                                {/* Contenido */}
+                                <div className="p-8 space-y-4">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-[9px] uppercase tracking-widest font-bold text-stone-400">
+                                            {curso.categoria}
+                                        </span>
+                                        <div className="flex items-center gap-2 text-[10px] opacity-60">
+                                            <Clock size={12} /> {curso.duracion}
+                                        </div>
+                                    </div>
+
+                                    <h3 className={`text-2xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>
+                                        {curso.titulo}
+                                    </h3>
+
+                                    <p className="text-xs leading-relaxed opacity-70 line-clamp-2">
+                                        {curso.descripcion}
+                                    </p>
+
+                                    <div className="pt-4 flex items-center justify-between">
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </section>
+
+                    {/* Footer Informativo */}
+                    <section className={`rounded-[3rem] p-12 text-center space-y-6 ${darkMode ? 'bg-stone-900/30' : 'bg-stone-100/50'}`}>
+                        <h4 className="font-serif italic text-xl">¿Deseas inscribirte o tienes dudas?</h4>
+                        <p className="text-xs opacity-70 max-w-md mx-auto">
+                            Las inscripciones se realizan de manera presencial al finalizar los cultos dominicales o a través de nuestro canal de WhatsApp.
+                        </p>
+                        <div className="pt-4">
+                            <a
+                                href="https://wa.me/51960843024?text=Hola,%20deseo%20más%20información%20sobre%20los%20cursos%20de%20la%20Academia%20IBM"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[10px] uppercase tracking-widest font-black border-b border-current pb-1 hover:opacity-60 transition-opacity"
+                            >
+                                Contactar para más información
+                            </a>
+                        </div>
+                    </section>
+
                 </div>
+
+                <footer className="py-12 text-center">
+                    <p className="text-[8px] uppercase tracking-[0.8em] opacity-30 font-bold italic">
+                        Equipando a los cristianos para la obra del ministerio
+                    </p>
+                </footer>
             </div>
+
             <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
         </main>
     )
