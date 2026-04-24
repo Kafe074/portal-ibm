@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react' // Añadimos useEffect
 import Sidebar from '@/app/components/sidebar'
 import {
   MapPin, Clock, Heart, ArrowRight,
@@ -16,36 +16,50 @@ export default function InicioPublico() {
   const [indexVision, setIndexVision] = useState(0)
   const [indexMision, setIndexMision] = useState(0)
 
+  // Lógica de Movimiento Automático para Ministerios
+  useEffect(() => {
+    const slider = document.getElementById('ministerios-slider');
+    if (!slider) return;
+
+    const interval = setInterval(() => {
+      if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth) {
+        slider.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        slider.scrollBy({ left: 300, behavior: 'smooth' });
+      }
+    }, 4000); // Se mueve cada 4 segundos
+
+    return () => clearInterval(interval);
+  }, []);
+
   const fotosHistoria = [
     { type: 'image', url: "/historia/iglesia_niños.jpeg" },
-    { type: 'image', url: "/historia/historia_6.jpg" },
+    { type: 'image', url: "/historia/2.jpg" },
     { type: 'image', url: "/historia/paseo.jpeg" }
   ]
 
   const fotosVision = [
+    { type: 'image', url: "/historia/1.jpg" },
     { type: 'image', url: "/historia/historia_3.jpg" },
-    { type: 'image', url: "/historia/historia_5.jpg" },
-    { type: 'image', url: "/historia/historia_1.jpg" } // Asegúrate que exista historia_1 o cambia el nombre
+    { type: 'image', url: "/historia/mision.jpg" }
   ]
 
   const fotosMision = [
-    { type: 'image', url: "/historia/historia_4.jpg" },
-    { type: 'image', url: "/historia/historia_3.jpg" },
-    { type: 'image', url: "/historia/historia_6.jpg" }
+    { type: 'image', url: "/historia/4.jpg" },
+    { type: 'image', url: "/historia/historia_6.jpg" },
+    { type: 'image', url: "/historia/final.jpg" }
   ]
 
-  // Datos de ministerios con imágenes y links
   const ministerios = [
-    { nombre: "Misiones", img: "/ministerios/misiones.jpg", link: "/ministerios/misiones" },
-    { nombre: "Acción Social", img: "/ministerios/accion-social.jpg", link: "/ministerios/accion-social" },
-    { nombre: "Alabanza", img: "/ministerios/alabanza.jpg", link: "/ministerios/alabanza" },
-    { nombre: "Escuela Dominical", img: "/ministerios/ninos.jpg", link: "/ministerios/escuela-dominical" },
-    { nombre: "Producción", img: "/ministerios/media.jpg", link: "/ministerios/produccion" },
-    { nombre: "Conectadas", img: "/ministerios/mujeres.jpg", link: "/ministerios/conectadas" },
-    { nombre: "Generación Emergente", img: "/ministerios/jovenes.jpg", link: "/ministerios/jovenes" },
-    { nombre: "Servir", img: "/ministerios/servir.jpg", link: "/ministerios/servir" },
-    { nombre: "Adolescentes", img: "/ministerios/teens.jpg", link: "/ministerios/teens" },
-    { nombre: "Pre-adolescentes", img: "/ministerios/pre-teens.jpg", link: "/ministerios/pre-teens" }
+    { nombre: "Misiones", img: "/ministerios/index/misiones.jpg", link: "/ministerios/misiones" },
+    { nombre: "Acción Social", img: "/ministerios/index/accion-social.jpg", link: "/ministerios/accion-social" },
+    { nombre: "Alabanza", img: "/ministerios/index/alabanza.jpg", link: "/ministerios/alabanza" },
+    { nombre: "Escuela Dominical", img: "/ministerios/index/ninos.jpg", link: "/ministerios/escuela-dominical" },
+    { nombre: "Producción", img: "/ministerios/index/media.jpg", link: "/ministerios/produccion" },
+    { nombre: "Conectadas", img: "/ministerios/index/mujeres.jpg", link: "/ministerios/conectadas" },
+    { nombre: "Generación Emergente", img: "/ministerios/index/jovenes.jpg", link: "/ministerios/jovenes" },
+    { nombre: "Adolescentes", img: "/ministerios/index/teens.jpg", link: "/ministerios/teens" },
+    { nombre: "Servir", img: "/ministerios/index/servir.jpg", link: "/ministerios/servir" }
   ]
 
   const nextSlide = (setFn: any, length: number) => setFn((prev: number) => (prev + 1) % length)
@@ -59,7 +73,7 @@ export default function InicioPublico() {
 
         <div className="w-full max-w-5xl mx-auto p-6 md:p-12 space-y-32">
 
-          {/* Hero Section - LOGO MÁS GRANDE */}
+          {/* Hero Section */}
           <section className="text-center space-y-8 py-6 relative">
             <div className="space-y-4">
               <div className="flex justify-center mb-8">
@@ -86,12 +100,12 @@ export default function InicioPublico() {
             </div>
           </section>
 
-          {/* Sección: Historia - CARRUSEL FUNCIONAL */}
+          {/* Sección: Historia */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="space-y-6 text-left">
               <h2 className={`text-3xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Nuestra Historia</h2>
               <p className="text-[13px] leading-relaxed opacity-80">
-                Nacimos como una  iglesia de niños, con una sola visión amar a Dios y al prójimo en nuestra comunidad.
+                Nacimos como una iglesia de niños, con una sola visión amar a Dios y al prójimo en nuestra comunidad.
               </p>
               <div className="flex gap-4 pt-4">
                 <button onClick={() => prevSlide(setIndexHistoria, fotosHistoria.length)} className="p-2 border rounded-full hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors"><ChevronLeft size={16} /></button>
@@ -107,80 +121,116 @@ export default function InicioPublico() {
             </div>
           </section>
 
-         {/* --- SECCIÓN: VISIÓN (Imagen Izquierda, Texto Derecha) --- */}
-<section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-    <div className="relative order-2 md:order-1 overflow-hidden rounded-[3rem] aspect-[4/5] md:aspect-square border dark:border-stone-900 shadow-2xl isolate">
-        <img
-            src={fotosVision[indexVision].url}
-            className="w-full h-full object-cover transition-all duration-700 ease-in-out hover:scale-105"
-            alt="Visión"
-        />
-        {/* Overlay sutil para el modo oscuro */}
-        {darkMode && <div className="absolute inset-0 bg-black/20 pointer-events-none" />}
-    </div>
-    
-    <div className="space-y-6 text-left md:text-right order-1 md:order-2">
-        <h2 className={`text-4xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Nuestra Visión</h2>
-        <p className="text-[13px] leading-relaxed opacity-70 font-light">
-            Ser una iglesia generacional, apasionada por Dios y por el prójimo donde podamos ver vidas cambiadas por Jesús y así impactar su esfera de influencia para la gloria de Dios.
-        </p>
-        <div className="flex gap-4 pt-4 justify-start md:justify-end">
-            <button onClick={() => prevSlide(setIndexVision, fotosVision.length)} className="p-3 border rounded-full hover:bg-stone-100 dark:hover:bg-stone-900 dark:border-stone-800 transition-colors">
-                <ChevronLeft size={16} />
-            </button>
-            <button onClick={() => nextSlide(setIndexVision, fotosVision.length)} className="p-3 border rounded-full hover:bg-stone-100 dark:hover:bg-stone-900 dark:border-stone-800 transition-colors">
-                <ChevronRight size={16} />
-            </button>
-        </div>
-    </div>
-</section>
+          {/* SECCIÓN: VISIÓN */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div className="relative order-2 md:order-1 overflow-hidden rounded-[3rem] aspect-[4/5] md:aspect-square border dark:border-stone-900 shadow-2xl isolate">
+              <img
+                src={fotosVision[indexVision].url}
+                className="w-full h-full object-cover transition-all duration-700 ease-in-out hover:scale-105"
+                alt="Visión"
+              />
+              {darkMode && <div className="absolute inset-0 bg-black/20 pointer-events-none" />}
+            </div>
 
-{/* --- SECCIÓN: MISIÓN (Texto Izquierda, Imagen Derecha) --- */}
-<section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-    <div className="space-y-6 text-left">
-        <h2 className={`text-4xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Nuestra Misión</h2>
-        <p className="text-[13px] leading-relaxed opacity-70 font-light">
-            Estamos levantando una nueva generación que se apasione por Dios y por el prójimo, creando espacios y ambientes que inviten a relacionarse con el creador mediante su palabra.
-        </p>
-        <div className="flex gap-4 pt-4 justify-start">
-            {/* Si tienes un carrusel para misión, usa un estado diferente como indexMision */}
-            <button onClick={() => prevSlide(setIndexMision, fotosMision.length)} className="p-3 border rounded-full hover:bg-stone-100 dark:hover:bg-stone-900 dark:border-stone-800 transition-colors">
-                <ChevronLeft size={16} />
-            </button>
-            <button onClick={() => nextSlide(setIndexMision, fotosMision.length)} className="p-3 border rounded-full hover:bg-stone-100 dark:hover:bg-stone-900 dark:border-stone-800 transition-colors">
-                <ChevronRight size={16} />
-            </button>
-        </div>
-    </div>
+            <div className="space-y-6 text-left md:text-right order-1 md:order-2">
+              <h2 className={`text-4xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Nuestra Visión</h2>
+              <p className="text-[13px] leading-relaxed opacity-70 font-light">
+                Ser una iglesia generacional, apasionada por Dios y por el prójimo donde podamos ver vidas cambiadas por Jesús y así impactar su esfera de influencia para la gloria de Dios.
+              </p>
+              <div className="flex gap-4 pt-4 justify-start md:justify-end">
+                <button onClick={() => prevSlide(setIndexVision, fotosVision.length)} className="p-3 border rounded-full hover:bg-stone-100 dark:hover:bg-stone-900 dark:border-stone-800 transition-colors">
+                  <ChevronLeft size={16} />
+                </button>
+                <button onClick={() => nextSlide(setIndexVision, fotosVision.length)} className="p-3 border rounded-full hover:bg-stone-100 dark:hover:bg-stone-900 dark:border-stone-800 transition-colors">
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+          </section>
 
-    <div className="relative overflow-hidden rounded-[3rem] aspect-[4/5] md:aspect-square border dark:border-stone-900 shadow-2xl isolate">
-        <img
-            src={fotosMision[indexMision].url}
-            className="w-full h-full object-cover transition-all duration-700 ease-in-out hover:scale-105"
-            alt="Misión"
-        />
-        {darkMode && <div className="absolute inset-0 bg-black/20 pointer-events-none" />}
-    </div>
-</section>
+          {/* SECCIÓN: MISIÓN */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div className="space-y-6 text-left">
+              <h2 className={`text-4xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Nuestra Misión</h2>
+              <p className="text-[13px] leading-relaxed opacity-70 font-light">
+                Estamos levantando una nueva generación que se apasione por Dios y por el prójimo, creando espacios y ambientes que inviten a relacionarse con el creador mediante su palabra.
+              </p>
+              <div className="flex gap-4 pt-4 justify-start">
+                <button onClick={() => prevSlide(setIndexMision, fotosMision.length)} className="p-3 border rounded-full hover:bg-stone-100 dark:hover:bg-stone-900 dark:border-stone-800 transition-colors">
+                  <ChevronLeft size={16} />
+                </button>
+                <button onClick={() => nextSlide(setIndexMision, fotosMision.length)} className="p-3 border rounded-full hover:bg-stone-100 dark:hover:bg-stone-900 dark:border-stone-800 transition-colors">
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
 
-          {/* Galería de Ministerios Dinámica (Accordion-style hover) */}
+            <div className="relative overflow-hidden rounded-[3rem] aspect-[4/5] md:aspect-square border dark:border-stone-900 shadow-2xl isolate">
+              <img
+                src={fotosMision[indexMision].url}
+                className="w-full h-full object-cover transition-all duration-700 ease-in-out hover:scale-105"
+                alt="Misión"
+              />
+              {darkMode && <div className="absolute inset-0 bg-black/20 pointer-events-none" />}
+            </div>
+          </section>
+
+          {/* --- SECCIÓN: MINISTERIOS (Slider Horizontal con Expansión y Auto-Play) --- */}
           <section className="space-y-12">
-            <h3 className="text-[9px] font-black uppercase tracking-[0.5em] text-stone-400 text-center">Nuestros Ministerios</h3>
-            <div className="flex flex-col md:flex-row gap-4 h-[500px] md:h-[400px]">
+            <div className="flex justify-between items-end px-2">
+              <div className="space-y-2">
+                <h3 className="text-[9px] font-black uppercase tracking-[0.5em] text-stone-400">Nuestros Ministerios</h3>
+                <h2 className={`text-3xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Vida en Comunidad</h2>
+              </div>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => {
+                    const slider = document.getElementById('ministerios-slider');
+                    if (slider) slider.scrollBy({ left: -400, behavior: 'smooth' });
+                  }}
+                  className={`p-3 rounded-full border transition-colors ${darkMode ? 'border-stone-800 text-stone-100 hover:bg-stone-900' : 'border-stone-100 text-stone-900 hover:bg-stone-50'}`}
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button 
+                  onClick={() => {
+                    const slider = document.getElementById('ministerios-slider');
+                    if (slider) slider.scrollBy({ left: 400, behavior: 'smooth' });
+                  }}
+                  className={`p-3 rounded-full border transition-colors ${darkMode ? 'border-stone-800 text-stone-100 hover:bg-stone-900' : 'border-stone-100 text-stone-900 hover:bg-stone-50'}`}
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+
+            <div 
+              id="ministerios-slider"
+              className="flex gap-4 overflow-x-auto pb-10 pt-4 snap-x snap-mandatory scrollbar-hide items-center h-[550px]"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
               {ministerios.map((min, i) => (
                 <Link
                   key={i}
                   href={min.link}
-                  className="relative flex-1 hover:flex-[3] transition-all duration-700 ease-in-out overflow-hidden rounded-[2rem] group border dark:border-stone-900"
+                  className="relative min-w-[250px] md:min-w-[300px] h-[450px] rounded-[3rem] overflow-hidden group border dark:border-stone-900 snap-center transition-all duration-700 ease-in-out hover:min-w-[450px] shadow-lg hover:shadow-2xl"
                 >
-                  <img src={min.img} className="absolute inset-0 w-full h-full object-cover" alt={min.nombre} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-90 transition-opacity" />
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <p className="text-white text-[10px] uppercase tracking-[0.3em] font-bold opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0">Explorar</p>
-                    <h4 className="text-white text-xl md:text-2xl font-serif italic whitespace-nowrap">{min.nombre}</h4>
+                  <img src={min.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt={min.nombre} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-70 group-hover:opacity-80 transition-opacity" />
+                  
+                  <div className="absolute inset-0 p-10 flex flex-col justify-end">
+                    <div className="space-y-3">
+                      <p className="text-amber-400 text-[9px] uppercase tracking-[0.4em] font-black opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">Ministerio</p>
+                      <h4 className="text-white text-3xl md:text-4xl font-serif italic transform transition-transform duration-500 group-hover:-translate-y-2">{min.nombre}</h4>
+                      <div className="pt-4 flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-700 delay-100 translate-y-4 group-hover:translate-y-0">
+                        <span className="text-[10px] uppercase tracking-widest text-white border-b border-white/40 pb-1">Explorar</span>
+                        <ArrowRight size={14} className="text-white" />
+                      </div>
+                    </div>
                   </div>
                 </Link>
               ))}
+              <div className="min-w-[50px] h-full" />
             </div>
           </section>
 
@@ -218,7 +268,7 @@ export default function InicioPublico() {
               </p>
             </div>
             <div className={`w-full h-80 rounded-[3.5rem] overflow-hidden border transition-all duration-1000 ${darkMode ? 'border-stone-900 grayscale opacity-40' : 'border-stone-100 shadow-2xl'}`}>
-              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14875.844776964977!2d-75.23131990621366!3d-12.053088526400664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x910e97906be66211%3A0x72ef7b6021e61c77!2sCiudad%20de%20Refugio%20Huancayo!5e1!3m2!1ses!2spe!4v1775870732946!5m2!1ses!2spe" className="w-full h-full border-0" allowFullScreen={true} loading="lazy"></iframe>
+              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3718.8953119717407!2d-75.23562292724115!3d-12.057841179133254!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x910e97906be66211%3A0x72ef7b6021e61c77!2sCiudad%20de%20Refugio%20Huancayo!5e1!3m2!1ses-419!2sus!4v1776532414486!5m2!1ses-419!2sus" className="w-full h-full border-0" allowFullScreen={true} loading="lazy"></iframe>
             </div>
           </section>
 
