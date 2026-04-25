@@ -42,9 +42,18 @@ export default function ServirPage() {
               Ministerio de Servir
             </h2>
             <h1
-              className={`text-5xl lg:text-6xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+              className={`text-5xl lg:text-7xl font-serif italic leading-[1.1] ${
+                darkMode ? "text-stone-100" : "text-stone-900"
+              }`}
             >
-              Bienvenido a <br /> nuestra familia.
+              Bienvenido a <br />
+              <span
+                className={`transition-colors duration-700 ${
+                  darkMode ? "text-blue-400" : "text-blue-600"
+                }`}
+              >
+                nuestra familia.
+              </span>
             </h1>
             <p
               className={`text-sm font-light max-w-sm mx-auto leading-relaxed ${darkMode ? "text-stone-500" : "text-stone-400"}`}
@@ -57,32 +66,73 @@ export default function ServirPage() {
 
         {/* PILARES DE SERVICIO - Diseño Suave */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Card: Acogida */}
           <div
-            className={`p-8 rounded-[3rem] space-y-4 text-center transition-all ${darkMode ? "bg-stone-900/40" : "bg-white shadow-sm"}`}
+            className={`p-10 rounded-[3rem] space-y-5 text-center transition-all duration-500 hover:scale-[1.02] ${
+              darkMode
+                ? "bg-stone-900/40 border border-stone-800"
+                : "bg-white shadow-sm border border-stone-100"
+            }`}
           >
-            <DoorOpen size={28} className="mx-auto text-amber-500" />
-            <h3 className="font-serif italic text-2xl">Acogida</h3>
-            <p className="text-xs text-stone-500 leading-relaxed font-light">
+            <DoorOpen size={32} className="mx-auto text-amber-500" />
+            <h3
+              className={`font-serif italic text-3xl ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+            >
+              Acogida
+            </h3>
+            <p
+              className={`text-[11px] uppercase tracking-wider font-semibold leading-relaxed ${
+                darkMode ? "text-stone-400" : "text-stone-500"
+              }`}
+            >
               Una sonrisa y un abrazo al llegar pueden cambiar el día de
               cualquier persona.
             </p>
           </div>
+
+          {/* Card: Celebración */}
           <div
-            className={`p-8 rounded-[3rem] space-y-4 text-center transition-all ${darkMode ? "bg-stone-900/40" : "bg-white shadow-sm"}`}
+            className={`p-10 rounded-[3rem] space-y-5 text-center transition-all duration-500 hover:scale-[1.02] ${
+              darkMode
+                ? "bg-stone-900/40 border border-stone-800"
+                : "bg-white shadow-sm border border-stone-100"
+            }`}
           >
-            <Cake size={28} className="mx-auto text-rose-400" />
-            <h3 className="font-serif italic text-2xl">Celebración</h3>
-            <p className="text-xs text-stone-500 leading-relaxed font-light">
+            <Cake size={32} className="mx-auto text-rose-400" />
+            <h3
+              className={`font-serif italic text-3xl ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+            >
+              Celebración
+            </h3>
+            <p
+              className={`text-[11px] uppercase tracking-wider font-semibold leading-relaxed ${
+                darkMode ? "text-stone-400" : "text-stone-500"
+              }`}
+            >
               Honramos la vida de cada hermano celebrando sus cumpleaños dentro
               de nuestra familia.
             </p>
           </div>
+
+          {/* Card: Nuevos Amigos */}
           <div
-            className={`p-8 rounded-[3rem] space-y-4 text-center transition-all ${darkMode ? "bg-stone-900/40" : "bg-white shadow-sm"}`}
+            className={`p-10 rounded-[3rem] space-y-5 text-center transition-all duration-500 hover:scale-[1.02] ${
+              darkMode
+                ? "bg-stone-900/40 border border-stone-800"
+                : "bg-white shadow-sm border border-stone-100"
+            }`}
           >
-            <UserPlus size={28} className="mx-auto text-emerald-500" />
-            <h3 className="font-serif italic text-2xl">Nuevos Amigos</h3>
-            <p className="text-xs text-stone-500 leading-relaxed font-light">
+            <UserPlus size={32} className="mx-auto text-emerald-500" />
+            <h3
+              className={`font-serif italic text-3xl ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+            >
+              Nuevos Amigos
+            </h3>
+            <p
+              className={`text-[11px] uppercase tracking-wider font-semibold leading-relaxed ${
+                darkMode ? "text-stone-400" : "text-stone-500"
+              }`}
+            >
               Acompañamos a quienes nos visitan por primera vez para que se
               sientan parte desde el minuto uno.
             </p>
@@ -111,16 +161,32 @@ export default function ServirPage() {
                 importan. Desde un café caliente hasta recordar un nombre, cada
                 gesto está diseñado para reflejar el amor de Dios.
               </p>
-              <div className="grid grid-cols-2 gap-6 pt-4">
-                <div className="flex items-start gap-3">
-                  <Coffee size={18} className="text-stone-400 shrink-0" />
-                  <p className="text-[11px] text-stone-500 italic">
+              {/* Grid de Detalles (Iconos actualizados) */}
+              <div className="grid grid-cols-2 gap-8 pt-6">
+                <div className="flex items-start gap-4 group">
+                  <Coffee
+                    size={24}
+                    className="text-amber-600 shrink-0 transition-transform group-hover:rotate-12"
+                  />
+                  <p
+                    className={`text-[12px] font-medium italic leading-snug ${
+                      darkMode ? "text-stone-300" : "text-stone-600"
+                    }`}
+                  >
                     Hospitalidad constante en cada reunión.
                   </p>
                 </div>
-                <div className="flex items-start gap-3">
-                  <Gift size={18} className="text-stone-400 shrink-0" />
-                  <p className="text-[11px] text-stone-500 italic">
+
+                <div className="flex items-start gap-4 group">
+                  <Gift
+                    size={24}
+                    className="text-amber-600 shrink-0 transition-transform group-hover:-rotate-12"
+                  />
+                  <p
+                    className={`text-[12px] font-medium italic leading-snug ${
+                      darkMode ? "text-stone-300" : "text-stone-600"
+                    }`}
+                  >
                     Atención especial en fechas importantes.
                   </p>
                 </div>

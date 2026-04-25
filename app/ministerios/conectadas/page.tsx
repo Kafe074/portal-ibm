@@ -29,7 +29,7 @@ export default function ConectadasPage() {
             ${darkMode ? "text-stone-600 hover:text-stone-200" : "text-stone-400 hover:text-stone-900"}`}
         >
           <ArrowLeft size={12} />
-            Volver al Inicio
+          Volver al Inicio
         </Link>
 
         {/* HERO - Elegante y Minimalista */}
@@ -41,9 +41,14 @@ export default function ConectadasPage() {
               Ministerio de Mujeres
             </h2>
             <h1
-              className={`text-5xl lg:text-6xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+              className={`text-5xl lg:text-7xl font-serif italic leading-tight ${
+                darkMode ? "text-stone-100" : "text-stone-900"
+              }`}
             >
-              Conectadas en <br /> Gracia y Propósito.
+              Conectadas en <br />
+              <span className={darkMode ? "text-rose-300" : "text-rose-500"}>
+                Gracia y Propósito.
+              </span>
             </h1>
             <p
               className={`text-sm font-light italic max-w-md mx-auto ${darkMode ? "text-stone-500" : "text-stone-500"}`}
@@ -105,7 +110,7 @@ export default function ConectadasPage() {
             <div className="lg:col-span-5 space-y-6">
               <div className="space-y-2">
                 <span className="text-[10px] font-bold text-rose-400 uppercase tracking-widest">
-                   Actividades
+                  Actividades
                 </span>
                 <h3
                   className={`text-3xl font-serif italic ${darkMode ? "text-stone-200" : "text-stone-800"}`}
@@ -151,7 +156,9 @@ export default function ConectadasPage() {
           </p>
           <div className="flex justify-center gap-10 pt-4">
             <div className="text-center">
-              <p className="text-2xl font-serif italic text-rose-400">Sabados</p>
+              <p className="text-2xl font-serif italic text-rose-400">
+                Sábados
+              </p>
               <p className="text-[8px] uppercase tracking-widest text-stone-400 font-bold">
                 Reuniones
               </p>
@@ -168,14 +175,35 @@ export default function ConectadasPage() {
         </section>
 
         {/* FOOTER QUOTE */}
-        <section className="text-center py-10 max-w-xl mx-auto">
-          <Quote size={20} className="mx-auto text-rose-200 mb-6" />
-          <p
-            className={`text-lg font-serif italic ${darkMode ? "text-stone-400" : "text-stone-500"}`}
-          >
-            "Mujer virtuosa, ¿quién la hallará? Porque su estima sobrepasa
-            largamente a la de las piedras preciosas."
-          </p>
+        <section className="text-center py-16 max-w-2xl mx-auto">
+          <Quote size={28} className="mx-auto text-rose-300/50 mb-8" />
+
+          <div className="space-y-6">
+            <p
+              className={`text-xl md:text-2xl font-serif italic leading-relaxed ${
+                darkMode ? "text-stone-300" : "text-stone-600"
+              }`}
+            >
+              "Mujer virtuosa, ¿quién la hallará? Porque su estima sobrepasa
+              largamente a la de las piedras preciosas."
+            </p>
+
+            {/* Referencia del Versículo */}
+            <span
+              className={`block font-serif italic text-lg ${
+                darkMode ? "text-rose-400" : "text-rose-500"
+              }`}
+            >
+              — Proverbios 31:10
+            </span>
+          </div>
+
+          {/* Un detalle visual sutil debajo de la cita */}
+          <div className="mt-10 flex justify-center opacity-20">
+            <div
+              className={`h-px w-20 ${darkMode ? "bg-stone-700" : "bg-stone-200"}`}
+            />
+          </div>
         </section>
       </main>
     </div>

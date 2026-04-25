@@ -122,11 +122,37 @@ export default function CursosPublico() {
 
                 </div>
 
-                <footer className="py-12 text-center">
-                    <p className="text-[8px] uppercase tracking-[0.8em] opacity-30 font-bold italic">
-                        Equipando a los cristianos para la obra del ministerio
-                    </p>
-                </footer>
+                <footer className="py-24 text-center border-t border-stone-100 dark:border-stone-900 mt-20">
+            <div className="space-y-6">
+              {/* Frase Principal con más presencia */}
+              <p
+                className={`text-xs md:text-sm uppercase tracking-[0.6em] font-black italic transition-colors duration-500 ${
+                  darkMode ? "text-amber-500/80" : "text-stone-400"
+                }`}
+              >
+                Equipando a los cristianos para la vida en el reino de Dios.
+              </p>
+
+              {/* Separador Minimalista */}
+              <div className="flex justify-center items-center gap-4 opacity-20">
+                <div
+                  className={`h-px w-12 ${darkMode ? "bg-stone-100" : "bg-stone-900"}`}
+                />
+                <div
+                  className={`w-1 h-1 rounded-full ${darkMode ? "bg-stone-100" : "bg-stone-900"}`}
+                />
+                <div
+                  className={`h-px w-12 ${darkMode ? "bg-stone-100" : "bg-stone-900"}`}
+                />
+              </div>
+
+              {/* Créditos opcionales o copyright */}
+              <p className="text-[9px] uppercase tracking-widest opacity-40 font-medium">
+                &copy; {new Date().getFullYear()} Iglesia Brisas del Mantaro —
+                Huancayo
+              </p>
+            </div>
+          </footer>
             </div>
 
             <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />

@@ -173,31 +173,30 @@ export default function Sidebar({ darkMode, setDarkMode }: SidebarProps) {
         <div className="mt-auto pb-10 flex flex-col items-center border-t border-stone-200 dark:border-stone-800 pt-6 group">
           <button
             onClick={() => setDarkMode(!darkMode)}
-            className={`p-4 rounded-full transition-all duration-500 flex items-center justify-center w-full px-7 ${
-              darkMode
-                ? "text-stone-500 hover:text-stone-200"
-                : "text-stone-400 hover:text-stone-900"
-            }`}
+            className="relative p-4 rounded-full transition-all duration-500 flex items-center justify-start w-full px-7"
           >
-            {darkMode ? (
-              <Sun
-                size={18}
-                strokeWidth={1.2}
-                className="transition-transform group-hover:rotate-45"
-              />
-            ) : (
-              <Moon
-                size={18}
-                strokeWidth={1.2}
-                className="transition-transform group-hover:-rotate-12"
-              />
-            )}
+            {/* Contenedor del Icono: Siempre centrado en el ancho colapsado */}
+            <div className="flex items-center justify-center shrink-0 w-6">
+              {darkMode ? (
+                <Sun
+                  size={18}
+                  strokeWidth={1.2}
+                  className="transition-transform group-hover:rotate-45"
+                />
+              ) : (
+                <Moon
+                  size={18}
+                  strokeWidth={1.2}
+                  className="transition-transform group-hover:-rotate-12"
+                />
+              )}
+            </div>
 
-            {/* Texto dinámico igual que los items */}
+            {/* Texto dinámico: Se oculta físicamente con hidden para que no ocupe espacio en PC colapsado */}
             <span
-              className={`ml-4 text-[10px] font-bold uppercase tracking-[0.3em] transition-all duration-700 ${
+              className={`ml-6 text-[10px] font-bold uppercase tracking-[0.3em] whitespace-nowrap transition-all duration-700 ${
                 isCollapsed
-                  ? "lg:opacity-0 lg:-translate-x-10"
+                  ? "lg:opacity-0 lg:-translate-x-10 lg:pointer-events-none"
                   : "opacity-100 translate-x-0"
               }`}
             >

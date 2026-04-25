@@ -108,13 +108,20 @@ export default function ProduccionPage() {
             color="bg-rose-600"
             darkMode={darkMode}
           />
-          <TechCard
-            icon={Share2}
-            title="Social Media"
-            desc="Conectando con el mundo a través de Facebook y redes sociales, llevando el mensaje más allá."
-            color="bg-cyan-600"
-            darkMode={darkMode}
-          />
+          <a
+            href="https://www.facebook.com/iddphyo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block transition-transform hover:scale-[1.02]"
+          >
+            <TechCard
+              icon={Share2}
+              title="Social Media"
+              desc="Conectando con el mundo a través de Facebook y redes sociales, llevando el mensaje más allá."
+              color="bg-cyan-600"
+              darkMode={darkMode}
+            />
+          </a>
         </div>
 
         {/* SECCIÓN "EL EQUIPO" - ESTILO DARK/CINEMÁTICO */}
@@ -144,43 +151,65 @@ export default function ProduccionPage() {
                   </p>
                 </div>
 
-                <div className="flex gap-8 items-center pt-6">
+                <div className="flex gap-8 items-center pt-8">
                   {/* Excelencia en el detalle */}
-                  <div className="flex flex-col">
+                  <div className="flex flex-col group">
                     <span
-                      className={`font-serif italic text-2xl ${darkMode ? "text-cyan-400" : "text-cyan-600"}`}
+                      className={`font-serif italic text-3xl transition-colors duration-500 ${
+                        darkMode ? "text-cyan-400" : "text-cyan-600"
+                      }`}
                     >
                       Excelencia
                     </span>
-                    <span className="text-[8px] uppercase tracking-widest text-stone-500">
+                    <span
+                      className={`text-[10px] uppercase tracking-[0.2em] font-semibold mt-1 ${
+                        darkMode ? "text-stone-400" : "text-stone-500"
+                      }`}
+                    >
                       En cada detalle visual
                     </span>
                   </div>
 
-                  <div className="w-[1px] h-10 bg-stone-800/30" />
+                  <div
+                    className={`w-[1px] h-12 ${darkMode ? "bg-stone-700" : "bg-stone-200"}`}
+                  />
 
                   {/* Compromiso constante */}
-                  <div className="flex flex-col">
+                  <div className="flex flex-col group">
                     <span
-                      className={`font-serif italic text-2xl ${darkMode ? "text-purple-400" : "text-purple-600"}`}
+                      className={`font-serif italic text-3xl transition-colors duration-500 ${
+                        darkMode ? "text-purple-400" : "text-purple-600"
+                      }`}
                     >
                       Corazón
                     </span>
-                    <span className="text-[8px] uppercase tracking-widest text-stone-500">
+                    <span
+                      className={`text-[10px] uppercase tracking-[0.2em] font-semibold mt-1 ${
+                        darkMode ? "text-stone-400" : "text-stone-500"
+                      }`}
+                    >
                       Servicio voluntario
                     </span>
                   </div>
 
-                  <div className="w-[1px] h-10 bg-stone-800/30" />
+                  <div
+                    className={`w-[1px] h-12 ${darkMode ? "bg-stone-700" : "bg-stone-200"}`}
+                  />
 
                   {/* Enfoque sin distracciones */}
-                  <div className="flex flex-col">
+                  <div className="flex flex-col group">
                     <span
-                      className={`font-serif italic text-2xl ${darkMode ? "text-rose-400" : "text-rose-600"}`}
+                      className={`font-serif italic text-3xl transition-colors duration-500 ${
+                        darkMode ? "text-rose-400" : "text-rose-600"
+                      }`}
                     >
                       Claridad
                     </span>
-                    <span className="text-[8px] uppercase tracking-widest text-stone-500">
+                    <span
+                      className={`text-[10px] uppercase tracking-[0.2em] font-semibold mt-1 ${
+                        darkMode ? "text-stone-400" : "text-stone-500"
+                      }`}
+                    >
                       Mensaje sin barreras
                     </span>
                   </div>

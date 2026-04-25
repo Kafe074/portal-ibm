@@ -13,6 +13,8 @@ import {
   Sparkles,
   BookOpen,
   ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Link from "next/link";
@@ -210,6 +212,24 @@ export default function MisionesPage() {
     mapRef.current?.flyTo({ center: [lng, lat], zoom: 6, duration: 2500 });
   };
 
+  const [currentIndices, setCurrentIndices] = useState<{
+    [key: number]: number;
+  }>({});
+
+  const handleNext = (viajeIdx: number, totalImages: number) => {
+    setCurrentIndices((prev) => ({
+      ...prev,
+      [viajeIdx]: ((prev[viajeIdx] || 0) + 1) % totalImages,
+    }));
+  };
+
+  const handlePrev = (viajeIdx: number, totalImages: number) => {
+    setCurrentIndices((prev) => ({
+      ...prev,
+      [viajeIdx]: ((prev[viajeIdx] || 0) - 1 + totalImages) % totalImages,
+    }));
+  };
+
   return (
     <div
       className={`flex flex-col lg:flex-row-reverse min-h-screen transition-colors duration-700 ${darkMode ? "bg-[#121212]" : "bg-[#fafafa]"}`}
@@ -217,8 +237,7 @@ export default function MisionesPage() {
       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
 
       <main className="flex-1 p-4 md:p-10 space-y-12 overflow-y-auto pt-24 lg:pt-10 scrollbar-hide">
-
-      <Link
+        <Link
           href="/"
           className={`inline-flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] transition-all
             ${darkMode ? "text-stone-600 hover:text-stone-200" : "text-stone-400 hover:text-stone-900"}`}
@@ -390,51 +409,112 @@ export default function MisionesPage() {
         </div>
 
         {/* 2. SECCIÓN: BITÁCORA DE VIAJES (CON FOTOS) */}
-        <section className="max-w-7xl mx-auto space-y-10">
-          <div className="flex items-center gap-4 border-b border-stone-200 dark:border-stone-800 pb-6">
-            <Camera size={28} className="text-amber-500" />
+        <section className="max-w-7xl mx-auto space-y-12">
+          <div className="flex items-center gap-6 border-b border-stone-200 dark:border-stone-800 pb-8">
+            <Camera size={32} className="text-amber-500" />
             <h3
-              className={`text-4xl font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}
+              className={`text-5xl font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}
             >
               Bitácora de Viajes
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {[
               {
                 lugar: "Puerto Bermudes",
                 fecha: "Agosto 2025",
                 desc: "Nuestra última expedición a Puerto Bermudes. Trabajamos en el evangelismo dentro de la ciudad al igual que las comunidades aledañas con acceso un poco más complicado.",
-                img: "/ministerios/misiones/seccion2/viaje-selva.jpg",
-              }
-            ].map((viaje, i) => (
-              <div
-                key={i}
-                className={`group overflow-hidden rounded-[3rem] border transition-all duration-500 ${darkMode ? "bg-stone-900/50 border-stone-800" : "bg-white border-stone-100 shadow-sm hover:shadow-xl"}`}
-              >
-                <div className="h-64 overflow-hidden">
-                  <img
-                    src={viaje.img}
-                    alt={viaje.lugar}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                  />
+                // Ahora aceptamos un array de imágenes
+                images: [
+                  "/ministerios/misiones/seccion2/viaje-selva.jpg",
+                  "/ministerios/misiones/seccion2/viaje-selva-2.jpg",
+                  "/ministerios/misiones/seccion2/viaje-selva-3.jpg",
+                ],
+              },
+            ].map((viaje, i) => {
+              const currentIndex = currentIndices[i] || 0;
+
+              return (
+                <div
+                  key={i}
+                  className={`group overflow-hidden rounded-[3.5rem] border transition-all duration-700 ${
+                    darkMode
+                      ? "bg-stone-900/40 border-stone-800 hover:border-stone-700"
+                      : "bg-white border-stone-100 shadow-sm hover:shadow-2xl"
+                  }`}
+                >
+                  {/* CONTENEDOR DEL CARRUSEL DE IMÁGENES */}
+                  <div className="relative h-80 overflow-hidden">
+                    {/* Navegación del Carrusel (Solo visible en hover) */}
+                    <div className="absolute inset-0 z-10 flex justify-between items-center px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <button
+                        onClick={() => handlePrev(i, viaje.images.length)}
+                        className="p-2 rounded-full bg-black/20 backdrop-blur-md text-white hover:bg-black/40 transition-all"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      <button
+                        onClick={() => handleNext(i, viaje.images.length)}
+                        className="p-2 rounded-full bg-black/20 backdrop-blur-md text-white hover:bg-black/40 transition-all"
+                      >
+                        <ChevronRight size={20} />
+                      </button>
+                    </div>
+
+                    {/* Indicadores de puntos (Dots) */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                      {viaje.images.map((_, dotIdx) => (
+                        <div
+                          key={dotIdx}
+                          className={`h-1 rounded-full transition-all duration-500 ${
+                            currentIndex === dotIdx
+                              ? "w-6 bg-amber-500"
+                              : "w-1 bg-white/50"
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Renderizado de la imagen con transición suave */}
+                    <div className="relative w-full h-full">
+                      {viaje.images.map((img, imgIdx) => (
+                        <img
+                          key={imgIdx}
+                          src={img}
+                          alt={`${viaje.lugar} ${imgIdx}`}
+                          className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${
+                            currentIndex === imgIdx
+                              ? "opacity-100 scale-100 translate-x-0"
+                              : "opacity-0 scale-110 translate-x-4 pointer-events-none"
+                          } ${imgIdx === currentIndex ? "grayscale-0" : "grayscale"}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* CONTENIDO DE TEXTO */}
+                  <div className="p-10 space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em]">
+                        {viaje.fecha}
+                      </span>
+                      <span className="text-[9px] opacity-40 font-bold uppercase tracking-widest">
+                        {currentIndex + 1} / {viaje.images.length}
+                      </span>
+                    </div>
+                    <h4
+                      className={`text-3xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-800"}`}
+                    >
+                      {viaje.lugar}
+                    </h4>
+                    <p className="text-base text-stone-500 dark:text-stone-400 font-light leading-relaxed">
+                      {viaje.desc}
+                    </p>
+                  </div>
                 </div>
-                <div className="p-8 space-y-3">
-                  <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest">
-                    {viaje.fecha}
-                  </span>
-                  <h4
-                    className={`text-2xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-800"}`}
-                  >
-                    {viaje.lugar}
-                  </h4>
-                  <p className="text-sm text-stone-500 font-light leading-relaxed">
-                    {viaje.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -470,14 +550,18 @@ export default function MisionesPage() {
                       <p
                         className={`text-sm font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}
                       >
-                        Sábado 02 de Mayo, 4:00 PM
+                        Sábado 26 de Abril, 10:00 AM
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
-              <button onClick={() => window.open('https://wa.me/51956055194', '_blank')} 
-              className="mt-8 w-full py-4 rounded-full bg-amber-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20">
+              <button
+                onClick={() =>
+                  window.open("https://wa.me/51956055194", "_blank")
+                }
+                className="mt-8 w-full py-4 rounded-full bg-amber-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20"
+              >
                 Sumarme al equipo
               </button>
             </div>
