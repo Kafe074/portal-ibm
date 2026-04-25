@@ -96,7 +96,7 @@ const puntos = [
     id: 4,
     name: "Chilca, Perú",
     misionero: "Susi Huillcas y Paola Arauco",
-    proyecto: "Ministerio de Reconciliación Familiar",
+    proyecto: "Casa Reconciliación Familiar",
     fotos: [
       "/ministerios/misiones/chilca.jpg",
       "/ministerios/misiones/chilca_1.jpg",
@@ -127,7 +127,7 @@ const puntos = [
     testimonios: [
       {
         autor: "Percy ",
-        texto: "Amando al prójimo y enseñándole del amor de nuestro Padre.",
+        texto: "Ser la luz a la comunidad indigena Urarinas Maypuco y alcanzar a las otras comunidades indigenas alrededor.",
       },
     ],
     peticiones: [
@@ -150,7 +150,7 @@ const puntos = [
     testimonios: [
       {
         autor: "Lince ",
-        texto: "Trabajando con niños que entreguen su corazón a Dios.",
+        texto: "Evangelizar las comunidades Aimaras en el lago Titicaca.",
       },
     ],
     peticiones: ["Salud para los niños", "Materiales didácticos bilingües"],
