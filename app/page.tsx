@@ -51,7 +51,7 @@ export default function InicioPublico() {
   ]
 
   const ministerios = [
-    { nombre: "Misiones", img: "/ministerios/index/misiones.jpg", link: "/ministerios/misiones" },
+    { nombre: "Misiones", img: "/ministerios/index/misiones_1.jpg", link: "/ministerios/misiones" },
     { nombre: "Acción Social", img: "/ministerios/index/accion-social.jpg", link: "/ministerios/accion-social" },
     { nombre: "Alabanza", img: "/ministerios/index/alabanza.jpg", link: "/ministerios/alabanza" },
     { nombre: "Escuela Dominical", img: "/ministerios/index/ninos.jpg", link: "/ministerios/escuela-dominical" },

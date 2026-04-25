@@ -97,7 +97,7 @@ export default function ConectadasPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 rounded-[3rem] overflow-hidden aspect-[16/9] shadow-sm">
               <img
-                src="/ministerios/conectadas-actividad.jpg"
+                src="/ministerios/index/conectadas.jpg"
                 className="w-full h-full object-cover"
                 alt="Encuentro de hermanas"
               />

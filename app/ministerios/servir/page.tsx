@@ -128,7 +128,7 @@ export default function ServirPage() {
             </div>
             <div className="order-1 lg:order-2 rounded-[3.5rem] overflow-hidden aspect-square lg:aspect-video shadow-2xl shadow-stone-200 dark:shadow-none">
               <img
-                src="/ministerios/servir-bienvenida.jpg"
+                src="/ministerios/index/servir_1.jpg"
                 className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
                 alt="Hospitalidad"
               />
