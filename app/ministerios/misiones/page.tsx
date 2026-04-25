@@ -127,7 +127,8 @@ const puntos = [
     testimonios: [
       {
         autor: "Percy ",
-        texto: "Ser la luz a la comunidad indigena Urarinas Maypuco y alcanzar a las otras comunidades indigenas alrededor.",
+        texto:
+          "Ser la luz a la comunidad indigena Urarinas Maypuco y alcanzar a las otras comunidades indigenas alrededor.",
       },
     ],
     peticiones: [
@@ -247,17 +248,53 @@ export default function MisionesPage() {
         </Link>
 
         {/* HEADER */}
-        <div className="flex flex-col space-y-2 text-center lg:text-left">
-          <h2
-            className={`text-[10px] font-bold uppercase tracking-[0.4em] ${darkMode ? "text-stone-500" : "text-stone-400"}`}
-          >
-            Evangelismo e Impacto
-          </h2>
-          <h1
-            className={`text-4xl md:text-6xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}
-          >
-            Nuestra Huella Misionera
-          </h1>
+        <div className="flex flex-col space-y-10 text-center lg:text-left max-w-3xl">
+          {/* Cabecera: Subtítulo + Título */}
+          <div className="space-y-3">
+            <h2
+              className={`text-[10px] font-black uppercase tracking-[0.5em] ${
+                darkMode ? "text-stone-500" : "text-stone-400"
+              }`}
+            >
+              Evangelismo e Impacto
+            </h2>
+            <h1
+              className={`text-4xl md:text-6xl font-serif italic leading-tight ${
+                darkMode ? "text-stone-100" : "text-stone-900"
+              }`}
+            >
+              Nuestra{" "}
+              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+                Huella Misionera
+              </span>
+            </h1>
+          </div>
+
+          {/* Bloque del Versículo: Más minimalista y aireado */}
+          <div className="flex flex-col space-y-6">
+            <div
+              className={`relative ${darkMode ? "text-stone-400" : "text-stone-600"}`}
+            >
+              {/* Línea decorativa lateral (solo visible en desktop para guiar la lectura) */}
+              <div className="hidden lg:block absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-amber-500/50 to-transparent"></div>
+
+              <p className="text-lg md:text-xl font-serif italic leading-relaxed tracking-wide">
+                "Pero recibiréis poder, cuando haya venido sobre vosotros el
+                Espíritu Santo, y me seréis testigos en Jerusalén, en toda
+                Judea, en Samaria, y hasta lo último de la tierra."
+              </p>
+            </div>
+
+            {/* Referencia: Hechos 1:8 */}
+            <div className="flex items-center justify-center lg:justify-start gap-4">
+              <span
+                className={`h-px w-8 ${darkMode ? "bg-stone-800" : "bg-stone-200"}`}
+              ></span>
+              <p className="text-[11px] font-black uppercase tracking-[0.3em] text-amber-600">
+                Hechos 1:8
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* CONTENEDOR MAPA Y INFO (RESPONSIVE) */}
@@ -275,8 +312,13 @@ export default function MisionesPage() {
                     strokeWidth={1}
                     className={darkMode ? "text-white" : "text-black"}
                   />
-                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold">
-                    Selecciona un marcador en el mapa
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-950">
+                    Las misiones es el mandato de nuestro Señor Jesucristo y en
+                    obediencia a ello nos extendemos.
+                  </p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-black">
+                    El Tambo | Chilca | San Jeronimo | Islas Flotantes - Puno |
+                    Maypuco - Loreto | Egipto | Malasia
                   </p>
                 </div>
               ) : (
