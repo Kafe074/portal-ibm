@@ -23,12 +23,12 @@ const coloresMinisterios: {
   [key: string]: { bg: string; text: string; border: string };
 } = {
   General: { bg: "#e7e5e4", text: "#44403c", border: "#d6d3d1" },
-  Producción: { bg: "#fce7f3", text: "#9d174d", border: "#fbcfe8" },
-  Alabanza: { bg: "#fef9c3", text: "#854d0e", border: "#fef08a" },
-  Servir: { bg: "#dcfce7", text: "#166534", border: "#bbf7d0" },
-  Conectadas: { bg: "#fae8ff", text: "#86198f", border: "#f5d0fe" },
-  Niños: { bg: "#ffedd5", text: "#9a3412", border: "#fed7aa" },
-  Misiones: { bg: "#dbeafe", text: "#1e40af", border: "#bfdbfe" },
+  Producción: { bg: "#B0D1F5", text: "#1772D4", border: "#B0D1F5" },
+  Alabanza: { bg: "#CCF0BD", text: "#78D455", border: "#CCF0BD" },
+  Servir: { bg: "#EFF0B6", text: "#E5E835", border: "#EFF0B6" },
+  Conectadas: { bg: "#F0D1EB", text: "#EB78D7", border: "#F0D1EB" },
+  Niños: { bg: "#E0AFB2", text: "#BA434A", border: "#E0AFB2" },
+  Misiones: { bg: "#D9BDA9", text: "#CC7435", border: "#D9BDA9" },
   "Jóvenes y Adolescentes": {
     bg: "#ede9fe",
     text: "#5b21b6",
