@@ -99,7 +99,7 @@ export default function Talentos() {
                                 playsInline
                                 className="w-full h-full object-cover grayscale opacity-60 transition-all duration-700 group-hover:scale-105"
                             >
-                                <source src="/talentos/talentos_7.mp4" type="video/mp4" />
+                                <source src="https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147442/talentos_7_uaekvi.mp4" />
                                 Tu navegador no soporta videos.
                             </video>
                             

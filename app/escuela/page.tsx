@@ -94,7 +94,7 @@ export default function EscuelaDominical() {
       fotos: [
         "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/estrellitas",
         "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/estrellitas_1",
-        "/escuela/estrellitas_2.mp4",
+        "https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147102/estrellitas_2_dug3z5.mp4",
       ],
     },
     {
@@ -105,7 +105,7 @@ export default function EscuelaDominical() {
       fotos: [
         "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/campeones",
         "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/campeones_1",
-        "/escuela/campeones_2.mp4",
+        "https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147101/campeones_2_rel0z9.mp4",
       ],
     },
     {
@@ -113,14 +113,14 @@ export default function EscuelaDominical() {
       nombre: "Pre-Adolescentes",
       desc: "Cimentando la fe con respuestas reales a sus preguntas en un entorno de confianza.",
       color: "text-purple-500",
-      fotos: ["https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/pre", "/escuela/pre_1.mp4"],
+      fotos: ["https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/pre", "https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147102/pre_1_cnxsm1.mp4"],
     },
     {
       rango: "16 a 18 años",
       nombre: "Adolescentes",
       desc: "Liderazgo, servicio y una fe inquebrantable para impactar su entorno actual.",
       color: "text-emerald-500",
-      fotos: ["https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/teens", "/escuela/teens_1.mp4"],
+      fotos: ["https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/teens", "https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147101/teens_1_rtk9y0.mp4"],
     },
   ];
 
@@ -183,7 +183,7 @@ export default function EscuelaDominical() {
                     playsInline
                     className="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110"
                   >
-                    <source src="/escuela/escuela_video.MOV" type="video/mp4" />
+                    <source src="https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147101/escuela_video_mrn9ng.mp4" />
                   </video>
 
                   {/* Overlay sutil para dar profundidad pero manteniendo el color */}
