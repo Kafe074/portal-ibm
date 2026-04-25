@@ -28,8 +28,8 @@ const puntos = [
     misionero: "Familia Romero",
     proyecto: "Plantación y Discipulado en la Selva Central",
     fotos: [
-      "/ministerios/misiones/mazamari.jpg",
-      "/ministerios/misiones/mazamari_1.jpg",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/mazamari",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/mazamari_1",
     ],
     testimonios: [
       {
@@ -53,8 +53,8 @@ const puntos = [
     misionero: "Chalay Santo",
     proyecto: "Modelo de Iglesia en Casa",
     fotos: [
-      "/ministerios/misiones/chalay.jpeg",
-      "/ministerios/misiones/chalay_1.jpeg",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/chalay",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/chalay_1",
     ],
     testimonios: [
       {
@@ -74,8 +74,8 @@ const puntos = [
     misionero: "Familia Taboada",
     proyecto: "Misión en las Alturas de Huancavelica",
     fotos: [
-      "/ministerios/misiones/pazos.jpg",
-      "/ministerios/misiones/pazos_1.jpg",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/pazos",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/pazos_1",
     ],
     testimonios: [
       {
@@ -98,8 +98,8 @@ const puntos = [
     misionero: "Susi Huillcas y Paola Arauco",
     proyecto: "Casa Reconciliación Familiar",
     fotos: [
-      "/ministerios/misiones/chilca.jpg",
-      "/ministerios/misiones/chilca_1.jpg",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/chilca",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/chilca_1",
     ],
     testimonios: [
       {
@@ -121,8 +121,8 @@ const puntos = [
     misionero: "Percy ",
     proyecto: "Luz en el Amazonas",
     fotos: [
-      "/ministerios/misiones/maypuco.jpg",
-      "/ministerios/misiones/maypuco_1.jpg",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/maypuco",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/maypuco_1",
     ],
     testimonios: [
       {
@@ -144,8 +144,8 @@ const puntos = [
     misionero: "Lince ",
     proyecto: "Generación Semilla en el Titicaca",
     fotos: [
-      "/ministerios/misiones/ccapi.jpg",
-      "/ministerios/misiones/ccapi_1.jpg",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/ccapi",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/ccapi_1",
     ],
     testimonios: [
       {
@@ -164,8 +164,8 @@ const puntos = [
     misionero: "Familia Angulo ",
     proyecto: "Puentes Culturales en el Medio Oriente",
     fotos: [
-      "/ministerios/misiones/cairo.jpeg",
-      "/ministerios/misiones/egipto_1.jpg",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/cairo",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/egipto_1",
     ],
     testimonios: [
       {
@@ -187,8 +187,8 @@ const puntos = [
     misionero: "Familia Cusilayme ",
     proyecto: "Misión en el Sudeste Asiático",
     fotos: [
-      "/ministerios/misiones/malasia.jpeg",
-      "/ministerios/misiones/malasia_1.jpeg",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/malasia",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/malasia_1",
     ],
     testimonios: [
       {
@@ -427,9 +427,9 @@ export default function MisionesPage() {
                 desc: "Nuestra última expedición a Puerto Bermudes. Trabajamos en el evangelismo dentro de la ciudad al igual que las comunidades aledañas con acceso un poco más complicado.",
                 // Ahora aceptamos un array de imágenes
                 images: [
-                  "/ministerios/misiones/seccion2/viaje-selva.jpg",
-                  "/ministerios/misiones/seccion2/viaje-selva-2.jpg",
-                  "/ministerios/misiones/seccion2/viaje-selva-3.jpg",
+                  "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/seccion2/viaje-selva",
+                  "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777144964/iglesia-portal/ministerios/misiones/seccion2/viaje-selva-2",
+                  "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777144964/iglesia-portal/ministerios/misiones/seccion2/viaje-selva-3",
                 ],
               },
             ].map((viaje, i) => {

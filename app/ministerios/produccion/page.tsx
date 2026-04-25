@@ -131,7 +131,7 @@ export default function ProduccionPage() {
           >
             <div className="aspect-[21/9] relative">
               <img
-                src="/ministerios/produccion/produccion.jpg"
+                src="https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/produccion/produccion"
                 className="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105"
                 alt="Backstage"
               />

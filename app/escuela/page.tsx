@@ -92,8 +92,8 @@ export default function EscuelaDominical() {
       desc: "Descubriendo las historias de la Biblia a través del asombro, el juego y la expresión creativa.",
       color: "text-red-500",
       fotos: [
-        "/escuela/estrellitas.jpg",
-        "/escuela/estrellitas_1.jpg",
+        "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/estrellitas",
+        "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/estrellitas_1",
         "/escuela/estrellitas_2.mp4",
       ],
     },
@@ -103,8 +103,8 @@ export default function EscuelaDominical() {
       desc: "Fortaleciendo su identidad en Cristo y cultivando amistades que duran para siempre.",
       color: "text-blue-500",
       fotos: [
-        "/escuela/campeones.jpg",
-        "/escuela/campeones_1.jpg",
+        "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/campeones",
+        "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/campeones_1",
         "/escuela/campeones_2.mp4",
       ],
     },
@@ -113,14 +113,14 @@ export default function EscuelaDominical() {
       nombre: "Pre-Adolescentes",
       desc: "Cimentando la fe con respuestas reales a sus preguntas en un entorno de confianza.",
       color: "text-purple-500",
-      fotos: ["/escuela/pre.jpg", "/escuela/pre_1.mp4"],
+      fotos: ["https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/pre", "/escuela/pre_1.mp4"],
     },
     {
       rango: "16 a 18 años",
       nombre: "Adolescentes",
       desc: "Liderazgo, servicio y una fe inquebrantable para impactar su entorno actual.",
       color: "text-emerald-500",
-      fotos: ["/escuela/teens.jpg", "/escuela/teens_1.mp4"],
+      fotos: ["https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/teens", "/escuela/teens_1.mp4"],
     },
   ];
 

@@ -28,7 +28,7 @@ export default function AlabanzaPage() {
       color: "from-blue-600/20 to-emerald-600/20",
       acento: "text-emerald-500",
       icon: Music,
-      imagen: "/ministerios/alabanza/alabanza-general.jpg",
+      imagen: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/alabanza/alabanza-general",
     },
     {
       id: "young",
@@ -39,7 +39,7 @@ export default function AlabanzaPage() {
       color: "from-purple-600/20 to-pink-600/20",
       acento: "text-purple-500",
       icon: Zap,
-      imagen: "/ministerios/alabanza-young.jpg",
+      imagen: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/alabanza/alabanza-young",
     },
   ];
 

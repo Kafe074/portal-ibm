@@ -162,7 +162,7 @@ export default function AccionSocialPage() {
             >
               {/* LA FOTO VA AQUÍ */}
               <img
-                src="/ministerios/accion-social/ciudad-refugio.jpg"
+                src="https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/accion-social/ciudad-refugio"
                 alt="Ciudad de Refugio"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />

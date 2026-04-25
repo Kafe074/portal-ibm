@@ -13,21 +13,21 @@ export default function CursosPublico() {
             descripcion: "Un recorrido para aprender sobre el reino de los cielos y el reino de las tinieblas, y cómo vivir en la luz.",
             duracion: "8 Sesiones",
             categoria: "Discipulado",
-            imagen: "/cursos/cursos_1.jpg"
+            imagen: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/cursos/cursos_1"
         },
         {
             titulo: "Libertad Financiera",
             descripcion: "Aprende a gestionar tus finanzas a la manera del reino de Dios.",
             duracion: "8 Sesiones",
             categoria: "Ministerial",
-            imagen: "/cursos/cursos_2.jpeg"
+            imagen: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/cursos/cursos_2"
         },
         {
             titulo: "Doctrina Basica 1",
             descripcion: "Principios bíblicos para el crecimiento espiritual y la vida cristiana.",
             duracion: "8 Sesiones",
             categoria: "Discipulado",
-            imagen: "/cursos/cursos_3.jpg"
+            imagen: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/cursos/cursos_3"
         },
     ]
 

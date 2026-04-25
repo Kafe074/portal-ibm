@@ -68,19 +68,19 @@ export default function ExperienciaClasesPage() {
 
   // Data de imágenes (puedes añadir más a cada array)
   const fotosEstrellitas = [
-    "/ministerios/escuela-dominical/estrellitas.jpg",
-    "/ministerios/escuela-dominical/estrellitas_1.jpg",
-    "/ministerios/escuela-dominical/estrellitas_2.jpg",
+    "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/escuela-dominical/estrellitas",
+    "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/escuela-dominical/estrellitas_1",
+    "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/escuela-dominical/estrellitas_2",
   ];
   const fotosCampeones = [
-    "/ministerios/escuela-dominical/campeones.jpg",
-    "/ministerios/escuela-dominical/campeones_2.jpg",
-    "/ministerios/escuela-dominical/campeones_1.jpg",
+    "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/escuela-dominical/campeones",
+    "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/escuela-dominical/campeones_2",
+    "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/escuela-dominical/campeones_1",
   ];
   const fotosPreAdos = [
-    "/ministerios/escuela-dominical/pre.jpg",
-    "/ministerios/escuela-dominical/pre_1.jpg",
-    "/ministerios/escuela-dominical/pre_2.jpg",
+    "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/escuela-dominical/pre",
+    "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/escuela-dominical/pre_1",
+    "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/escuela-dominical/pre_2",
   ];
 
   return (

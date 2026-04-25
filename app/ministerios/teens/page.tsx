@@ -71,7 +71,7 @@ export default function AdolescentesPage() {
         {/* BANNER CENTRAL - "THE VIBE" */}
         <section className="max-w-6xl mx-auto relative h-[300px] rounded-[3.5rem] overflow-hidden group">
           <img 
-            src="/ministerios/index/teens.jpg" 
+            src="https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/index/teens" 
             className="w-full h-full object-cover grayscale brightness-50 transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105"
             alt="Adolescentes comunidad"
           />

@@ -186,7 +186,7 @@ export default function GeneracionEmergentePage() {
             {/* Agregado isolate para manejar capas */}
             <div className="aspect-[21/9] relative">
               <img
-                src="/ministerios/index/jovenes.jpg"
+                src="https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/index/jovenes"
                 alt="Jóvenes compartiendo"
                 className="w-full h-full object-cover transition-all duration-1000 ease-in-out
           /* Estado inicial: Oscuro y con ligero zoom out */

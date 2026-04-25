@@ -92,7 +92,7 @@ export default function ComedorPopularPage() {
             ${darkMode ? "border-stone-800 grayscale-[0.3]" : "border-stone-100 shadow-2xl shadow-stone-200/50"}`}
           >
             <img
-              src="/ministerios/accion-social/comedor.jpg"
+              src="https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/accion-social/comedor"
               alt="Voluntarios sirviendo comida en el Comedor Misericordia"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
             />

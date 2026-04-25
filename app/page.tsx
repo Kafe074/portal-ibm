@@ -41,67 +41,67 @@ export default function InicioPublico() {
   }, [isPaused]); // El efecto se reinicia/limpia cuando cambia isPaused
 
   const fotosHistoria = [
-    { type: "image", url: "/historia/iglesia_niños.jpeg" },
-    { type: "image", url: "/historia/2.jpg" },
-    { type: "image", url: "/historia/paseo.jpeg" },
+    { type: "image", url: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/historia/lywjqyhpmgcsfo8dymvn" },
+    { type: "image", url: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/historia/2" },
+    { type: "image", url: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/historia/paseo" },
   ];
 
   const fotosVision = [
-    { type: "image", url: "/historia/1.jpg" },
-    { type: "image", url: "/historia/historia_3.jpg" },
-    { type: "image", url: "/historia/mision.jpg" },
+    { type: "image", url: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/historia/1" },
+    { type: "image", url: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/historia/historia_3" },
+    { type: "image", url: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/historia/mision" },
   ];
 
   const fotosMision = [
-    { type: "image", url: "/historia/4.jpg" },
-    { type: "image", url: "/historia/historia_6.jpg" },
-    { type: "image", url: "/historia/final.jpg" },
+    { type: "image", url: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/historia/4" },
+    { type: "image", url: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/historia/historia_6" },
+    { type: "image", url: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/historia/final" },
   ];
 
   const ministerios = [
     {
       nombre: "Misiones",
-      img: "/ministerios/index/misiones_1.jpg",
+      img: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/index/misiones_1",
       link: "/ministerios/misiones",
     },
     {
       nombre: "Acción Social",
-      img: "/ministerios/index/accion-social.jpg",
+      img: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/index/accion-social",
       link: "/ministerios/accion-social",
     },
     {
       nombre: "Alabanza",
-      img: "/ministerios/index/alabanza.jpg",
+      img: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/index/alabanza",
       link: "/ministerios/alabanza",
     },
     {
       nombre: "Escuela Dominical",
-      img: "/ministerios/index/ninos.jpg",
+      img: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/index/ninos",
       link: "/ministerios/escuela-dominical",
     },
     {
       nombre: "Producción",
-      img: "/ministerios/index/media.jpg",
+      img: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/index/media",
       link: "/ministerios/produccion",
     },
     {
       nombre: "Conectadas",
-      img: "/ministerios/index/mujeres.jpg",
+      img: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/index/mujeres",
       link: "/ministerios/conectadas",
     },
     {
       nombre: "Generación Emergente",
-      img: "/ministerios/index/jovenes.jpg",
+      img: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/index/jovenes",
       link: "/ministerios/jovenes",
     },
     {
       nombre: "Adolescentes",
-      img: "/ministerios/index/teens.jpg",
+      img: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/index/teens",
       link: "/ministerios/teens",
     },
     {
       nombre: "Servir",
-      img: "/ministerios/index/servir.jpg",
+      img: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/index/servir",
       link: "/ministerios/servir",
     },
   ];

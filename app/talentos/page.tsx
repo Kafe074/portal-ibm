@@ -40,7 +40,7 @@ export default function Talentos() {
             subtitulo: "Proverbios 22:6",
             desc: "Instruimos al joven en disciplina y orden con el fin de formar su carácter .",
             icono: <ShieldCheck size={16} />,
-            imgs: ["/talentos/talentos_1.jpg", "/talentos/talentos_2.jpg", "/talentos/talentos_5.jpg"],
+            imgs: ["https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/talentos/talentos_1", "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/talentos/talentos_2", "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/talentos/talentos_5"],
             currentSlide: slideValor1,
             setSlide: setSlideValor1
         },
@@ -49,7 +49,7 @@ export default function Talentos() {
             subtitulo: "1 Corintios 10:31",
             desc: "Buscamos la excelencia para la gloria de Dios. El fútbol es el campo donde practicamos la humildad y el compañerismo real.",
             icono: <Heart size={16} />,
-            imgs: ["/talentos/talentos_3.jpg", "/talentos/talentos_4.jpg"],
+            imgs: ["https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/talentos/talentos", "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/talentos/talentos_3", "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/talentos/talentos_4"],
             currentSlide: slideValor2,
             setSlide: setSlideValor2
         }
