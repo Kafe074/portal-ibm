@@ -50,8 +50,8 @@ const puntos = [
   {
     id: 2,
     name: "San Jerónimo de Túnan, Perú",
-    misionero: "Chalay Santo",
-    proyecto: "Modelo de Iglesia en Casa",
+    misionero: "Richard C. y Ana M.",
+    proyecto: "Iglesia en Casa Chalaysanto.",
     fotos: [
       "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/chalay",
       "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/chalay_1",
@@ -95,11 +95,11 @@ const puntos = [
   {
     id: 4,
     name: "Chilca, Perú",
-    misionero: "Susi Huillcas y Paola Arauco",
-    proyecto: "Casa Reconciliación Familiar",
+    misionero: "Paola C. y Judith A.",
+    proyecto: "Casa de Paz Reconciliación Familiar",
     fotos: [
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/chilca",
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/chilca_1",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777816078/WhatsApp_Image_2026-04-25_at_10.38.03_PM_ijaprt.jpg",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777816076/WhatsApp_Image_2026-05-02_at_9.48.06_PM_bu8qen.jpg",
     ],
     testimonios: [
       {
@@ -111,14 +111,14 @@ const puntos = [
       "Sanidad emocional en las familias",
       "Recursos para talleres comunitarios",
     ],
-    bio: "Susi y Paola enfocan su energía en el distrito de Chilca, trabajando directamente con mujeres y familias en riesgo. Su proyecto busca restaurar el tejido social a través de los valores del Reino y la mentoría personalizada.",
+    bio: " Paola enfocan su energía en el distrito de Chilca, trabajando directamente con mujeres y familias en riesgo. Su proyecto busca restaurar el tejido social a través de los valores del Reino y la mentoría personalizada.",
     lat: -12.085900440542568,
     lng: -75.20025828175238,
   },
   {
     id: 5,
     name: "Maypuco, Perú",
-    misionero: "Percy ",
+    misionero: "Percy R.",
     proyecto: "Luz en el Amazonas",
     fotos: [
       "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/maypuco",
@@ -126,7 +126,7 @@ const puntos = [
     ],
     testimonios: [
       {
-        autor: "Percy ",
+        autor: "Percy R.",
         texto:
           "Ser la luz a la comunidad indigena Urarinas Maypuco y alcanzar a las otras comunidades indigenas alrededor.",
       },
@@ -142,7 +142,7 @@ const puntos = [
   {
     id: 6,
     name: "Ccapi Los Uros, Perú",
-    misionero: "Lince ",
+    misionero: "Lince C.",
     proyecto: "Generación Semilla en el Titicaca",
     fotos: [
       "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/ccapi",
@@ -150,7 +150,7 @@ const puntos = [
     ],
     testimonios: [
       {
-        autor: "Lince ",
+        autor: "Lince C.",
         texto: "Evangelizar las comunidades Aimaras en el lago Titicaca.",
       },
     ],
