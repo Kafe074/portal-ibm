@@ -32,14 +32,14 @@ export default function AlabanzaPage() {
     },
     {
       id: "young",
-      titulo: "Alabanza Young",
+      titulo: "Grace and Mercy",
       subtitulo: "Energía y Pasión",
       descripcion:
         "El sonido de las nuevas generaciones. Un equipo dinámico enfocado en conectar con los jóvenes a través de ritmos modernos y una atmósfera vibrante.",
       color: "from-purple-600/20 to-pink-600/20",
       acento: "text-purple-500",
       icon: Zap,
-      imagen: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/alabanza/alabanza-young",
+      imagen: "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777812687/Gemini_Generated_Image_qzqn8fqzqn8fqzqn_swmppz.png",
     },
   ];
 
@@ -65,14 +65,26 @@ export default function AlabanzaPage() {
   const horarios = [
     {
       banda: "Alabanza General",
-      dia: "Viernes",
-      hora: "7:00 PM - 9:00 PM",
+      turnos: [
+        {
+          dias: "Viernes",
+          rango: "7:00 PM - 9:00 PM",
+        },
+      ],
       color: "text-emerald-500",
     },
     {
-      banda: "Alabanza Young",
-      dia: "Viernes",
-      hora: "6:30 PM - 8:30 PM",
+      banda: "Grace and Mercy",
+      turnos: [
+        {
+          dias: "Lunes, Miércoles, Jueves",
+          rango: "7:30 PM - 9:30 PM",
+        },
+        {
+          dias: "Sábado",
+          rango: "9:30 AM - 11:30 AM",
+        },
+      ],
       color: "text-purple-500",
     },
   ];
@@ -165,7 +177,7 @@ export default function AlabanzaPage() {
                     <div className="flex items-center gap-2">
                       <Mic2 size={14} className="text-stone-400" />
                       <span className="text-[9px] font-bold uppercase tracking-widest text-stone-300">
-                        
+
                       </span>
                     </div>
                   </div>
@@ -177,12 +189,14 @@ export default function AlabanzaPage() {
 
         {/* NUEVA SECCIÓN: HORARIOS DE ENSAYO */}
         <section
-          className={`p-12 rounded-[3.5rem] border transition-all ${darkMode ? "bg-stone-900/20 border-stone-800/50" : "bg-[#fafaf9] border-stone-100"}`}
+          className={`p-12 rounded-[3.5rem] border transition-all ${darkMode ? "bg-stone-900/20 border-stone-800/50" : "bg-[#fafaf9] border-stone-100"
+            }`}
         >
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <div className="space-y-2">
               <h3
-                className={`text-2xl font-serif italic ${darkMode ? "text-stone-200" : "text-stone-800"}`}
+                className={`text-2xl font-serif italic ${darkMode ? "text-stone-200" : "text-stone-800"
+                  }`}
               >
                 Cronograma de Ensayos
               </h3>
@@ -190,23 +204,32 @@ export default function AlabanzaPage() {
                 Preparación técnica y espiritual
               </p>
             </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 w-full md:w-auto">
               {horarios.map((h, i) => (
-                <div key={i} className="flex gap-4 items-center">
+                <div key={i} className="flex gap-4 items-start"> {/* Cambiado a items-start para múltiples líneas */}
                   <div
-                    className={`w-10 h-10 rounded-2xl flex items-center justify-center ${darkMode ? "bg-stone-800" : "bg-white shadow-sm"}`}
+                    className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${darkMode ? "bg-stone-800" : "bg-white shadow-sm"
+                      }`}
                   >
                     <Clock size={18} className={h.color} />
                   </div>
-                  <div>
+                  <div className="space-y-1">
                     <p
-                      className={`text-[10px] font-bold uppercase tracking-tighter ${darkMode ? "text-stone-300" : "text-stone-800"}`}
+                      className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? "text-stone-300" : "text-stone-800"
+                        }`}
                     >
                       {h.banda}
                     </p>
-                    <p className="text-sm font-light text-stone-500">
-                      {h.dia} • {h.hora}
-                    </p>
+
+                    {/* NUEVO: Mapeo de turnos para soportar uno o varios horarios */}
+                    {h.turnos.map((turno, idx) => (
+                      <p key={idx} className="text-sm font-light text-stone-500 leading-tight">
+                        <span className="opacity-70">{turno.dias}</span>
+                        <span className="mx-2 text-stone-300">•</span>
+                        <span className="font-medium">{turno.rango}</span>
+                      </p>
+                    ))}
                   </div>
                 </div>
               ))}

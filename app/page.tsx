@@ -126,11 +126,10 @@ export default function InicioPublico() {
                 <img
                   src="/IBM.png"
                   alt="Logo"
-                  className={`w-20 h-20 md:w-24 md:h-24 object-contain transition-all duration-1000 ${
-                    darkMode
+                  className={`w-20 h-20 md:w-24 md:h-24 object-contain transition-all duration-1000 ${darkMode
                       ? "opacity-40 grayscale invert" // Tema Oscuro: Mismo efecto actual
                       : "opacity-100 grayscale brightness-0" // Tema Claro: 100% Negro
-                  }`}
+                    }`}
                 />
               </div>
               <span className="text-[10px] uppercase tracking-[0.6em] text-stone-400 font-bold block">
@@ -157,6 +156,38 @@ export default function InicioPublico() {
               >
                 Ver Calendario <ArrowRight size={14} />
               </Link>
+            </div>
+          </section>
+
+          <section className="space-y-12">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-stone-400 text-center">
+              Nuestras Reuniones
+            </h3>
+            <div
+              className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 border-t border-b py-16 ${darkMode ? "border-stone-900" : "border-stone-100"
+                }`}
+            >
+              {[
+                { icon: <Clock size={20} />, day: "Martes", title: "Oración", time: "19:30 — 21:30", color: "text-amber-500" },
+                { icon: <Users size={20} />, day: "Sábados", title: "Jóvenes", time: "19:30 — 21:30", color: "text-purple-600" },
+                { icon: <Users size={20} />, day: "Sábados", title: "Adolescentes", time: "19:30 — 21:30", color: "text-black" },
+                { icon: <Heart size={20} />, day: "Domingos", title: "Reunión General", time: "10:00 — 12:00", color: "text-rose-400" },
+              ].map((item, idx) => (
+                <div key={idx} className="space-y-6 text-center group">
+                  <div className={`flex justify-center transition-transform duration-500 group-hover:scale-110 ${item.color}`}>
+                    {item.icon}
+                  </div>
+                  <div className="space-y-3">
+                    <p className="text-[9px] uppercase tracking-widest text-stone-400 font-black">
+                      {item.day}
+                    </p>
+                    <h4 className={`text-2xl font-serif italic ${darkMode ? "text-stone-200" : "text-stone-800"}`}>
+                      {item.title}
+                    </h4>
+                    <p className="text-xs font-medium opacity-50">{item.time}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -382,73 +413,7 @@ export default function InicioPublico() {
             </div>
           </section>
 
-          {/* Agenda */}
-          <section className="space-y-12">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-stone-400 text-center">
-              Nuestras Reuniones
-            </h3>
-            <div
-              className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 border-t border-b py-16 ${
-                darkMode ? "border-stone-900" : "border-stone-100"
-              }`}
-            >
-              {[
-                {
-                  icon: <Clock size={20} />, // Aumentado ligeramente el tamaño
-                  day: "Martes",
-                  title: "Oración",
-                  time: "19:30 — 21:30",
-                  color: "text-amber-500", // Color específico
-                },
-                {
-                  icon: <Users size={20} />,
-                  day: "Sábados",
-                  title: "Jóvenes",
-                  time: "19:30 — 21:30",
-                  color: "text-orange-400",
-                },
-                {
-                  icon: <Users size={20} />,
-                  day: "Sábados",
-                  title: "Adolescentes",
-                  time: "19:30 — 21:30",
-                  color: "text-orange-400",
-                },
-                {
-                  icon: <Heart size={20} />,
-                  day: "Domingos",
-                  title: "Reunión General",
-                  time: "10:00 — 12:00",
-                  color: "text-rose-400",
-                },
-              ].map((item, idx) => (
-                <div key={idx} className="space-y-6 text-center group">
-                  {" "}
-                  {/* Agregado group para hover effects */}
-                  <div
-                    className={`flex justify-center transition-transform duration-500 group-hover:scale-110 ${item.color}`}
-                  >
-                    {item.icon}
-                  </div>
-                  <div className="space-y-3">
-                    <p className="text-[9px] uppercase tracking-widest text-stone-400 font-black">
-                      {item.day}
-                    </p>
-                    <h4
-                      className={`text-2xl font-serif italic ${
-                        darkMode ? "text-stone-200" : "text-stone-800"
-                      }`}
-                    >
-                      {item.title}
-                    </h4>
-                    <p className="text-xs font-medium opacity-50">
-                      {item.time}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+          
 
           {/* Ubicación */}
           <section className="space-y-10 pb-20">
@@ -483,9 +448,8 @@ export default function InicioPublico() {
             <div className="space-y-6">
               {/* Frase Principal con más presencia */}
               <p
-                className={`text-xs md:text-sm uppercase tracking-[0.6em] font-black italic transition-colors duration-500 ${
-                  darkMode ? "text-amber-500/80" : "text-stone-400"
-                }`}
+                className={`text-xs md:text-sm uppercase tracking-[0.6em] font-black italic transition-colors duration-500 ${darkMode ? "text-amber-500/80" : "text-stone-400"
+                  }`}
               >
                 Una sola fe <span className="mx-2 opacity-30">•</span>
                 Una sola gracia <span className="mx-2 opacity-30">•</span>
