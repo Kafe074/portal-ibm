@@ -640,9 +640,9 @@ export default function MisionesPage() {
             <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
                 "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777857373/WhatsApp_Image_2026-05-03_at_8.14.41_PM_inrajt.jpg",
-                "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777858000/WhatsApp_Image_2026-05-03_at_8.24.42_PM_il58in.jpg",
+                "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777857322/WhatsApp_Image_2026-05-03_at_8.14.28_PM_gjpgra.jpg",
                 "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777858044/WhatsApp_Image_2026-05-03_at_8.25.36_PM_yqrl0k.jpg",
-                "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777858029/WhatsApp_Image_2026-05-03_at_8.22.24_PM_hy5ylt.jpg",
+                "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777858000/WhatsApp_Image_2026-05-03_at_8.24.42_PM_il58in.jpg",
               ].map((img, i) => (
                 <div
                   key={i}
