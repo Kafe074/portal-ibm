@@ -115,7 +115,7 @@ export default function GeneracionEmergentePage() {
             <h3
               className={`font-serif italic text-2xl ${darkMode ? "text-stone-100" : "text-stone-900"}`}
             >
-              Young Alabanza
+              Grace and Mercy
             </h3>
             <p
               className={`text-[11px] uppercase tracking-wider font-medium leading-relaxed ${darkMode ? "text-stone-400" : "text-stone-500"}`}
