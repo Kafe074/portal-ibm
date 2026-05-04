@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react"; // Añadimos useEffect
+import { useState, useEffect, useRef } from "react"; // Añadimos useEffect
 import Sidebar from "@/app/components/sidebar";
 import {
   MapPin,
@@ -24,21 +24,38 @@ export default function InicioPublico() {
 
   // Lógica de Movimiento Automático para Ministerios
   const [isPaused, setIsPaused] = useState(false);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
+  // 2. Simplifica el useEffect del auto-scroll
   useEffect(() => {
-    const slider = document.getElementById("ministerios-slider");
-    if (!slider || isPaused) return; // Si está pausado, no ejecutamos el intervalo
+    if (isPaused) return;
 
     const interval = setInterval(() => {
-      if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 10) {
-        slider.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        slider.scrollBy({ left: 400, behavior: "smooth" });
+      if (sliderRef.current) {
+        const { scrollLeft, offsetWidth, scrollWidth } = sliderRef.current;
+
+        // Si estamos cerca del final, volvemos al inicio suavemente
+        if (scrollLeft + offsetWidth >= scrollWidth - 20) {
+          sliderRef.current.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          sliderRef.current.scrollBy({ left: offsetWidth * 0.8, behavior: "smooth" });
+        }
       }
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [isPaused]); // El efecto se reinicia/limpia cuando cambia isPaused
+  }, [isPaused]);
+
+  // 3. Funciones de navegación manual seguras
+  const scrollManual = (direccion: 'next' | 'prev') => {
+    if (sliderRef.current) {
+      const scrollAmount = sliderRef.current.offsetWidth * 0.8;
+      sliderRef.current.scrollBy({
+        left: direccion === 'next' ? scrollAmount : -scrollAmount,
+        behavior: "smooth"
+      });
+    }
+  };
 
   const fotosHistoria = [
     { type: "image", url: "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/historia/lywjqyhpmgcsfo8dymvn" },
@@ -127,8 +144,8 @@ export default function InicioPublico() {
                   src="/IBM.png"
                   alt="Logo"
                   className={`w-20 h-20 md:w-24 md:h-24 object-contain transition-all duration-1000 ${darkMode
-                      ? "opacity-40 grayscale invert" // Tema Oscuro: Mismo efecto actual
-                      : "opacity-100 grayscale brightness-0" // Tema Claro: 100% Negro
+                    ? "opacity-40 grayscale invert" // Tema Oscuro: Mismo efecto actual
+                    : "opacity-100 grayscale brightness-0" // Tema Claro: 100% Negro
                     }`}
                 />
               </div>
@@ -320,37 +337,26 @@ export default function InicioPublico() {
           </section>
 
           {/* --- SECCIÓN: MINISTERIOS (Slider Infinito y Suave) --- */}
+          {/* --- SECCIÓN: MINISTERIOS --- */}
           <section className="space-y-12">
             <div className="flex justify-between items-end px-2">
               <div className="space-y-2">
                 <h3 className="text-[9px] font-black uppercase tracking-[0.5em] text-stone-400">
                   Nuestros Ministerios
                 </h3>
-                <h2
-                  className={`text-4xl lg:text-5xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}
-                >
+                <h2 className={`text-4xl lg:text-5xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
                   Vida en Comunidad
                 </h2>
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => {
-                    const slider =
-                      document.getElementById("ministerios-slider");
-                    if (slider)
-                      slider.scrollBy({ left: -400, behavior: "smooth" });
-                  }}
+                  onClick={() => scrollManual('prev')}
                   className={`p-3 rounded-full border transition-colors ${darkMode ? "border-stone-800 text-stone-100 hover:bg-stone-900" : "border-stone-100 text-stone-900 hover:bg-stone-50"}`}
                 >
                   <ChevronLeft size={30} />
                 </button>
                 <button
-                  onClick={() => {
-                    const slider =
-                      document.getElementById("ministerios-slider");
-                    if (slider)
-                      slider.scrollBy({ left: 400, behavior: "smooth" });
-                  }}
+                  onClick={() => scrollManual('next')}
                   className={`p-3 rounded-full border transition-colors ${darkMode ? "border-stone-800 text-stone-100 hover:bg-stone-900" : "border-stone-100 text-stone-900 hover:bg-stone-50"}`}
                 >
                   <ChevronRight size={30} />
@@ -360,29 +366,21 @@ export default function InicioPublico() {
 
             <div
               className="relative group overflow-hidden"
-              onMouseEnter={() => setIsPaused(true)} // Cuando el mouse entra, isPaused = true
-              onMouseLeave={() => setIsPaused(false)} // Cuando el mouse sale, isPaused = false
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onTouchStart={() => setIsPaused(true)} // Pausa en móviles al tocar
             >
               <div
-                id="ministerios-slider"
-                className="flex gap-6 overflow-x-auto pb-10 pt-4 snap-x snap-mandatory scrollbar-hide items-center h-[600px]"
+                ref={sliderRef}
+                className="flex gap-6 overflow-x-auto pb-10 pt-4 snap-x snap-mandatory scroll-smooth items-center h-[550px] scrollbar-hide"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                onScroll={(e) => {
-                  const el = e.currentTarget;
-                  // Efecto Infinito Simple: Si llega al final, vuelve al inicio sin que se note
-                  if (el.scrollLeft + el.offsetWidth >= el.scrollWidth - 10) {
-                    el.scrollTo({ left: 1 });
-                  } else if (el.scrollLeft <= 0) {
-                    el.scrollTo({ left: el.scrollWidth - el.offsetWidth - 11 });
-                  }
-                }}
               >
-                {/* Duplicamos el array para el efecto infinito */}
-                {[...ministerios, ...ministerios].map((min, i) => (
+                {/* Usamos el array simple sin duplicar para evitar errores de scroll en móviles */}
+                {ministerios.map((min, i) => (
                   <Link
                     key={i}
                     href={min.link}
-                    className="relative min-w-[280px] md:min-w-[350px] h-[480px] rounded-[3.5rem] overflow-hidden group border dark:border-stone-900 snap-center transition-all duration-1000 ease-in-out hover:min-w-[500px] shadow-lg hover:shadow-2xl"
+                    className="relative min-w-[80vw] md:min-w-[350px] h-[450px] rounded-[3.5rem] overflow-hidden group border dark:border-stone-900 snap-center transition-all duration-700 shadow-lg hover:shadow-2xl"
                   >
                     <img
                       src={min.img}
@@ -391,12 +389,12 @@ export default function InicioPublico() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
 
-                    <div className="absolute inset-0 p-12 flex flex-col justify-end">
+                    <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-end">
                       <div className="space-y-4">
                         <p className="text-amber-400 text-[10px] uppercase tracking-[0.5em] font-black opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0">
                           Ministerio
                         </p>
-                        <h4 className="text-white text-4xl md:text-5xl font-serif italic transform transition-transform duration-700 group-hover:-translate-y-2">
+                        <h4 className="text-white text-3xl md:text-5xl font-serif italic transform transition-transform duration-700 group-hover:-translate-y-2">
                           {min.nombre}
                         </h4>
                         <div className="pt-6 flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-1000 delay-200 translate-y-4 group-hover:translate-y-0">
@@ -413,7 +411,7 @@ export default function InicioPublico() {
             </div>
           </section>
 
-          
+
 
           {/* Ubicación */}
           <section className="space-y-10 pb-20">

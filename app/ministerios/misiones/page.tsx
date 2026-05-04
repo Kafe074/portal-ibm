@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
+  ArrowRight,
 } from "lucide-react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Link from "next/link";
@@ -99,7 +100,7 @@ const puntos = [
     proyecto: "Casa de Paz Reconciliación Familiar",
     fotos: [
       "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777816078/WhatsApp_Image_2026-04-25_at_10.38.03_PM_ijaprt.jpg",
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777816076/WhatsApp_Image_2026-05-02_at_9.48.06_PM_bu8qen.jpg",
+      "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777855222/WhatsApp_Image_2026-04-25_at_10.38.17_PM_vwhx9d.jpg",
     ],
     testimonios: [
       {
@@ -111,7 +112,7 @@ const puntos = [
       "Sanidad emocional en las familias",
       "Recursos para talleres comunitarios",
     ],
-    bio: " Paola enfocan su energía en el distrito de Chilca, trabajando directamente con mujeres y familias en riesgo. Su proyecto busca restaurar el tejido social a través de los valores del Reino y la mentoría personalizada.",
+    bio: "Desde la cercanía del hogar, Dios levanta espacios donde su Palabra es compartida, las familias son fortalecidas y la fe florece viva, guiados por Él; en lo cotidiano y cercano, se impulsa un movimiento que transforma la comunidad desde el núcleo familiar, donde nacen relaciones genuinas, se restauran corazones, renace la esperanza y cada proceso es acompañado con amor. ",
     lat: -12.085900440542568,
     lng: -75.20025828175238,
   },
@@ -201,8 +202,11 @@ const puntos = [
     bio: "Desde Malasia, los Cusilayme trabajan en la integración y el testimonio dentro de una sociedad multicultural. Su enfoque es el servicio profesional como plataforma para manifestar el carácter de Dios en el continente asiático.",
     lat: 3.147356,
     lng: 101.695283,
+    link: "https://luzenelsudesteasiatico.com/"
   },
 ];
+
+
 
 export default function MisionesPage() {
   const [darkMode, setDarkMode] = useState(false);
@@ -404,10 +408,38 @@ export default function MisionesPage() {
                       ))}
                     </ul>
                   </div>
+                  {selectedPoint.link && (
+                    <div className="pt-8 border-t border-stone-100 dark:border-stone-800 animate-in fade-in slide-in-from-top-2 duration-1000 delay-300">
+                      <Link
+                        href={selectedPoint.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`group flex items-center justify-between w-full px-6 py-5 rounded-[2rem] border transition-all duration-500
+              ${darkMode
+                            ? "border-stone-800 bg-stone-900/50 hover:bg-stone-800 text-stone-400 hover:text-stone-100"
+                            : "border-stone-100 bg-stone-50/50 hover:bg-stone-100 text-stone-500 hover:text-stone-900 shadow-sm"}`}
+                      >
+                        <div className="flex flex-col items-start gap-1 text-left">
+                          <span className="text-[8px] font-black uppercase tracking-[0.2em] text-amber-600">
+                            Sitio Externo
+                          </span>
+                          <span className="text-[11px] font-bold tracking-wide">
+                            Ver plataforma del proyecto
+                          </span>
+                        </div>
+                        <div className="p-2 rounded-full bg-amber-500/10 text-amber-600 group-hover:bg-amber-500 group-hover:text-white transition-all duration-500">
+                          <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                        </div>
+                      </Link>
+                    </div>
+                  )}
+
                 </div>
               )}
             </div>
           </div>
+
+
 
           {/* MAPA */}
           <div
@@ -480,8 +512,8 @@ export default function MisionesPage() {
                 <div
                   key={i}
                   className={`group overflow-hidden rounded-[3.5rem] border transition-all duration-700 ${darkMode
-                      ? "bg-stone-900/40 border-stone-800 hover:border-stone-700"
-                      : "bg-white border-stone-100 shadow-sm hover:shadow-2xl"
+                    ? "bg-stone-900/40 border-stone-800 hover:border-stone-700"
+                    : "bg-white border-stone-100 shadow-sm hover:shadow-2xl"
                     }`}
                 >
                   {/* CONTENEDOR DEL CARRUSEL DE IMÁGENES */}
@@ -508,8 +540,8 @@ export default function MisionesPage() {
                         <div
                           key={dotIdx}
                           className={`h-1 rounded-full transition-all duration-500 ${currentIndex === dotIdx
-                              ? "w-6 bg-amber-500"
-                              : "w-1 bg-white/50"
+                            ? "w-6 bg-amber-500"
+                            : "w-1 bg-white/50"
                             }`}
                         />
                       ))}
@@ -523,8 +555,8 @@ export default function MisionesPage() {
                           src={img}
                           alt={`${viaje.lugar} ${imgIdx}`}
                           className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${currentIndex === imgIdx
-                              ? "opacity-100 scale-100 translate-x-0"
-                              : "opacity-0 scale-110 translate-x-4 pointer-events-none"
+                            ? "opacity-100 scale-100 translate-x-0"
+                            : "opacity-0 scale-110 translate-x-4 pointer-events-none"
                             } ${imgIdx === currentIndex ? "grayscale-0" : "grayscale"}`}
                         />
                       ))}
