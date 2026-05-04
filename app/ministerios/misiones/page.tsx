@@ -615,12 +615,12 @@ export default function MisionesPage() {
                     <Clock className="text-amber-500" size={24} />
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
-                        Próxima Salida
+                        Próxima Ayuno
                       </p>
                       <p
                         className={`text-sm font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}
                       >
-                        Sábado 26 de Abril, 10:00 AM
+                        Sábado 03 de Mayo, 09:00 AM
                       </p>
                     </div>
                   </div>
