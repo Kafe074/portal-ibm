@@ -252,16 +252,14 @@ export default function MisionesPage() {
           {/* Cabecera: Subtítulo + Título */}
           <div className="space-y-3">
             <h2
-              className={`text-[10px] font-black uppercase tracking-[0.5em] ${
-                darkMode ? "text-stone-500" : "text-stone-400"
-              }`}
+              className={`text-[10px] font-black uppercase tracking-[0.5em] ${darkMode ? "text-stone-500" : "text-stone-400"
+                }`}
             >
               Evangelismo e Impacto
             </h2>
             <h1
-              className={`text-4xl md:text-6xl font-serif italic leading-tight ${
-                darkMode ? "text-stone-100" : "text-stone-900"
-              }`}
+              className={`text-4xl md:text-6xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"
+                }`}
             >
               Nuestra{" "}
               <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
@@ -413,18 +411,19 @@ export default function MisionesPage() {
 
           {/* MAPA */}
           <div
-            className={`flex-1 min-h-[400px] lg:min-h-full relative rounded-[3rem] overflow-hidden border transition-all duration-1000
-            ${darkMode ? "border-stone-800" : "border-stone-100 shadow-2xl shadow-stone-200/50"}`}
+            className={`w-full h-[450px] lg:h-[650px] relative rounded-[3rem] overflow-hidden border transition-all duration-1000 z-0
+    ${darkMode ? "border-stone-800" : "border-stone-100 shadow-2xl shadow-stone-200/50"}`}
           >
             <Map
               ref={mapRef}
               mapboxAccessToken={MAPBOX_TOKEN}
-              initialViewState={{ longitude: -75, latitude: -11, zoom: 4.5 }}
+              initialViewState={{ longitude: -75, latitude: -11, zoom: 3.5 }} // Zoom un poco más alejado para móvil
               mapStyle={
                 darkMode
                   ? "mapbox://styles/mapbox/dark-v11"
                   : "mapbox://styles/mapbox/light-v11"
               }
+              style={{ width: "100%", height: "100%" }} // Garantiza que llene el contenedor
             >
               <NavigationControl position="bottom-right" />
               {puntos.map((p) => (
@@ -437,11 +436,11 @@ export default function MisionesPage() {
                     className="group relative flex items-center justify-center"
                   >
                     <div
-                      className={`absolute w-12 h-12 rounded-full animate-ping opacity-10 ${selectedPoint?.id === p.id ? "bg-amber-500" : "bg-stone-400"}`}
+                      className={`absolute w-10 h-10 rounded-full animate-ping opacity-10 ${selectedPoint?.id === p.id ? "bg-amber-500" : "bg-stone-400"}`}
                     />
                     <div
-                      className={`w-5 h-5 rounded-full border-[3px] border-white shadow-xl transition-all duration-700
-                      ${selectedPoint?.id === p.id ? "bg-amber-500 scale-150" : "bg-stone-800 group-hover:bg-amber-500"}`}
+                      className={`w-4 h-4 rounded-full border-[2px] border-white shadow-xl transition-all duration-700
+              ${selectedPoint?.id === p.id ? "bg-amber-500 scale-125" : "bg-stone-800"}`}
                     />
                   </button>
                 </Marker>
@@ -480,11 +479,10 @@ export default function MisionesPage() {
               return (
                 <div
                   key={i}
-                  className={`group overflow-hidden rounded-[3.5rem] border transition-all duration-700 ${
-                    darkMode
+                  className={`group overflow-hidden rounded-[3.5rem] border transition-all duration-700 ${darkMode
                       ? "bg-stone-900/40 border-stone-800 hover:border-stone-700"
                       : "bg-white border-stone-100 shadow-sm hover:shadow-2xl"
-                  }`}
+                    }`}
                 >
                   {/* CONTENEDOR DEL CARRUSEL DE IMÁGENES */}
                   <div className="relative h-80 overflow-hidden">
@@ -509,11 +507,10 @@ export default function MisionesPage() {
                       {viaje.images.map((_, dotIdx) => (
                         <div
                           key={dotIdx}
-                          className={`h-1 rounded-full transition-all duration-500 ${
-                            currentIndex === dotIdx
+                          className={`h-1 rounded-full transition-all duration-500 ${currentIndex === dotIdx
                               ? "w-6 bg-amber-500"
                               : "w-1 bg-white/50"
-                          }`}
+                            }`}
                         />
                       ))}
                     </div>
@@ -525,11 +522,10 @@ export default function MisionesPage() {
                           key={imgIdx}
                           src={img}
                           alt={`${viaje.lugar} ${imgIdx}`}
-                          className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${
-                            currentIndex === imgIdx
+                          className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${currentIndex === imgIdx
                               ? "opacity-100 scale-100 translate-x-0"
                               : "opacity-0 scale-110 translate-x-4 pointer-events-none"
-                          } ${imgIdx === currentIndex ? "grayscale-0" : "grayscale"}`}
+                            } ${imgIdx === currentIndex ? "grayscale-0" : "grayscale"}`}
                         />
                       ))}
                     </div>
