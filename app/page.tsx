@@ -1,21 +1,47 @@
 "use client";
-import { useState, useEffect, useRef } from "react"; // Añadimos useEffect
-import Sidebar from "@/app/components/sidebar";
+import { useState, useEffect, useRef } from "react";
+import Sidebar from "@/components/Sidebar";
+import { useDarkMode } from "@/hooks/useDarkMode";
 import {
-  MapPin,
-  Clock,
-  Heart,
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  CalendarDays,
-  Users,
-  Star,
+  Clock, Heart, ArrowRight, ChevronLeft, ChevronRight, Users, X, Music,
 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import type { Horario } from "@/types";
 import Link from "next/link";
 
+// Mapeo de clave de icono → componente lucide
+const ICONOS_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
+  clock: Clock, users: Users, heart: Heart, music: Music,
+};
+
 export default function InicioPublico() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useDarkMode();
+  const [noticiaActiva, setNoticiaActiva] = useState<any>(null);
+  const [showAviso, setShowAviso] = useState(false);
+  const [horarios, setHorarios] = useState<Horario[]>([]);
+
+  useEffect(() => {
+    supabase.from("horarios").select("*")
+      .eq("seccion", "inicio").eq("activo", true).order("orden")
+      .then(({ data }) => { if (data) setHorarios(data); });
+  }, []);
+
+  useEffect(() => {
+    supabase
+      .from("noticias")
+      .select("*, noticia_imagenes(url, orden)")
+      .eq("activa", true)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          const imagenes = [...(data.noticia_imagenes || [])]
+            .sort((a: any, b: any) => a.orden - b.orden)
+            .map((img: any) => img.url);
+          setNoticiaActiva({ ...data, imagenes });
+          setShowAviso(true);
+        }
+      });
+  }, []);
 
   // Estados independientes para cada carrusel
   const [indexHistoria, setIndexHistoria] = useState(0);
@@ -25,28 +51,68 @@ export default function InicioPublico() {
   // Lógica de Movimiento Automático para Ministerios
   const [isPaused, setIsPaused] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isLoopingRef = useRef(false);
 
-  // 2. Simplifica el useEffect del auto-scroll
+  useEffect(() => {
+    if (window.location.hash === "#ministerios") {
+      const el = document.getElementById("ministerios");
+      const container = scrollContainerRef.current;
+      if (el && container) {
+        setTimeout(() => {
+          container.scrollTo({ top: el.offsetTop - 48, behavior: "smooth" });
+        }, 100);
+      }
+    }
+  }, []);
+
+  // Inicializar en el set del medio + loop infinito
+  useEffect(() => {
+    const el = sliderRef.current;
+    if (!el) return;
+
+    requestAnimationFrame(() => {
+      if (el) el.scrollLeft = el.scrollWidth / 3;
+    });
+
+    const handleScroll = () => {
+      if (isLoopingRef.current) return;
+      const oneSetWidth = el.scrollWidth / 3;
+      if (el.scrollLeft >= oneSetWidth * 2 - 100) {
+        isLoopingRef.current = true;
+        el.style.scrollSnapType = "none";
+        el.scrollLeft -= oneSetWidth;
+        requestAnimationFrame(() => {
+          el.style.scrollSnapType = "";
+          isLoopingRef.current = false;
+        });
+      } else if (el.scrollLeft <= 100) {
+        isLoopingRef.current = true;
+        el.style.scrollSnapType = "none";
+        el.scrollLeft += oneSetWidth;
+        requestAnimationFrame(() => {
+          el.style.scrollSnapType = "";
+          isLoopingRef.current = false;
+        });
+      }
+    };
+
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Auto-scroll: siempre avanza, el listener se encarga del loop
   useEffect(() => {
     if (isPaused) return;
-
     const interval = setInterval(() => {
       if (sliderRef.current) {
-        const { scrollLeft, offsetWidth, scrollWidth } = sliderRef.current;
-
-        // Si estamos cerca del final, volvemos al inicio suavemente
-        if (scrollLeft + offsetWidth >= scrollWidth - 20) {
-          sliderRef.current.scrollTo({ left: 0, behavior: "smooth" });
-        } else {
-          sliderRef.current.scrollBy({ left: offsetWidth * 0.8, behavior: "smooth" });
-        }
+        sliderRef.current.scrollBy({ left: sliderRef.current.offsetWidth * 0.8, behavior: "smooth" });
       }
     }, 5000);
-
     return () => clearInterval(interval);
   }, [isPaused]);
 
-  // 3. Funciones de navegación manual seguras
+  // Navegación manual
   const scrollManual = (direccion: 'next' | 'prev') => {
     if (sliderRef.current) {
       const scrollAmount = sliderRef.current.offsetWidth * 0.8;
@@ -123,6 +189,9 @@ export default function InicioPublico() {
     },
   ];
 
+  // Triplicado para carrusel infinito
+  const ministeriosLoop = [...ministerios, ...ministerios, ...ministerios];
+
   const nextSlide = (setFn: any, length: number) =>
     setFn((prev: number) => (prev + 1) % length);
   const prevSlide = (setFn: any, length: number) =>
@@ -132,10 +201,10 @@ export default function InicioPublico() {
     <main
       className={`flex h-screen transition-colors duration-1000 overflow-hidden ${darkMode ? "bg-[#0a0a0a] text-stone-400" : "bg-[#fafaf9] text-stone-600"}`}
     >
-      <div className="flex-1 flex flex-col overflow-y-auto font-light selection:bg-stone-200 custom-scrollbar">
+      <div ref={scrollContainerRef} className="flex-1 flex flex-col overflow-y-auto font-light selection:bg-stone-200 custom-scrollbar">
         <div className="h-8 md:h-12" />
 
-        <div className="w-full max-w-5xl mx-auto p-6 md:p-12 space-y-32">
+        <div className="w-full max-w-5xl mx-auto p-6 md:p-12 space-y-16 md:space-y-32">
           {/* Hero Section */}
           <section className="text-center space-y-8 py-6 relative">
             <div className="space-y-4">
@@ -153,7 +222,7 @@ export default function InicioPublico() {
                 Iglesia Brisas del Mantaro
               </span>
               <h1
-                className={`text-5xl md:text-8xl font-extralight tracking-tighter leading-[1] ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+                className={`text-4xl md:text-5xl lg:text-8xl font-extralight tracking-tighter leading-[1] ${darkMode ? "text-stone-100" : "text-stone-900"}`}
               >
                 Una iglesia <br />
                 <span className="italic font-serif opacity-40">
@@ -167,12 +236,22 @@ export default function InicioPublico() {
                 "Con una sola misión . Jerusalén, Judea, Samaria y hasta lo
                 ultimo de la tierra ."
               </p>
-              <Link
-                href="/calendario"
-                className={`flex items-center gap-3 px-8 py-4 rounded-full border text-[10px] uppercase tracking-[0.2em] font-bold transition-all ${darkMode ? "border-stone-800 hover:bg-stone-900 text-stone-300" : "border-stone-200 hover:bg-stone-50 text-stone-800 shadow-sm"}`}
-              >
-                Ver Calendario <ArrowRight size={14} />
-              </Link>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <Link
+                  href="/calendario"
+                  className={`flex items-center gap-3 px-8 py-4 rounded-full border text-[10px] uppercase tracking-[0.2em] font-bold transition-all ${darkMode ? "border-stone-800 hover:bg-stone-900 text-stone-300" : "border-stone-200 hover:bg-stone-50 text-stone-800 shadow-sm"}`}
+                >
+                  Ver Calendario <ArrowRight size={14} />
+                </Link>
+                <a
+                  href="https://www.facebook.com/iddphyo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-3 px-8 py-4 rounded-full border text-[10px] uppercase tracking-[0.2em] font-bold transition-all group ${darkMode ? "border-stone-800 hover:bg-stone-900 text-stone-300" : "border-stone-200 hover:bg-stone-50 text-stone-800 shadow-sm"}`}
+                >
+                  Facebook <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                </a>
+              </div>
             </div>
           </section>
 
@@ -180,31 +259,23 @@ export default function InicioPublico() {
             <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-stone-400 text-center">
               Nuestras Reuniones
             </h3>
-            <div
-              className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 border-t border-b py-16 ${darkMode ? "border-stone-900" : "border-stone-100"
-                }`}
-            >
-              {[
-                { icon: <Clock size={20} />, day: "Martes", title: "Oración", time: "19:30 — 21:30", color: "text-amber-500" },
-                { icon: <Users size={20} />, day: "Sábados", title: "Jóvenes", time: "19:30 — 21:30", color: "text-purple-600" },
-                { icon: <Users size={20} />, day: "Sábados", title: "Adolescentes", time: "19:30 — 21:30", color: "text-black" },
-                { icon: <Heart size={20} />, day: "Domingos", title: "Reunión General", time: "10:00 — 12:00", color: "text-rose-400" },
-              ].map((item, idx) => (
-                <div key={idx} className="space-y-6 text-center group">
-                  <div className={`flex justify-center transition-transform duration-500 group-hover:scale-110 ${item.color}`}>
-                    {item.icon}
+            <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 border-t border-b py-16 ${darkMode ? "border-stone-900" : "border-stone-100"}`}>
+              {horarios.map((h) => {
+                const Icono = ICONOS_MAP[h.icono] ?? Clock;
+                const time = h.hora_fin ? `${h.hora_inicio} — ${h.hora_fin}` : h.hora_inicio;
+                return (
+                  <div key={h.id} className="space-y-6 text-center group">
+                    <div className={`flex justify-center transition-transform duration-500 group-hover:scale-110 ${h.color}`}>
+                      <Icono size={20} />
+                    </div>
+                    <div className="space-y-3">
+                      <p className="text-[9px] uppercase tracking-widest text-stone-400 font-black">{h.dias}</p>
+                      <h4 className={`text-2xl font-serif italic ${darkMode ? "text-stone-200" : "text-stone-800"}`}>{h.titulo}</h4>
+                      <p className="text-xs font-medium opacity-50">{time}</p>
+                    </div>
                   </div>
-                  <div className="space-y-3">
-                    <p className="text-[9px] uppercase tracking-widest text-stone-400 font-black">
-                      {item.day}
-                    </p>
-                    <h4 className={`text-2xl font-serif italic ${darkMode ? "text-stone-200" : "text-stone-800"}`}>
-                      {item.title}
-                    </h4>
-                    <p className="text-xs font-medium opacity-50">{item.time}</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 
@@ -336,9 +407,8 @@ export default function InicioPublico() {
             </div>
           </section>
 
-          {/* --- SECCIÓN: MINISTERIOS (Slider Infinito y Suave) --- */}
           {/* --- SECCIÓN: MINISTERIOS --- */}
-          <section className="space-y-12">
+          <section id="ministerios" className="space-y-12">
             <div className="flex justify-between items-end px-2">
               <div className="space-y-2">
                 <h3 className="text-[9px] font-black uppercase tracking-[0.5em] text-stone-400">
@@ -372,15 +442,14 @@ export default function InicioPublico() {
             >
               <div
                 ref={sliderRef}
-                className="flex gap-6 overflow-x-auto pb-10 pt-4 snap-x snap-mandatory scroll-smooth items-center h-[550px] scrollbar-hide"
+                className="flex gap-6 overflow-x-auto pb-10 pt-4 snap-x snap-mandatory scroll-smooth items-center h-[420px] md:h-[550px] scrollbar-hide"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               >
-                {/* Usamos el array simple sin duplicar para evitar errores de scroll en móviles */}
-                {ministerios.map((min, i) => (
+                {ministeriosLoop.map((min, i) => (
                   <Link
                     key={i}
                     href={min.link}
-                    className="relative min-w-[80vw] md:min-w-[350px] h-[450px] rounded-[3.5rem] overflow-hidden group border dark:border-stone-900 snap-center transition-all duration-700 shadow-lg hover:shadow-2xl"
+                    className="relative min-w-[80vw] md:min-w-[350px] h-[360px] md:h-[450px] rounded-[3.5rem] overflow-hidden group border dark:border-stone-900 snap-center transition-all duration-700 shadow-lg hover:shadow-2xl"
                   >
                     <img
                       src={min.img}
@@ -477,6 +546,57 @@ export default function InicioPublico() {
         </div>
       </div>
       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
+
+      {/* MODAL DE AVISO — usa la noticia activa de /noticias/data.ts */}
+      {showAviso && noticiaActiva && (
+        <div
+          className="fixed inset-0 bg-stone-950/60 backdrop-blur-sm flex items-center justify-center z-[250] p-4"
+          onClick={() => setShowAviso(false)}
+        >
+          <div
+            className={`w-full ${noticiaActiva.imagenes.length > 0 ? "max-w-md" : "max-w-sm"} rounded-[2.5rem] overflow-hidden border shadow-2xl relative animate-in fade-in slide-in-from-bottom-4 duration-500 ${darkMode ? "bg-stone-900 border-stone-800" : "bg-white border-stone-100"}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Botón cerrar */}
+            <button
+              onClick={() => setShowAviso(false)}
+              className={`absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${noticiaActiva.imagenes.length > 0 ? "bg-black/30 backdrop-blur-sm text-white hover:bg-black/50" : "text-stone-400 hover:text-stone-600"}`}
+            >
+              <X size={18} />
+            </button>
+
+            {/* Primera imagen de la noticia */}
+            {noticiaActiva.imagenes.length > 0 && (
+              <div className="overflow-hidden">
+                <img
+                  src={noticiaActiva.imagenes[0]}
+                  alt="Aviso"
+                  className="w-full h-auto"
+                />
+              </div>
+            )}
+
+            {/* Título + Ver más */}
+            <div className={`flex items-center justify-between gap-4 ${noticiaActiva.imagenes.length > 0 ? "px-6 py-4" : "px-8 py-6"}`}>
+              <div className="text-left space-y-1 flex-1 min-w-0">
+                <span className={`text-[8px] font-bold uppercase tracking-widest ${darkMode ? "text-amber-400" : "text-amber-600"}`}>
+                  {noticiaActiva.tag}
+                </span>
+                <h3 className={`text-xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
+                  {noticiaActiva.titulo}
+                </h3>
+              </div>
+              <Link
+                href="/noticias"
+                onClick={() => setShowAviso(false)}
+                className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full border text-[9px] font-bold uppercase tracking-widest transition-all ${darkMode ? "border-stone-700 hover:bg-stone-800 text-stone-300" : "border-stone-200 hover:bg-stone-50 text-stone-700 shadow-sm"}`}
+              >
+                Ver más <ArrowRight size={11} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

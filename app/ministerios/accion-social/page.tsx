@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import Sidebar from "@/app/components/sidebar";
+import Sidebar from "@/components/Sidebar";
+import { useDarkMode } from "@/hooks/useDarkMode";
+import { useContacto, abrirWhatsApp } from "@/hooks/useContacto";
 import {
   HeartPulse,
   Utensils,
@@ -69,7 +71,8 @@ const areasSociales = [
 ];
 
 export default function AccionSocialPage() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useDarkMode();
+  const contacto = useContacto("comedor");
 
   return (
     <div
@@ -77,9 +80,9 @@ export default function AccionSocialPage() {
     >
       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-      <main className="flex-1 p-10 space-y-12 overflow-y-auto scrollbar-hide">
+      <main className="flex-1 p-6 lg:p-10 space-y-12 overflow-y-auto scrollbar-hide pt-20 lg:pt-10">
         <Link
-          href="/"
+          href="/#ministerios"
           className={`inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] transition-all
             ${darkMode ? "text-stone-500 hover:text-stone-200" : "text-stone-400 hover:text-stone-900"}`}
         >
@@ -93,16 +96,17 @@ export default function AccionSocialPage() {
             Compromiso Social
           </h2>
           <h1
-            className={`text-5xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+            className={`text-4xl md:text-5xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}
           >
-            Amor en Movimiento
+            Amor en <br />
+            <span className={darkMode ? "text-blue-400" : "text-blue-600"}>Movimiento.</span>
           </h1>
         </div>
 
         {/* SECCIÓN DESTACADA: CAMPAÑAS MÉDICAS */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           <div
-            className={`lg:col-span-7 p-10 rounded-[3rem] border transition-all duration-700
+            className={`lg:col-span-7 p-6 lg:p-10 rounded-[3rem] border transition-all duration-700
             ${darkMode ? "bg-stone-900/40 border-stone-800" : "bg-[#fafaf9] border-stone-200 shadow-sm"}`}
           >
             <div className="flex justify-between items-start mb-8">
@@ -168,7 +172,7 @@ export default function AccionSocialPage() {
               />
 
               {/* Capa de degradado para que el texto sea legible */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-10 group-hover:from-blue-900/80 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6 lg:p-10 group-hover:from-blue-900/80 transition-all">
                 <div className="flex justify-between items-end">
                   <div>
                     <p className="text-white text-lg font-serif italic leading-tight">
@@ -192,7 +196,7 @@ export default function AccionSocialPage() {
           {areasSociales.map((area) => (
             <Link href={area.link} key={area.id} className="group">
               <div
-                className={`p-10 h-full rounded-[3rem] border transition-all duration-700 flex flex-col justify-between
+                className={`p-6 lg:p-10 h-full rounded-[3rem] border transition-all duration-700 flex flex-col justify-between
                 ${darkMode ? "bg-stone-900/40 border-stone-800 hover:bg-stone-900/60" : "bg-[#fafaf9] border-stone-200 shadow-sm hover:shadow-xl hover:shadow-stone-200/50"}`}
               >
                 <div className="space-y-6">
@@ -245,7 +249,7 @@ export default function AccionSocialPage() {
 
         {/* CTA FINAL */}
         <div
-          className={`p-16 rounded-[4rem] text-center space-y-8 transition-colors
+          className={`p-8 md:p-16 rounded-[4rem] text-center space-y-8 transition-colors
           ${darkMode ? "bg-stone-900/20" : "bg-stone-50"}`}
         >
           <div className="space-y-2">
@@ -259,18 +263,13 @@ export default function AccionSocialPage() {
               apasionados para expandir nuestro alcance social.
             </p>
           </div>
-          <Link
-            href="https://wa.me/51964373959?text=Hola,%20me%20gustaría%20obtener%20más%20información%20para%20unirme%20como%20voluntario%20en%20el%20área%20de%20Acción%20Social."
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button
-              className={`px-10 py-4 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] transition-all
+          <button
+            onClick={() => abrirWhatsApp(contacto, "Hola, me gustaría obtener más información para unirme como voluntario en el área de Acción Social.")}
+            className={`px-10 py-4 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] transition-all
     ${darkMode ? "bg-white text-black hover:bg-stone-200" : "bg-stone-900 text-white hover:bg-black shadow-xl shadow-stone-200"}`}
-            >
-              Quiero ser Voluntario
-            </button>
-          </Link>
+          >
+            Quiero ser Voluntario
+          </button>
         </div>
       </main>
     </div>

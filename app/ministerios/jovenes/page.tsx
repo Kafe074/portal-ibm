@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import Sidebar from "@/app/components/sidebar";
+import Sidebar from "@/components/Sidebar";
+import { useDarkMode } from "@/hooks/useDarkMode";
+import { useContacto, abrirWhatsApp } from "@/hooks/useContacto";
 import {
   ArrowLeft,
   Music,
@@ -14,8 +16,40 @@ import {
   MessageCircle,
 } from "lucide-react";
 
+function BannerFoto({ darkMode }: { darkMode: boolean }) {
+  const [fotoRevelada, setFotoRevelada] = useState(false);
+  return (
+    <div
+      onClick={() => setFotoRevelada(!fotoRevelada)}
+      className={`relative rounded-[3.5rem] overflow-hidden border cursor-pointer select-none min-h-[260px] md:min-h-[380px] ${darkMode ? "border-stone-800" : "border-stone-100"}`}
+    >
+      <img
+        src="https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_1000/iglesia-portal/ministerios/index/jovenes"
+        alt="Jóvenes compartiendo"
+        className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${fotoRevelada ? "opacity-100 grayscale-0 scale-105" : "opacity-50 grayscale"}`}
+      />
+      <div className={`absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-transparent to-transparent transition-opacity duration-700 ${fotoRevelada ? "opacity-0" : "opacity-100"}`} />
+      <div className={`absolute inset-0 flex flex-col justify-end p-8 md:p-12 space-y-3 z-10 transition-opacity duration-500 ${fotoRevelada ? "opacity-0" : "opacity-100"}`}>
+        <div className="flex items-center gap-2">
+          <Zap size={14} className="text-violet-500 fill-violet-500" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white">Impacto Real</span>
+        </div>
+        <h3 className="text-white text-2xl md:text-4xl font-serif italic max-w-xl">
+          Encontrando respuestas eternas a preguntas actuales.
+        </h3>
+      </div>
+      <div className="absolute bottom-4 left-6">
+        <span className={`text-[9px] font-bold uppercase tracking-widest transition-opacity duration-500 ${fotoRevelada ? "text-white/60 opacity-100" : "text-white/40 opacity-100"}`}>
+          {fotoRevelada ? "Toca para volver" : "Toca para ver la foto"}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function GeneracionEmergentePage() {
-  const [darkMode, setDarkMode] = useState(false); // Default dark para este ministerio
+  const [darkMode, setDarkMode] = useDarkMode();
+  const contacto = useContacto("jovenes");
 
   return (
     <div
@@ -23,9 +57,9 @@ export default function GeneracionEmergentePage() {
     >
       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-      <main className="flex-1 p-6 lg:p-10 space-y-12 overflow-y-auto scrollbar-hide">
+      <main className="flex-1 p-6 lg:p-10 space-y-12 overflow-y-auto scrollbar-hide pt-20 lg:pt-10">
         <Link
-          href="/"
+          href="/#ministerios"
           className={`inline-flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] transition-all
             ${darkMode ? "text-stone-600 hover:text-stone-200" : "text-stone-400 hover:text-stone-900"}`}
         >
@@ -179,44 +213,30 @@ export default function GeneracionEmergentePage() {
           </div>
         </div>
 
-        {/* SECCIÓN "EMERGENTE" - Visual Impact */}
+        {/* SECCIÓN "EMERGENTE" - Visual Impact - toca para revelar foto */}
         <section className="max-w-6xl mx-auto">
-          <div className="relative rounded-[3.5rem] overflow-hidden group border border-stone-800 isolate">
-            {" "}
-            {/* Agregado isolate para manejar capas */}
-            <div className="aspect-[21/9] relative">
-              <img
-                src="https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/index/jovenes"
-                alt="Jóvenes compartiendo"
-                className="w-full h-full object-cover transition-all duration-1000 ease-in-out
-          /* Estado inicial: Oscuro y con ligero zoom out */
-          opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
-              />
+          <BannerFoto darkMode={darkMode} />
+        </section>
 
-              {/* Gradiente de fondo: Se desvanece en hover para revelar la foto completa */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-transparent to-transparent transition-opacity duration-1000 group-hover:opacity-0" />
-
-              {/* Contenido de texto: Aseguramos contraste siempre */}
-              <div className="absolute inset-0 flex flex-col justify-end p-10 lg:p-16 space-y-4 z-10">
-                <div className="flex items-center gap-2">
-                  <Zap size={16} className="text-violet-500 fill-violet-500" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white">
-                    Impacto Real
-                  </span>
-                </div>
-                <h3 className="text-white text-3xl lg:text-4xl font-serif italic max-w-xl transition-all duration-500 group-hover:drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-                  Encontrando respuestas eternas a preguntas actuales.
-                </h3>
-              </div>
-            </div>
-          </div>
+        {/* CTA */}
+        <section className={`max-w-4xl mx-auto p-8 md:p-12 rounded-[3rem] text-center space-y-6 border ${darkMode ? "bg-stone-900/40 border-stone-800" : "bg-white border-stone-100 shadow-xl"}`}>
+          <h3 className={`text-3xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
+            ¿Listo para <span className="text-violet-500">emerger</span>?
+          </h3>
+          <p className={`text-sm font-light max-w-sm mx-auto ${darkMode ? "text-stone-400" : "text-stone-500"}`}>
+            Los sábados son para vivir la fe sin filtros. Escríbenos y te contamos todo.
+          </p>
+          <button
+            onClick={() => abrirWhatsApp(contacto)}
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-violet-600 text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-violet-500 transition-all shadow-lg shadow-violet-500/20"
+          >
+            Quiero venir este Sábado
+          </button>
         </section>
 
         {/* MENSAJE FINAL */}
         <section className="text-center py-10 max-w-xl mx-auto">
-          <p
-            className={`text-xl font-serif italic ${darkMode ? "text-stone-300" : "text-stone-600"}`}
-          >
+          <p className={`text-xl font-serif italic ${darkMode ? "text-stone-300" : "text-stone-600"}`}>
             "Que nadie te menosprecie por ser joven..."
           </p>
           <p className="text-[9px] uppercase tracking-widest text-stone-500 mt-4">

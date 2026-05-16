@@ -15,6 +15,7 @@ import {
   Moon,
   Menu,
   X,
+  Newspaper,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -33,6 +34,12 @@ export default function Sidebar({ darkMode, setDarkMode }: SidebarProps) {
 
   const menuItems = [
     { id: "inicio", label: "Inicio", icon: Home, href: "/" },
+    {
+      id: "noticias",
+      label: "Noticias",
+      icon: Newspaper,
+      href: "/noticias",
+    },
     {
       id: "calendario",
       label: "Calendario",
@@ -109,7 +116,7 @@ export default function Sidebar({ darkMode, setDarkMode }: SidebarProps) {
         </div>
 
         {/* MENÚ DE NAVEGACIÓN */}
-        <div className="flex-1 flex flex-col py-12 lg:py-20 overflow-x-hidden scrollbar-hide">
+        <div className="flex-1 flex flex-col py-6 lg:py-20 overflow-x-hidden scrollbar-hide">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;

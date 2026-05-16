@@ -30,7 +30,7 @@ export default function UpdatePasswordPage() {
 
   return (
     <div className="min-h-screen bg-[#fafaf9] flex items-center justify-center p-6">
-      <div className="w-full max-w-md bg-white p-10 rounded-[3rem] border border-stone-100 shadow-2xl text-center">
+      <div className="w-full max-w-md bg-white p-6 md:p-10 rounded-[3rem] border border-stone-100 shadow-2xl text-center">
         <div className="w-16 h-16 bg-stone-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
           <Lock size={28} className="text-stone-400" />
         </div>

@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Sidebar from "@/app/components/sidebar";
+import Sidebar from "@/components/Sidebar";
+import { useDarkMode } from "@/hooks/useDarkMode";
 import {
   ArrowLeft,
   Quote,
@@ -64,7 +65,7 @@ const Carousel = ({ images }: { images: string[] }) => {
 };
 
 export default function ExperienciaClasesPage() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useDarkMode();
 
   // Data de imágenes (puedes añadir más a cada array)
   const fotosEstrellitas = [
@@ -89,9 +90,9 @@ export default function ExperienciaClasesPage() {
     >
       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-      <main className="flex-1 p-6 lg:p-10 space-y-8 overflow-y-auto scrollbar-hide">
+      <main className="flex-1 p-6 lg:p-10 space-y-8 overflow-y-auto scrollbar-hide pt-20 lg:pt-10">
         <Link
-          href="/"
+          href="/#ministerios"
           className={`inline-flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] transition-all
             ${darkMode ? "text-stone-600 hover:text-stone-200" : "text-stone-400 hover:text-stone-900"}`}
         >
@@ -110,7 +111,8 @@ export default function ExperienciaClasesPage() {
             <h1
               className={`text-4xl lg:text-5xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}
             >
-              Pequeños pasos, gran fe.
+              Pequeños pasos, <br />
+              <span className={darkMode ? "text-amber-400" : "text-amber-600"}>gran fe.</span>
             </h1>
           </div>
         </section>
@@ -213,10 +215,41 @@ export default function ExperienciaClasesPage() {
           </section>
         </div>
 
-        <section className="text-center py-8 border-t border-stone-100 dark:border-stone-800/50 max-w-lg mx-auto">
-          <p
-            className={`text-base font-serif italic ${darkMode ? "text-stone-400" : "text-stone-500"}`}
+        {/* ESTADÍSTICAS */}
+        <section className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {[
+            { valor: "4", label: "Salones" },
+            { valor: "3–15", label: "Años atendidos" },
+            { valor: "Domingos", label: "Cada semana" },
+            { valor: "40+", label: "Niños y jóvenes" },
+          ].map((stat, i) => (
+            <div key={i} className={`p-5 rounded-[2rem] text-center border ${darkMode ? "bg-stone-900/40 border-stone-800" : "bg-white border-stone-100 shadow-sm"}`}>
+              <p className="text-2xl font-serif italic text-amber-500">{stat.valor}</p>
+              <p className="text-[9px] uppercase tracking-widest text-stone-400 font-bold mt-1">{stat.label}</p>
+            </div>
+          ))}
+        </section>
+
+        {/* CTA */}
+        <section className={`max-w-4xl mx-auto p-8 md:p-12 rounded-[3rem] text-center space-y-6 border ${darkMode ? "bg-stone-900/40 border-stone-800" : "bg-amber-50/50 border-amber-100"}`}>
+          <h3 className={`text-3xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
+            ¿Traes a tus <span className="text-amber-500">pequeños</span> el próximo Domingo?
+          </h3>
+          <p className={`text-sm font-light max-w-sm mx-auto ${darkMode ? "text-stone-400" : "text-stone-600"}`}>
+            Domingos de 10:30 AM a 12:30 PM · Calle los Heraldos 105
+          </p>
+          <a
+            href="https://wa.me/51989495033?text=Hola,%20deseo%20más%20información%20sobre%20la%20Escuela%20Dominical"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-amber-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20"
           >
+            Consultar información
+          </a>
+        </section>
+
+        <section className="text-center py-8 border-t border-stone-100 dark:border-stone-800/50 max-w-lg mx-auto">
+          <p className={`text-base font-serif italic ${darkMode ? "text-stone-400" : "text-stone-500"}`}>
             "Sembrando hoy la sombra del mañana."
           </p>
         </section>

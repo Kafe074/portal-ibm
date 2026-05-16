@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useDarkMode } from "@/hooks/useDarkMode";
 import dynamic from "next/dynamic";
 import { supabase } from "@/lib/supabase";
-import Sidebar from "@/app/components/sidebar";
+import Sidebar from "@/components/Sidebar";
 import {
   X,
   Calendar,
@@ -22,19 +23,17 @@ import esLocale from "@fullcalendar/core/locales/es";
 const coloresMinisterios: {
   [key: string]: { bg: string; text: string; border: string };
 } = {
-  General: { bg: "#e7e5e4", text: "#44403c", border: "#d6d3d1" },
+  General:    { bg: "#DBEAFE", text: "#1D4ED8", border: "#BFDBFE" },
+  Cursos:     { bg: "#FEF3C7", text: "#B45309", border: "#FDE68A" },
+  Eventos:    { bg: "#CCFBF1", text: "#0F766E", border: "#99F6E4" },
   Producción: { bg: "#B0D1F5", text: "#1772D4", border: "#B0D1F5" },
-  Alabanza: { bg: "#CCF0BD", text: "#78D455", border: "#CCF0BD" },
-  Servir: { bg: "#EFF0B6", text: "#E5E835", border: "#EFF0B6" },
+  Alabanza:   { bg: "#CCF0BD", text: "#78D455", border: "#CCF0BD" },
+  Servir:     { bg: "#EFF0B6", text: "#CA8A04", border: "#FDE68A" },
   Conectadas: { bg: "#F0D1EB", text: "#EB78D7", border: "#F0D1EB" },
-  Niños: { bg: "#E0AFB2", text: "#BA434A", border: "#E0AFB2" },
-  Misiones: { bg: "#D9BDA9", text: "#CC7435", border: "#D9BDA9" },
-  "Jóvenes y Adolescentes": {
-    bg: "#ede9fe",
-    text: "#5b21b6",
-    border: "#ddd6fe",
-  },
-  Default: { bg: "#f5f5f4", text: "#57534e", border: "#e7e5e4" },
+  Niños:      { bg: "#E0AFB2", text: "#BA434A", border: "#E0AFB2" },
+  Misiones:   { bg: "#D9BDA9", text: "#CC7435", border: "#D9BDA9" },
+  "Jóvenes y Adolescentes": { bg: "#ede9fe", text: "#5b21b6", border: "#ddd6fe" },
+  Default:    { bg: "#F0F9FF", text: "#0369A1", border: "#BAE6FD" },
 };
 
 export default function CalendarioDefinitivo() {
@@ -42,7 +41,7 @@ export default function CalendarioDefinitivo() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useDarkMode();
   const [userSession, setUserSession] = useState<any>(null);
   const [fechasSeleccionadas, setFechasSeleccionadas] = useState<string[]>([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState({
@@ -166,7 +165,7 @@ export default function CalendarioDefinitivo() {
     >
       <div className="flex-1 flex flex-col overflow-y-auto">
         <nav
-          className={`px-8 py-6 flex justify-between items-center border-b transition-colors ${darkMode ? "border-stone-900" : "border-stone-200"}`}
+          className={`px-4 md:px-8 py-4 md:py-6 pr-20 md:pr-8 flex justify-between items-center border-b transition-colors ${darkMode ? "border-stone-900" : "border-stone-200"}`}
         >
           <div>
             <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-stone-400">
@@ -201,9 +200,9 @@ export default function CalendarioDefinitivo() {
           </div>
         </nav>
 
-        <div className="p-8 max-w-6xl mx-auto w-full">
+        <div className="p-2 md:p-8 max-w-6xl mx-auto w-full">
           <div
-            className={`p-8 rounded-[2rem] border ${darkMode ? "bg-stone-900/40 border-stone-800" : "bg-white border-stone-100 shadow-sm"}`}
+            className={`p-2 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border ${darkMode ? "bg-stone-900/40 border-stone-800" : "bg-white border-stone-100 shadow-sm"}`}
           >
             <FullCalendar
               plugins={[dayGridPlugin]}
@@ -246,7 +245,7 @@ export default function CalendarioDefinitivo() {
         <div className="fixed inset-0 bg-stone-950/60 backdrop-blur-md flex items-center justify-center z-[200] p-4">
           <form
             onSubmit={handleGuardar}
-            className={`w-full max-w-xl rounded-[2.5rem] p-10 border shadow-2xl ${darkMode ? "bg-stone-900 border-stone-800" : "bg-white border-stone-100"}`}
+            className={`w-full max-w-xl rounded-[2.5rem] p-6 md:p-10 border shadow-2xl ${darkMode ? "bg-stone-900 border-stone-800" : "bg-white border-stone-100"}`}
           >
             <div className="text-center mb-8">
               <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-stone-400">
@@ -366,7 +365,7 @@ export default function CalendarioDefinitivo() {
       {selectedEvent && (
         <div className="fixed inset-0 bg-stone-950/40 backdrop-blur-md flex items-center justify-center z-50 p-4">
           <div
-            className={`${darkMode ? "bg-stone-900 border-stone-800 text-stone-100" : "bg-white border-stone-50 text-stone-900"} rounded-[2.5rem] p-10 max-w-sm w-full border shadow-2xl relative text-center`}
+            className={`${darkMode ? "bg-stone-900 border-stone-800 text-stone-100" : "bg-white border-stone-50 text-stone-900"} rounded-[2.5rem] p-6 md:p-10 max-w-sm w-full border shadow-2xl relative text-center`}
           >
             <button
               onClick={() => setSelectedEvent(null)}
@@ -401,9 +400,11 @@ export default function CalendarioDefinitivo() {
                   : "TODO EL DÍA"}
               </div>
             </div>
-            <p className="text-stone-500 text-sm italic mb-8">
-              "{selectedEvent.extendedProps.descripcion || "Sin descripción."}"
-            </p>
+            {selectedEvent.extendedProps.descripcion && (
+              <p className="text-stone-500 text-sm italic mb-8">
+                "{selectedEvent.extendedProps.descripcion}"
+              </p>
+            )}
             {userSession && (
               <div className="flex gap-2">
                 <button

@@ -1,18 +1,16 @@
 "use client";
-import { useState } from "react";
-import Sidebar from "@/app/components/sidebar";
+import { useState, useEffect } from "react";
+import { useDarkMode } from "@/hooks/useDarkMode";
+import { useContacto, abrirWhatsApp } from "@/hooks/useContacto";
+import { supabase } from "@/lib/supabase";
+import type { EscuelaSalon } from "@/types";
+import Sidebar from "@/components/Sidebar";
 import {
-  Baby,
-  Sparkles,
-  ShieldCheck,
-  Sun,
-  BookOpen,
-  Heart,
-  ChevronLeft,
-  ChevronRight,
-  Play,
-  MessageCircle,
+  Baby, Sparkles, ShieldCheck, Sun, BookOpen, Heart,
+  ChevronLeft, ChevronRight, Play, MessageCircle,
 } from "lucide-react";
+
+const SALON_COLORS = ["text-red-500", "text-blue-500", "text-purple-500", "text-emerald-500"];
 
 function CarruselSalon({
   fotos,
@@ -83,46 +81,14 @@ function CarruselSalon({
 }
 
 export default function EscuelaDominical() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useDarkMode();
+  const contacto = useContacto("escuela");
+  const [salones, setSalones] = useState<EscuelaSalon[]>([]);
 
-  const salones = [
-    {
-      rango: "3 a 6 años",
-      nombre: "Estrellitas",
-      desc: "Descubriendo las historias de la Biblia a través del asombro, el juego y la expresión creativa.",
-      color: "text-red-500",
-      fotos: [
-        "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/estrellitas",
-        "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/estrellitas_1",
-        "https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147102/estrellitas_2_dug3z5.mp4",
-      ],
-    },
-    {
-      rango: "7 a 11 años",
-      nombre: "Campeones",
-      desc: "Fortaleciendo su identidad en Cristo y cultivando amistades que duran para siempre.",
-      color: "text-blue-500",
-      fotos: [
-        "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/campeones",
-        "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/campeones_1",
-        "https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147101/campeones_2_rel0z9.mp4",
-      ],
-    },
-    {
-      rango: "12 a 15 años",
-      nombre: "Pre-Adolescentes",
-      desc: "Cimentando la fe con respuestas reales a sus preguntas en un entorno de confianza.",
-      color: "text-purple-500",
-      fotos: ["https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/pre", "https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147102/pre_1_cnxsm1.mp4"],
-    },
-    {
-      rango: "16 a 18 años",
-      nombre: "Adolescentes",
-      desc: "Liderazgo, servicio y una fe inquebrantable para impactar su entorno actual.",
-      color: "text-emerald-500",
-      fotos: ["https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/escuela/teens", "https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147101/teens_1_rtk9y0.mp4"],
-    },
-  ];
+  useEffect(() => {
+    supabase.from("escuela_salones").select("*").eq("activo", true).order("orden")
+      .then(({ data }) => { if (data) setSalones(data); });
+  }, []);
 
   return (
     <main
@@ -131,7 +97,7 @@ export default function EscuelaDominical() {
       <div className="flex-1 flex flex-col overflow-y-auto font-light selection:bg-stone-200 custom-scrollbar">
         <div className="h-8 md:h-12" />
 
-        <div className="w-full max-w-4xl mx-auto p-6 md:p-12 space-y-32">
+        <div className="w-full max-w-4xl mx-auto p-6 md:p-12 space-y-16 md:space-y-32">
           {/* --- HERO CINEMÁTICO --- */}
           <header className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
@@ -156,15 +122,13 @@ export default function EscuelaDominical() {
                 </p>
               </div>
 
-              <a
-                href="https://wa.me/51989495033?text=Hola,%20deseo%20más%20información%20sobre%20la%20Escuela%20Dominical"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => abrirWhatsApp(contacto, "Hola, deseo más información sobre la Escuela Dominical")}
                 className="inline-flex items-center gap-4 text-[10px] uppercase tracking-widest font-black border-b border-current pb-2 hover:opacity-50 transition-all"
               >
                 <MessageCircle size={14} />
                 Consultar para más información
-              </a>
+              </button>
             </div>
 
             <div className="relative group max-w-sm mx-auto md:ml-auto">
@@ -211,15 +175,15 @@ export default function EscuelaDominical() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {salones.map((salon, idx) => (
                 <div
-                  key={idx}
+                  key={salon.id}
                   className={`p-8 rounded-[3.5rem] border transition-all duration-500 group ${darkMode ? "bg-[#0f0f0f] border-stone-900 hover:border-stone-700" : "bg-white border-stone-100 hover:shadow-2xl hover:-translate-y-1"}`}
                 >
                   <CarruselSalon fotos={salon.fotos} darkMode={darkMode} />
                   <div className="flex justify-between items-center mb-6">
                     <span
-                      className={`text-[10px] font-black uppercase tracking-[0.2em] ${salon.color}`}
+                      className={`text-[10px] font-black uppercase tracking-[0.2em] ${SALON_COLORS[idx] ?? "text-amber-500"}`}
                     >
-                      {salon.rango}
+                      {salon.rango_edades}
                     </span>
                     <div
                       className={`p-2.5 rounded-2xl ${darkMode ? "bg-stone-900" : "bg-stone-50"}`}
@@ -238,7 +202,7 @@ export default function EscuelaDominical() {
                       {salon.nombre}
                     </h4>
                     <p className="text-[13px] opacity-60 leading-relaxed font-light">
-                      {salon.desc}
+                      {salon.descripcion}
                     </p>
                   </div>
                 </div>
@@ -247,7 +211,7 @@ export default function EscuelaDominical() {
           </section>
 
           {/* --- PILARES REFINADOS --- */}
-          <section className="py-20 border-y border-stone-200 dark:border-stone-900 grid grid-cols-1 md:grid-cols-3 gap-12">
+          <section className="py-10 md:py-20 border-y border-stone-200 dark:border-stone-900 grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
               {
                 icon: <ShieldCheck size={20} />,

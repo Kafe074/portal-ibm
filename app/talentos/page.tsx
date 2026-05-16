@@ -1,38 +1,40 @@
 'use client'
-import { useState } from 'react'
-import Sidebar from '@/app/components/sidebar'
+import { useState, useEffect } from 'react'
+import Sidebar from '@/components/Sidebar'
+import { useDarkMode } from '@/hooks/useDarkMode'
+import { useContacto, abrirWhatsApp } from '@/hooks/useContacto'
+import { supabase } from '@/lib/supabase'
+import type { TalentosConfig } from '@/types'
 import {
-    Trophy,
-    MessageCircle,
-    ChevronLeft,
-    ChevronRight,
-    ShieldCheck,
-    Heart,
-    Timer,
-    Users,
-    CheckCircle2,
-    Play
+    Trophy, MessageCircle, ChevronLeft, ChevronRight,
+    ShieldCheck, Heart, Timer, Users, CheckCircle2, Play
 } from 'lucide-react'
 
 export default function Talentos() {
-    const [darkMode, setDarkMode] = useState(false)
-    
-    // Estados para los mini-carruseles de valores
+    const [darkMode, setDarkMode] = useDarkMode()
+    const contacto = useContacto('talentos')
+    const [config, setConfig] = useState<TalentosConfig | null>(null)
+
     const [slideValor1, setSlideValor1] = useState(0)
     const [slideValor2, setSlideValor2] = useState(0)
 
-    const stats = [
-        { label: "Participantes", value: "25+", icon: <Users size={12} /> },
-        { label: "Días de Entrenamiento", value: "Sábados", icon: <Timer size={12} /> },
-        { label: "Categoría", value: "2 categorias", icon: <Trophy size={12} /> },
-    ];
+    useEffect(() => {
+        supabase.from('talentos_config').select('*').single()
+            .then(({ data }) => { if (data) setConfig(data) })
+    }, [])
 
-    const requisitos = [
+    const stats = [
+        { label: "Participantes",        value: config?.participantes ?? "25+",     icon: <Users size={12} /> },
+        { label: "Días de Entrenamiento", value: config?.dia_entrenamiento ?? "Sábados", icon: <Timer size={12} /> },
+        { label: "Categoría",            value: `${config?.categorias ?? 2} categorias`, icon: <Trophy size={12} /> },
+    ]
+
+    const requisitos = config?.requisitos ?? [
         "Uniforme de la academia",
         "Canilleras (obligatorio)",
         "Hidratación personal",
         "Puntualidad y respeto"
-    ];
+    ]
 
     const valores = [
         {
@@ -65,7 +67,7 @@ export default function Talentos() {
                 <div className="w-full max-w-4xl mx-auto p-6 md:p-12 space-y-24">
 
                     {/* --- HEADER --- */}
-                    <header className="flex flex-col md:flex-row justify-between items-end gap-8">
+                    <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                         <div className="space-y-4 text-left">
                             <span className="text-[8px] uppercase tracking-[0.6em] text-stone-400 font-bold block">
                                 Escuela de Fútbol
@@ -75,8 +77,8 @@ export default function Talentos() {
                                 <span className="italic font-serif opacity-40 text-3xl md:text-5xl">Talentos IBM</span>
                             </h2>
                         </div>
-                        
-                        <div className="flex gap-8 border-l border-stone-200 dark:border-stone-800 pl-8 pb-2">
+
+                        <div className="flex flex-wrap gap-6 md:gap-8 border-t md:border-t-0 md:border-l border-stone-200 dark:border-stone-800 pt-4 md:pt-0 md:pl-8 pb-2">
                             {stats.map((stat, i) => (
                                 <div key={i} className="space-y-1">
                                     <div className="flex items-center gap-2 text-stone-400">
@@ -99,7 +101,7 @@ export default function Talentos() {
                                 playsInline
                                 className="w-full h-full object-cover grayscale opacity-60 transition-all duration-700 group-hover:scale-105"
                             >
-                                <source src="https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147442/talentos_7_uaekvi.mp4" />
+                                <source src={config?.video_url ?? "https://res.cloudinary.com/dv5j3lyph/video/upload/v1777147442/talentos_7_uaekvi.mp4"} />
                                 Tu navegador no soporta videos.
                             </video>
                             
@@ -115,7 +117,7 @@ export default function Talentos() {
                     </div>
 
                     {/* --- REQUISITOS --- */}
-                    <section className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-12 border-y border-stone-200 dark:border-stone-900">
+                    <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center py-8 md:py-12 border-y border-stone-200 dark:border-stone-900">
                         <div>
                             <h4 className={`text-2xl font-serif italic mb-4 ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Preparación para el juego</h4>
                             <p className="text-xs opacity-60 leading-relaxed">Fomentamos la responsabilidad desde el momento en que preparan su mochila para el entrenamiento.</p>
@@ -131,7 +133,7 @@ export default function Talentos() {
                     </section>
 
                     {/* --- VALORES CON CARRUSEL --- */}
-                    <div className="space-y-32">
+                    <div className="space-y-16 md:space-y-32">
                         {valores.map((valor, idx) => (
                             <div key={idx} className={`flex flex-col ${idx % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} gap-12 md:gap-20 items-center`}>
                                 <div className={`flex-1 space-y-6 ${idx % 2 !== 0 ? 'md:text-right' : 'text-left'}`}>
@@ -182,13 +184,13 @@ export default function Talentos() {
                         <div className="space-y-4">
                             <h2 className={`text-3xl md:text-5xl font-serif italic ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Únete al equipo</h2>
                             <p className="max-w-xs mx-auto text-[10px] uppercase tracking-[0.3em] text-stone-500 leading-relaxed">
-                                Sábados de 4:00 pm a 6:00 pm <br />
-                                Niños y jóvenes de 7 a 17 años
+                                {config ? `${config.dia_entrenamiento} de ${config.hora_inicio} a ${config.hora_fin}` : "Sábados de 4:00 pm a 6:00 pm"} <br />
+                                Niños y jóvenes de {config?.edad_min ?? 7} a {config?.edad_max ?? 17} años
                             </p>
                         </div>
 
                         <button
-                            onClick={() => window.open('https://wa.me/51982794302', '_blank')}
+                            onClick={() => abrirWhatsApp(contacto)}
                             className={`group px-10 py-5 rounded-full inline-flex items-center gap-4 transition-all hover:scale-105 active:scale-95 ${darkMode ? 'bg-stone-100 text-stone-900' : 'bg-stone-900 text-stone-100'}`}
                         >
                             <MessageCircle size={16} className="group-hover:rotate-12 transition-transform" />

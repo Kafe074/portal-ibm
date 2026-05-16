@@ -1,251 +1,59 @@
 "use client";
-import { useRef, useState } from "react";
-import Sidebar from "@/app/components/sidebar";
+import { useRef, useState, useEffect } from "react";
+import Sidebar from "@/components/Sidebar";
+import { useDarkMode } from "@/hooks/useDarkMode";
+import { useContacto, abrirWhatsApp } from "@/hooks/useContacto";
+import { supabase } from "@/lib/supabase";
+import type { MisionPunto, MisionViaje, MisionEvangelismo } from "@/types";
 import { Map, Marker, NavigationControl } from "react-map-gl/mapbox";
 import {
-  MapPin,
-  X,
-  Quote,
-  Camera,
-  Heart,
-  Zap,
-  Clock,
-  Sparkles,
-  BookOpen,
-  ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
-  ArrowRight,
+  MapPin, X, Quote, Camera, Heart, Zap, Clock,
+  BookOpen, ArrowLeft, ChevronLeft, ChevronRight, ArrowRight,
 } from "lucide-react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Link from "next/link";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-const puntos = [
-  {
-    id: 1,
-    name: "Mazamari, Perú",
-    misionero: "Familia Romero",
-    proyecto: "Plantación y Discipulado en la Selva Central",
-    fotos: [
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/mazamari",
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/mazamari_1",
-    ],
-    testimonios: [
-      {
-        autor: "David R.",
-        texto:
-          "Ver cómo los jóvenes en Mazamari abren su corazón ha sido nuestra mayor recompensa este año.",
-      },
-    ],
-    peticiones: [
-      "Sabiduría para el equipo",
-      "Nuevos locales en las comunidades",
-      "Protección en los viajes fluviales",
-    ],
-    bio: "La Familia Romero dejó su hogar en El Salvador respondiendo al llamado de servir en la selva peruana. Su labor se centra en establecer centros de esperanza para comunidades indígenas, combinando la enseñanza bíblica con apoyo social.",
-    lat: -11.32171943470054,
-    lng: -74.5356705910892,
-  },
-  {
-    id: 2,
-    name: "San Jerónimo de Túnan, Perú",
-    misionero: "Richard C. y Ana M.",
-    proyecto: "Iglesia en Casa Chalaysanto.",
-    fotos: [
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/chalay",
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/chalay_1",
-    ],
-    testimonios: [
-      {
-        autor: "Richard C.",
-        texto:
-          "Evangelizar y ganar a mi familia para Dios, así como también a nuestro barrio y comunidad.",
-      },
-    ],
-    peticiones: ["Unidad familiar", "Apertura de nuevos hogares anfitriones"],
-    bio: "En el corazón del Valle del Mantaro, Chalay lidera un movimiento de iglesias orgánicas. Su enfoque es transformar la comunidad desde el núcleo familiar, fortaleciendo los lazos espirituales en entornos cotidianos y cercanos.",
-    lat: -11.943488519081162,
-    lng: -75.29026290268125,
-  },
-  {
-    id: 3,
-    name: "Pazos, Perú",
-    misionero: "Familia Taboada",
-    proyecto: "Misión en las Alturas de Huancavelica",
-    fotos: [
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/pazos",
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/pazos_1",
-    ],
-    testimonios: [
-      {
-        autor: "Benjamín T.",
-        texto:
-          "En las alturas de Junín, la fe se siente tan pura como el aire.",
-      },
-    ],
-    peticiones: [
-      "Fortaleza física para el clima",
-      "Provisión para materiales educativos",
-    ],
-    bio: "La Familia Taboada sirve a más de 3,800 metros de altura. Su labor es vital en comunidades donde el acceso es limitado, llevando no solo el mensaje de salvación, sino también un acompañamiento constante en el desarrollo discipular.",
-    lat: -12.258744835555603,
-    lng: -75.07072022168634,
-  },
-  {
-    id: 4,
-    name: "Chilca, Perú",
-    misionero: "Paola C. y Judith A.",
-    proyecto: "Casa de Paz Reconciliación Familiar",
-    fotos: [
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777816078/WhatsApp_Image_2026-04-25_at_10.38.03_PM_ijaprt.jpg",
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777855222/WhatsApp_Image_2026-04-25_at_10.38.17_PM_vwhx9d.jpg",
-    ],
-    testimonios: [
-      {
-        autor: "Paola A.",
-        texto: "Dando a conocer del amor de Dios a la familia.",
-      },
-    ],
-    peticiones: [
-      "Sanidad emocional en las familias",
-      "Recursos para talleres comunitarios",
-    ],
-    bio: "Desde la cercanía del hogar, Dios levanta espacios donde su Palabra es compartida, las familias son fortalecidas y la fe florece viva, guiados por Él; en lo cotidiano y cercano, se impulsa un movimiento que transforma la comunidad desde el núcleo familiar, donde nacen relaciones genuinas, se restauran corazones, renace la esperanza y cada proceso es acompañado con amor. ",
-    lat: -12.085900440542568,
-    lng: -75.20025828175238,
-  },
-  {
-    id: 5,
-    name: "Maypuco, Perú",
-    misionero: "Percy R.",
-    proyecto: "Luz en el Amazonas",
-    fotos: [
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/maypuco",
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/maypuco_1",
-    ],
-    testimonios: [
-      {
-        autor: "Percy R.",
-        texto:
-          "Ser la luz a la comunidad indigena Urarinas Maypuco y alcanzar a las otras comunidades indigenas alrededor.",
-      },
-    ],
-    peticiones: [
-      "Nuevos líderes locales",
-      "Sostenimiento para viajes extensos",
-    ],
-    bio: "Percy navega las riberas del Marañón llevando esperanza a pueblos que rara vez reciben visitas. Su vida es un testimonio de entrega, enfocándose en el discipulado de hombres que se conviertan en los futuros pilares de su región.",
-    lat: -4.826989923629894,
-    lng: -75.11991101724514,
-  },
-  {
-    id: 6,
-    name: "Ccapi Los Uros, Perú",
-    misionero: "Lince C.",
-    proyecto: "Generación Semilla en el Titicaca",
-    fotos: [
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/ccapi",
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/ccapi_1",
-    ],
-    testimonios: [
-      {
-        autor: "Lince C.",
-        texto: "Evangelizar las comunidades Aimaras en el lago Titicaca.",
-      },
-    ],
-    peticiones: ["Salud para los niños", "Materiales didácticos bilingües"],
-    bio: "Sobre las islas flotantes de los Uros, Lince trabaja con la generación más joven. En un entorno turístico pero de muchas necesidades espirituales, ella siembra principios eternos en el corazón de los niños que habitan el lago sagrado.",
-    lat: -15.81209726283079,
-    lng: -69.36955345903066,
-  },
-  {
-    id: 7,
-    name: "El Cairo, Egipto",
-    misionero: "Familia Angulo ",
-    proyecto: "Puentes Culturales en el Medio Oriente",
-    fotos: [
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/cairo",
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/egipto_1",
-    ],
-    testimonios: [
-      {
-        autor: "David A. ",
-        texto: "Compartiendo con diferentes culturas y enseñándoles de Jesús.",
-      },
-    ],
-    peticiones: [
-      "Gracia en el aprendizaje del idioma",
-      "Protección y discreción",
-    ],
-    bio: "La Familia Angulo representa nuestra extensión en tierras lejanas. Su labor en Egipto es un ejercicio de amor y paciencia, construyendo puentes de amistad genuina y compartiendo la luz de Cristo en un contexto cultural profundamente distinto.",
-    lat: 30.099720817871646,
-    lng: 31.301887758604295,
-  },
-  {
-    id: 8,
-    name: "Kuala Lumpur, Malasia",
-    misionero: "Familia Cusilayme ",
-    proyecto: "Misión en el Sudeste Asiático",
-    fotos: [
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/malasia",
-      "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/malasia_1",
-    ],
-    testimonios: [
-      {
-        autor: "Richard C. ",
-        texto: "Compartiendo con diferentes culturas y enseñándoles de Jesús.",
-      },
-    ],
-    peticiones: ["Conexiones estratégicas", "Paz para la región"],
-    bio: "Desde Malasia, los Cusilayme trabajan en la integración y el testimonio dentro de una sociedad multicultural. Su enfoque es el servicio profesional como plataforma para manifestar el carácter de Dios en el continente asiático.",
-    lat: 3.147356,
-    lng: 101.695283,
-    link: "https://luzenelsudesteasiatico.com/"
-  },
-];
-
-
-
 export default function MisionesPage() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [selectedPoint, setSelectedPoint] = useState<any>(null);
+  const [darkMode, setDarkMode] = useDarkMode();
+  const contacto = useContacto("misiones");
   const mapRef = useRef<any>(null);
+
+  const [puntos, setPuntos] = useState<MisionPunto[]>([]);
+  const [viajes, setViajes] = useState<MisionViaje[]>([]);
+  const [evangelismo, setEvangelismo] = useState<MisionEvangelismo | null>(null);
+  const [selectedPoint, setSelectedPoint] = useState<MisionPunto | null>(null);
+  const [currentIndices, setCurrentIndices] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    supabase.from("misiones_puntos").select("*").eq("activo", true).order("orden")
+      .then(({ data }) => { if (data) setPuntos(data); });
+    supabase.from("misiones_viajes").select("*").order("orden")
+      .then(({ data }) => { if (data) setViajes(data); });
+    supabase.from("misiones_evangelismo").select("*").eq("activo", true).single()
+      .then(({ data }) => { if (data) setEvangelismo(data); });
+  }, []);
 
   const flyToPoint = (lng: number, lat: number) => {
     mapRef.current?.flyTo({ center: [lng, lat], zoom: 6, duration: 2500 });
   };
 
-  const [currentIndices, setCurrentIndices] = useState<{
-    [key: number]: number;
-  }>({});
-
-  const handleNext = (viajeIdx: number, totalImages: number) => {
+  const handleCarrusel = (id: string, dir: 1 | -1, total: number) => {
     setCurrentIndices((prev) => ({
       ...prev,
-      [viajeIdx]: ((prev[viajeIdx] || 0) + 1) % totalImages,
-    }));
-  };
-
-  const handlePrev = (viajeIdx: number, totalImages: number) => {
-    setCurrentIndices((prev) => ({
-      ...prev,
-      [viajeIdx]: ((prev[viajeIdx] || 0) - 1 + totalImages) % totalImages,
+      [id]: ((prev[id] || 0) + dir + total) % total,
     }));
   };
 
   return (
-    <div
-      className={`flex flex-col lg:flex-row-reverse min-h-screen transition-colors duration-700 ${darkMode ? "bg-[#121212]" : "bg-[#fafafa]"}`}
-    >
+    <div className={`flex flex-col lg:flex-row-reverse min-h-screen transition-colors duration-700 ${darkMode ? "bg-[#121212]" : "bg-[#fafafa]"}`}>
       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
 
       <main className="flex-1 p-4 md:p-10 space-y-12 overflow-y-auto pt-24 lg:pt-10 scrollbar-hide">
         <Link
-          href="/"
-          className={`inline-flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] transition-all
-            ${darkMode ? "text-stone-600 hover:text-stone-200" : "text-stone-400 hover:text-stone-900"}`}
+          href="/#ministerios"
+          className={`inline-flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] transition-all ${darkMode ? "text-stone-600 hover:text-stone-200" : "text-stone-400 hover:text-stone-900"}`}
         >
           <ArrowLeft size={12} />
           Volver al Inicio
@@ -253,18 +61,11 @@ export default function MisionesPage() {
 
         {/* HEADER */}
         <div className="flex flex-col space-y-10 text-center lg:text-left max-w-3xl">
-          {/* Cabecera: Subtítulo + Título */}
           <div className="space-y-3">
-            <h2
-              className={`text-[10px] font-black uppercase tracking-[0.5em] ${darkMode ? "text-stone-500" : "text-stone-400"
-                }`}
-            >
+            <h2 className={`text-[10px] font-black uppercase tracking-[0.5em] ${darkMode ? "text-stone-500" : "text-stone-400"}`}>
               Evangelismo e Impacto
             </h2>
-            <h1
-              className={`text-4xl md:text-6xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"
-                }`}
-            >
+            <h1 className={`text-4xl md:text-6xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
               Nuestra{" "}
               <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
                 Huella Misionera
@@ -272,55 +73,34 @@ export default function MisionesPage() {
             </h1>
           </div>
 
-          {/* Bloque del Versículo: Más minimalista y aireado */}
           <div className="flex flex-col space-y-6">
-            <div
-              className={`relative ${darkMode ? "text-stone-400" : "text-stone-600"}`}
-            >
-              {/* Línea decorativa lateral (solo visible en desktop para guiar la lectura) */}
-              <div className="hidden lg:block absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-amber-500/50 to-transparent"></div>
-
+            <div className={`relative ${darkMode ? "text-stone-400" : "text-stone-600"}`}>
+              <div className="hidden lg:block absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-amber-500/50 to-transparent" />
               <p className="text-lg md:text-xl font-serif italic leading-relaxed tracking-wide">
-                "Pero recibiréis poder, cuando haya venido sobre vosotros el
-                Espíritu Santo, y me seréis testigos en Jerusalén, en toda
-                Judea, en Samaria, y hasta lo último de la tierra."
+                "Pero recibiréis poder, cuando haya venido sobre vosotros el Espíritu Santo,
+                y me seréis testigos en Jerusalén, en toda Judea, en Samaria, y hasta lo último de la tierra."
               </p>
             </div>
-
-            {/* Referencia: Hechos 1:8 */}
             <div className="flex items-center justify-center lg:justify-start gap-4">
-              <span
-                className={`h-px w-8 ${darkMode ? "bg-stone-800" : "bg-stone-200"}`}
-              ></span>
-              <p className="text-[11px] font-black uppercase tracking-[0.3em] text-amber-600">
-                Hechos 1:8
-              </p>
+              <span className={`h-px w-8 ${darkMode ? "bg-stone-800" : "bg-stone-200"}`} />
+              <p className="text-[11px] font-black uppercase tracking-[0.3em] text-amber-600">Hechos 1:8</p>
             </div>
           </div>
         </div>
 
-        {/* CONTENEDOR MAPA Y INFO (RESPONSIVE) */}
+        {/* MAPA + SIDEBAR DE DETALLES */}
         <div className="flex flex-col lg:flex-row gap-8 min-h-[600px] lg:h-[650px]">
-          {/* SIDEBAR INTERNO (DETALLES) */}
-          <div
-            className={`w-full lg:w-[450px] rounded-[3rem] border overflow-hidden transition-all duration-700 flex flex-col
-            ${darkMode ? "bg-stone-900/40 border-stone-800" : "bg-white border-stone-200 shadow-sm"}`}
-          >
+          {/* Panel de detalle */}
+          <div className={`w-full lg:w-[450px] rounded-[3rem] border overflow-hidden transition-all duration-700 flex flex-col ${darkMode ? "bg-stone-900/40 border-stone-800" : "bg-white border-stone-200 shadow-sm"}`}>
             <div className="p-8 flex-1 overflow-y-auto scrollbar-hide">
               {!selectedPoint ? (
                 <div className="h-full flex flex-col justify-center items-center text-center space-y-6 opacity-30">
-                  <MapPin
-                    size={24}
-                    strokeWidth={1}
-                    className={darkMode ? "text-white" : "text-black"}
-                  />
-                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-950">
-                    Las misiones es el mandato de nuestro Señor Jesucristo y en
-                    obediencia a ello nos extendemos.
+                  <MapPin size={24} strokeWidth={1} className={darkMode ? "text-white" : "text-black"} />
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold">
+                    Las misiones es el mandato de nuestro Señor Jesucristo y en obediencia a ello nos extendemos.
                   </p>
-                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-black">
-                    El Tambo | Chilca | San Jeronimo | Islas Flotantes - Puno |
-                    Maypuco - Loreto | Egipto | Malasia
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold">
+                    {puntos.map((p) => p.nombre.split(",")[0]).join(" | ")}
                   </p>
                 </div>
               ) : (
@@ -330,150 +110,105 @@ export default function MisionesPage() {
                       Campo Misionero
                     </span>
                     <button onClick={() => setSelectedPoint(null)}>
-                      <X
-                        size={18}
-                        className="text-stone-400 hover:text-stone-600"
-                      />
+                      <X size={18} className="text-stone-400 hover:text-stone-600" />
                     </button>
                   </div>
 
                   <div className="space-y-3">
-                    <h3
-                      className={`text-4xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}
-                    >
+                    <h3 className={`text-4xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
                       {selectedPoint.misionero}
                     </h3>
                     <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-amber-600">
-                      {selectedPoint.name}
+                      {selectedPoint.nombre}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    {selectedPoint.fotos.map((foto: string, i: number) => (
-                      <img
-                        key={i}
-                        src={foto}
-                        className="rounded-2xl h-28 w-full object-cover grayscale hover:grayscale-0 transition-all duration-500 shadow-md"
-                        alt="Misión"
-                      />
+                    {selectedPoint.fotos.map((foto, i) => (
+                      <img key={i} src={foto} className="rounded-2xl h-28 w-full object-cover grayscale hover:grayscale-0 transition-all duration-500 shadow-md" alt="Misión" />
                     ))}
                   </div>
 
                   <div className="space-y-4">
-                    <h4
-                      className={`text-lg font-serif italic ${darkMode ? "text-stone-200" : "text-stone-800"}`}
-                    >
+                    <h4 className={`text-lg font-serif italic ${darkMode ? "text-stone-200" : "text-stone-800"}`}>
                       {selectedPoint.proyecto}
                     </h4>
-                    <p
-                      className={`text-sm leading-relaxed font-light ${darkMode ? "text-stone-400" : "text-stone-600"}`}
-                    >
-                      {selectedPoint.bio}
-                    </p>
-                  </div>
-
-                  <div className="space-y-4 pt-6 border-t border-stone-100 dark:border-stone-800">
-                    <div className="flex items-center gap-2 text-stone-400">
-                      <Quote size={14} className="text-amber-500" />
-                      <span className="text-[9px] font-bold uppercase tracking-widest">
-                        Testimonio
-                      </span>
-                    </div>
-                    {selectedPoint.testimonios.map((t: any, i: number) => (
-                      <p
-                        key={i}
-                        className={`text-[14px] italic leading-relaxed border-l-2 border-amber-500 pl-4 ${darkMode ? "text-stone-300" : "text-stone-700"}`}
-                      >
-                        "{t.texto}"
+                    {selectedPoint.bio && (
+                      <p className={`text-sm leading-relaxed font-light ${darkMode ? "text-stone-400" : "text-stone-600"}`}>
+                        {selectedPoint.bio}
                       </p>
-                    ))}
+                    )}
                   </div>
 
-                  <div className="space-y-4 pt-6">
-                    <div className="flex items-center gap-2 text-amber-600">
-                      <Heart size={14} fill="currentColor" />
-                      <span className="text-[9px] font-bold uppercase tracking-widest">
-                        Peticiones de Oración
-                      </span>
+                  {selectedPoint.testimonio_texto && (
+                    <div className="space-y-4 pt-6 border-t border-stone-100 dark:border-stone-800">
+                      <div className="flex items-center gap-2 text-stone-400">
+                        <Quote size={14} className="text-amber-500" />
+                        <span className="text-[9px] font-bold uppercase tracking-widest">Testimonio</span>
+                      </div>
+                      <p className={`text-[14px] italic leading-relaxed border-l-2 border-amber-500 pl-4 ${darkMode ? "text-stone-300" : "text-stone-700"}`}>
+                        "{selectedPoint.testimonio_texto}"
+                      </p>
                     </div>
-                    <ul className="space-y-2">
-                      {selectedPoint.peticiones.map((p: string, i: number) => (
-                        <li
-                          key={i}
-                          className={`text-[12px] flex items-center gap-3 ${darkMode ? "text-stone-400" : "text-stone-600"}`}
-                        >
-                          <span className="w-1 h-1 bg-amber-500 rounded-full" />{" "}
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  {selectedPoint.link && (
-                    <div className="pt-8 border-t border-stone-100 dark:border-stone-800 animate-in fade-in slide-in-from-top-2 duration-1000 delay-300">
+                  )}
+
+                  {selectedPoint.peticiones.length > 0 && (
+                    <div className="space-y-4 pt-6">
+                      <div className="flex items-center gap-2 text-amber-600">
+                        <Heart size={14} fill="currentColor" />
+                        <span className="text-[9px] font-bold uppercase tracking-widest">Peticiones de Oración</span>
+                      </div>
+                      <ul className="space-y-2">
+                        {selectedPoint.peticiones.map((p, i) => (
+                          <li key={i} className={`text-[12px] flex items-center gap-3 ${darkMode ? "text-stone-400" : "text-stone-600"}`}>
+                            <span className="w-1 h-1 bg-amber-500 rounded-full" /> {p}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {selectedPoint.link_externo && (
+                    <div className="pt-8 border-t border-stone-100 dark:border-stone-800">
                       <Link
-                        href={selectedPoint.link}
+                        href={selectedPoint.link_externo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`group flex items-center justify-between w-full px-6 py-5 rounded-[2rem] border transition-all duration-500
-              ${darkMode
-                            ? "border-stone-800 bg-stone-900/50 hover:bg-stone-800 text-stone-400 hover:text-stone-100"
-                            : "border-stone-100 bg-stone-50/50 hover:bg-stone-100 text-stone-500 hover:text-stone-900 shadow-sm"}`}
+                        className={`group flex items-center justify-between w-full px-6 py-5 rounded-[2rem] border transition-all duration-500 ${darkMode ? "border-stone-800 bg-stone-900/50 hover:bg-stone-800 text-stone-400 hover:text-stone-100" : "border-stone-100 bg-stone-50/50 hover:bg-stone-100 text-stone-500 hover:text-stone-900 shadow-sm"}`}
                       >
                         <div className="flex flex-col items-start gap-1 text-left">
-                          <span className="text-[8px] font-black uppercase tracking-[0.2em] text-amber-600">
-                            Sitio Externo
-                          </span>
-                          <span className="text-[11px] font-bold tracking-wide">
-                            Ver plataforma del proyecto
-                          </span>
+                          <span className="text-[8px] font-black uppercase tracking-[0.2em] text-amber-600">Sitio Externo</span>
+                          <span className="text-[11px] font-bold tracking-wide">Ver plataforma del proyecto</span>
                         </div>
                         <div className="p-2 rounded-full bg-amber-500/10 text-amber-600 group-hover:bg-amber-500 group-hover:text-white transition-all duration-500">
-                          <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                          <ArrowRight size={16} />
                         </div>
                       </Link>
                     </div>
                   )}
-
                 </div>
               )}
             </div>
           </div>
 
-
-
-          {/* MAPA */}
-          <div
-            className={`w-full h-[450px] lg:h-[650px] relative rounded-[3rem] overflow-hidden border transition-all duration-1000 z-0
-    ${darkMode ? "border-stone-800" : "border-stone-100 shadow-2xl shadow-stone-200/50"}`}
-          >
+          {/* Mapa */}
+          <div className={`w-full h-[450px] lg:h-[650px] relative rounded-[3rem] overflow-hidden border transition-all duration-1000 z-0 ${darkMode ? "border-stone-800" : "border-stone-100 shadow-2xl shadow-stone-200/50"}`}>
             <Map
               ref={mapRef}
               mapboxAccessToken={MAPBOX_TOKEN}
-              initialViewState={{ longitude: -75, latitude: -11, zoom: 3.5 }} // Zoom un poco más alejado para móvil
-              mapStyle={
-                darkMode
-                  ? "mapbox://styles/mapbox/dark-v11"
-                  : "mapbox://styles/mapbox/light-v11"
-              }
-              style={{ width: "100%", height: "100%" }} // Garantiza que llene el contenedor
+              initialViewState={{ longitude: -75, latitude: -11, zoom: 3.5 }}
+              mapStyle={darkMode ? "mapbox://styles/mapbox/dark-v11" : "mapbox://styles/mapbox/light-v11"}
+              style={{ width: "100%", height: "100%" }}
             >
               <NavigationControl position="bottom-right" />
               {puntos.map((p) => (
                 <Marker key={p.id} longitude={p.lng} latitude={p.lat}>
                   <button
-                    onClick={() => {
-                      setSelectedPoint(p);
-                      flyToPoint(p.lng, p.lat);
-                    }}
+                    onClick={() => { setSelectedPoint(p); flyToPoint(p.lng, p.lat); }}
                     className="group relative flex items-center justify-center"
                   >
-                    <div
-                      className={`absolute w-10 h-10 rounded-full animate-ping opacity-10 ${selectedPoint?.id === p.id ? "bg-amber-500" : "bg-stone-400"}`}
-                    />
-                    <div
-                      className={`w-4 h-4 rounded-full border-[2px] border-white shadow-xl transition-all duration-700
-              ${selectedPoint?.id === p.id ? "bg-amber-500 scale-125" : "bg-stone-800"}`}
-                    />
+                    <div className={`absolute w-10 h-10 rounded-full animate-ping opacity-10 ${selectedPoint?.id === p.id ? "bg-amber-500" : "bg-stone-400"}`} />
+                    <div className={`w-4 h-4 rounded-full border-[2px] border-white shadow-xl transition-all duration-700 ${selectedPoint?.id === p.id ? "bg-amber-500 scale-125" : "bg-stone-800"}`} />
                   </button>
                 </Marker>
               ))}
@@ -481,205 +216,116 @@ export default function MisionesPage() {
           </div>
         </div>
 
-        {/* 2. SECCIÓN: BITÁCORA DE VIAJES (CON FOTOS) */}
-        <section className="max-w-7xl mx-auto space-y-12">
-          <div className="flex items-center gap-6 border-b border-stone-200 dark:border-stone-800 pb-8">
-            <Camera size={32} className="text-amber-500" />
-            <h3
-              className={`text-5xl font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}
-            >
-              Bitácora de Viajes
-            </h3>
-          </div>
+        {/* BITÁCORA DE VIAJES */}
+        {viajes.length > 0 && (
+          <section className="max-w-7xl mx-auto space-y-12">
+            <div className="flex items-center gap-6 border-b border-stone-200 dark:border-stone-800 pb-8">
+              <Camera size={32} className="text-amber-500" />
+              <h3 className={`text-3xl md:text-5xl font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}>
+                Bitácora de Viajes
+              </h3>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {[
-              {
-                lugar: "Puerto Bermudes",
-                fecha: "Agosto 2025",
-                desc: "Nuestra última expedición a Puerto Bermudes. Trabajamos en el evangelismo dentro de la ciudad al igual que las comunidades aledañas con acceso un poco más complicado.",
-                // Ahora aceptamos un array de imágenes
-                images: [
-                  "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto/iglesia-portal/ministerios/misiones/seccion2/viaje-selva",
-                  "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777144964/iglesia-portal/ministerios/misiones/seccion2/viaje-selva-2",
-                  "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777144964/iglesia-portal/ministerios/misiones/seccion2/viaje-selva-3",
-                ],
-              },
-            ].map((viaje, i) => {
-              const currentIndex = currentIndices[i] || 0;
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {viajes.map((viaje) => {
+                const idx = currentIndices[viaje.id] || 0;
+                return (
+                  <div key={viaje.id} className={`group overflow-hidden rounded-[3.5rem] border transition-all duration-700 ${darkMode ? "bg-stone-900/40 border-stone-800 hover:border-stone-700" : "bg-white border-stone-100 shadow-sm hover:shadow-2xl"}`}>
+                    <div className="relative h-80 overflow-hidden">
+                      <div className="absolute inset-0 z-10 flex justify-between items-center px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <button onClick={() => handleCarrusel(viaje.id, -1, viaje.fotos.length)} className="p-2 rounded-full bg-black/20 backdrop-blur-md text-white hover:bg-black/40 transition-all">
+                          <ChevronLeft size={20} />
+                        </button>
+                        <button onClick={() => handleCarrusel(viaje.id, 1, viaje.fotos.length)} className="p-2 rounded-full bg-black/20 backdrop-blur-md text-white hover:bg-black/40 transition-all">
+                          <ChevronRight size={20} />
+                        </button>
+                      </div>
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                        {viaje.fotos.map((_, dotIdx) => (
+                          <div key={dotIdx} className={`h-1 rounded-full transition-all duration-500 ${idx === dotIdx ? "w-6 bg-amber-500" : "w-1 bg-white/50"}`} />
+                        ))}
+                      </div>
+                      <div className="relative w-full h-full">
+                        {viaje.fotos.map((img, imgIdx) => (
+                          <img key={imgIdx} src={img} alt={`${viaje.lugar} ${imgIdx}`}
+                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${idx === imgIdx ? "opacity-100 scale-100" : "opacity-0 scale-110 pointer-events-none"}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="p-6 md:p-10 space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em]">{viaje.fecha_texto}</span>
+                        <span className="text-[9px] opacity-40 font-bold uppercase tracking-widest">{idx + 1} / {viaje.fotos.length}</span>
+                      </div>
+                      <h4 className={`text-3xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-800"}`}>{viaje.lugar}</h4>
+                      {viaje.descripcion && <p className="text-base text-stone-500 dark:text-stone-400 font-light leading-relaxed">{viaje.descripcion}</p>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
-              return (
-                <div
-                  key={i}
-                  className={`group overflow-hidden rounded-[3.5rem] border transition-all duration-700 ${darkMode
-                    ? "bg-stone-900/40 border-stone-800 hover:border-stone-700"
-                    : "bg-white border-stone-100 shadow-sm hover:shadow-2xl"
-                    }`}
+        {/* EVANGELISMO LOCAL */}
+        {evangelismo && (
+          <section className="max-w-7xl mx-auto space-y-10">
+            <div className="flex items-center gap-4 border-b border-stone-200 dark:border-stone-800 pb-6">
+              <Zap size={28} className="text-amber-500" />
+              <h3 className={`text-4xl font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}>Evangelismo Local</h3>
+            </div>
+
+            <div className="flex flex-col lg:flex-row gap-10">
+              <div className={`lg:w-1/3 p-6 md:p-10 rounded-[3.5rem] flex flex-col justify-between ${darkMode ? "bg-stone-900/80" : "bg-stone-100"}`}>
+                <div className="space-y-6">
+                  <p className="text-stone-500 italic font-light leading-relaxed">
+                    "No nos avergonzamos del evangelio, porque es poder de Dios." Creemos que nuestra primera misión está en nuestras calles, compartiendo esperanza con cada vecino.
+                  </p>
+                  {evangelismo.proxima_salida && (
+                    <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl">
+                      <Clock className="text-amber-500" size={24} />
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Próxima Salida</p>
+                        <p className={`text-sm font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}>{evangelismo.proxima_salida}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <button
+                  onClick={() => abrirWhatsApp(contacto)}
+                  className="mt-8 w-full py-4 rounded-full bg-amber-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20"
                 >
-                  {/* CONTENEDOR DEL CARRUSEL DE IMÁGENES */}
-                  <div className="relative h-80 overflow-hidden">
-                    {/* Navegación del Carrusel (Solo visible en hover) */}
-                    <div className="absolute inset-0 z-10 flex justify-between items-center px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      <button
-                        onClick={() => handlePrev(i, viaje.images.length)}
-                        className="p-2 rounded-full bg-black/20 backdrop-blur-md text-white hover:bg-black/40 transition-all"
-                      >
-                        <ChevronLeft size={20} />
-                      </button>
-                      <button
-                        onClick={() => handleNext(i, viaje.images.length)}
-                        className="p-2 rounded-full bg-black/20 backdrop-blur-md text-white hover:bg-black/40 transition-all"
-                      >
-                        <ChevronRight size={20} />
-                      </button>
-                    </div>
-
-                    {/* Indicadores de puntos (Dots) */}
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-                      {viaje.images.map((_, dotIdx) => (
-                        <div
-                          key={dotIdx}
-                          className={`h-1 rounded-full transition-all duration-500 ${currentIndex === dotIdx
-                            ? "w-6 bg-amber-500"
-                            : "w-1 bg-white/50"
-                            }`}
-                        />
-                      ))}
-                    </div>
-
-                    {/* Renderizado de la imagen con transición suave */}
-                    <div className="relative w-full h-full">
-                      {viaje.images.map((img, imgIdx) => (
-                        <img
-                          key={imgIdx}
-                          src={img}
-                          alt={`${viaje.lugar} ${imgIdx}`}
-                          className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${currentIndex === imgIdx
-                            ? "opacity-100 scale-100 translate-x-0"
-                            : "opacity-0 scale-110 translate-x-4 pointer-events-none"
-                            } ${imgIdx === currentIndex ? "grayscale-0" : "grayscale"}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* CONTENIDO DE TEXTO */}
-                  <div className="p-10 space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em]">
-                        {viaje.fecha}
-                      </span>
-                      <span className="text-[9px] opacity-40 font-bold uppercase tracking-widest">
-                        {currentIndex + 1} / {viaje.images.length}
-                      </span>
-                    </div>
-                    <h4
-                      className={`text-3xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-800"}`}
-                    >
-                      {viaje.lugar}
-                    </h4>
-                    <p className="text-base text-stone-500 dark:text-stone-400 font-light leading-relaxed">
-                      {viaje.desc}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* 3. SECCIÓN: EVANGELISMO LOCAL (CON FOTOS) */}
-        <section className="max-w-7xl mx-auto space-y-10">
-          <div className="flex items-center gap-4 border-b border-stone-200 dark:border-stone-800 pb-6">
-            <Zap size={28} className="text-amber-500" />
-            <h3
-              className={`text-4xl font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}
-            >
-              Evangelismo Local
-            </h3>
-          </div>
-
-          <div className="flex flex-col lg:flex-row gap-10">
-            {/* Info y Salida */}
-            <div
-              className={`lg:w-1/3 p-10 rounded-[3.5rem] flex flex-col justify-between ${darkMode ? "bg-stone-900/80" : "bg-stone-100"}`}
-            >
-              <div className="space-y-6">
-                <p className="text-stone-500 italic font-light leading-relaxed">
-                  "No nos avergonzamos del evangelio, porque es poder de Dios."
-                  Creemos que nuestra primera misión está en nuestras calles,
-                  compartiendo esperanza con cada vecino.
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl">
-                    <Clock className="text-amber-500" size={24} />
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
-                        Próxima Ayuno
-                      </p>
-                      <p
-                        className={`text-sm font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}
-                      >
-                        Sábado 03 de Mayo, 09:00 AM
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                  Sumarme al equipo
+                </button>
               </div>
-              <button
-                onClick={() =>
-                  window.open("https://wa.me/51956055194", "_blank")
-                }
-                className="mt-8 w-full py-4 rounded-full bg-amber-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20"
-              >
-                Sumarme al equipo
-              </button>
-            </div>
 
-            {/* Galería Evangelismo */}
-            <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-4">
-              {[
-                "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777857373/WhatsApp_Image_2026-05-03_at_8.14.41_PM_inrajt.jpg",
-                "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777857322/WhatsApp_Image_2026-05-03_at_8.14.28_PM_gjpgra.jpg",
-                "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777858044/WhatsApp_Image_2026-05-03_at_8.25.36_PM_yqrl0k.jpg",
-                "https://res.cloudinary.com/dv5j3lyph/image/upload/v1777858000/WhatsApp_Image_2026-05-03_at_8.24.42_PM_il58in.jpg",
-              ].map((img, i) => (
-                <div
-                  key={i}
-                  className={`rounded-[2rem] overflow-hidden h-40 md:h-full ${i === 0 ? "md:row-span-2" : ""}`}
-                >
-                  <img
-                    src={img}
-                    alt="Evangelismo"
-                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                  />
-                </div>
-              ))}
+              <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-4">
+                {evangelismo.fotos.map((img, i) => (
+                  <div key={i} className={`rounded-[2rem] overflow-hidden h-40 md:h-full ${i === 0 ? "md:row-span-2" : ""}`}>
+                    <img src={img} alt="Evangelismo" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        {/* 4. VERSÍCULO FINAL (LA GRAN COMISIÓN) */}
+        {/* VERSÍCULO FINAL */}
         <section className="max-w-4xl mx-auto text-center py-20 space-y-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 mb-4">
             <BookOpen size={32} />
           </div>
           <div className="space-y-6">
-            <h2
-              className={`text-2xl md:text-3xl font-serif italic leading-relaxed ${darkMode ? "text-stone-200" : "text-stone-800"}`}
-            >
-              "Y Jesús se acercó y les habló diciendo: Toda potestad me es dada
-              en el cielo y en la tierra. Por tanto, id, y haced discípulos a
-              todas las naciones, bautizándolos en el nombre del Padre, y del
-              Hijo, y del Espíritu Santo; enseñándoles que guarden todas las
-              cosas que os he mandado; y he aquí yo estoy con vosotros todos los
-              días, hasta el fin del mundo."
+            <h2 className={`text-2xl md:text-3xl font-serif italic leading-relaxed ${darkMode ? "text-stone-200" : "text-stone-800"}`}>
+              "Y Jesús se acercó y les habló diciendo: Toda potestad me es dada en el cielo y en la tierra.
+              Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre,
+              y del Hijo, y del Espíritu Santo; enseñándoles que guarden todas las cosas que os he mandado;
+              y he aquí yo estoy con vosotros todos los días, hasta el fin del mundo."
             </h2>
             <div className="flex flex-col items-center gap-2">
-              <span className="h-px w-12 bg-amber-500"></span>
-              <p className="text-[12px] font-bold uppercase tracking-[0.4em] text-amber-600">
-                Mateo 28:18-20
-              </p>
+              <span className="h-px w-12 bg-amber-500" />
+              <p className="text-[12px] font-bold uppercase tracking-[0.4em] text-amber-600">Mateo 28:18-20</p>
             </div>
           </div>
         </section>
