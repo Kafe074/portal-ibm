@@ -1,7 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import Sidebar from "@/app/components/sidebar";
+import Sidebar from "@/components/Sidebar";
+import { useDarkMode } from "@/hooks/useDarkMode";
+import { supabase } from "@/lib/supabase";
+import type { Integrante } from "@/types";
 import {
   ArrowLeft,
   Mic2,
@@ -12,6 +15,8 @@ import {
   Layers,
   Settings,
   Cpu,
+  Users,
+  User,
 } from "lucide-react";
 
 // Componente para las tarjetas de especialidad (más técnicas)
@@ -42,7 +47,20 @@ const TechCard = ({ icon: Icon, title, desc, color, darkMode }: any) => (
 );
 
 export default function ProduccionPage() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useDarkMode();
+  const [integrantes, setIntegrantes] = useState<Integrante[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from("ministerio_integrantes")
+      .select("*")
+      .eq("ministerio", "produccion")
+      .eq("activo", true)
+      .order("orden")
+      .then(({ data }) => {
+        if (data) setIntegrantes(data);
+      });
+  }, []);
 
   return (
     <div
@@ -50,9 +68,9 @@ export default function ProduccionPage() {
     >
       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-      <main className="flex-1 p-6 lg:p-10 space-y-12 overflow-y-auto scrollbar-hide">
+      <main className="flex-1 p-6 lg:p-10 space-y-12 overflow-y-auto scrollbar-hide pt-20 lg:pt-10">
         <Link
-          href="/"
+          href="/#ministerios"
           className={`inline-flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] transition-all
             ${darkMode ? "text-stone-600 hover:text-stone-200" : "text-stone-400 hover:text-stone-900"}`}
         >
@@ -124,99 +142,96 @@ export default function ProduccionPage() {
           </a>
         </div>
 
-        {/* SECCIÓN "EL EQUIPO" - ESTILO DARK/CINEMÁTICO */}
+        {/* SECCIÓN "EL EQUIPO" - GRID DOS COLUMNAS */}
         <section className="max-w-6xl mx-auto">
-          <div
-            className={`relative rounded-[3rem] overflow-hidden group border ${darkMode ? "border-stone-800" : "border-stone-100"}`}
-          >
-            <div className="aspect-[21/9] relative">
+          <div className={`rounded-[3rem] overflow-hidden border grid grid-cols-1 lg:grid-cols-2 ${darkMode ? "border-stone-800" : "border-stone-100"}`}>
+            {/* Imagen */}
+            <div className="relative min-h-[280px] lg:min-h-0 group overflow-hidden">
               <img
-                src="https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_800/iglesia-portal/ministerios/produccion/produccion"
-                className="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105"
+                src="https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_900/iglesia-portal/ministerios/produccion/produccion"
+                className="absolute inset-0 w-full h-full object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105"
                 alt="Backstage"
               />
-              <div
-                className={`absolute inset-0 bg-gradient-to-r ${darkMode ? "from-black via-black/40" : "from-stone-900/90 via-transparent"} to-transparent`}
-              />
+              <div className={`absolute inset-0 ${darkMode ? "bg-black/40" : "bg-stone-900/30"}`} />
+            </div>
 
-              <div className="absolute inset-0 flex flex-col justify-center p-12 lg:p-20 space-y-6">
-                <div className="space-y-2">
-                  <h3 className="text-white text-3xl lg:text-4xl font-serif italic">
-                    El arte de servir <br /> en silencio.
-                  </h3>
-                  <p className="text-stone-300 text-sm font-light max-w-md leading-relaxed">
-                    Nuestro trabajo es invisible cuando es perfecto. Nos
-                    esforzamos por eliminar distracciones para que el mensaje
-                    sea el único protagonista.
-                  </p>
-                </div>
-
-                <div className="flex gap-8 items-center pt-8">
-                  {/* Excelencia en el detalle */}
-                  <div className="flex flex-col group">
-                    <span
-                      className={`font-serif italic text-3xl transition-colors duration-500 ${
-                        darkMode ? "text-cyan-400" : "text-cyan-600"
-                      }`}
-                    >
-                      Excelencia
-                    </span>
-                    <span
-                      className={`text-[10px] uppercase tracking-[0.2em] font-semibold mt-1 ${
-                        darkMode ? "text-stone-400" : "text-stone-500"
-                      }`}
-                    >
-                      En cada detalle visual
-                    </span>
+            {/* Texto */}
+            <div className={`p-8 md:p-12 flex flex-col justify-center space-y-8 ${darkMode ? "bg-[#111]" : "bg-stone-50"}`}>
+              <div className="space-y-3">
+                <h3 className={`text-2xl md:text-3xl font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}>
+                  El arte de servir <br /> en silencio.
+                </h3>
+                <p className={`text-sm font-light leading-relaxed ${darkMode ? "text-stone-400" : "text-stone-500"}`}>
+                  Nuestro trabajo es invisible cuando es perfecto. Nos esforzamos por eliminar distracciones para que el mensaje sea el único protagonista.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 gap-4">
+                {[
+                  { label: "Excelencia", sub: "En cada detalle visual", color: darkMode ? "text-cyan-400" : "text-cyan-600" },
+                  { label: "Corazón", sub: "Servicio voluntario", color: darkMode ? "text-purple-400" : "text-purple-600" },
+                  { label: "Claridad", sub: "Mensaje sin barreras", color: darkMode ? "text-rose-400" : "text-rose-600" },
+                ].map((item, i) => (
+                  <div key={i} className={`flex items-center gap-4 pb-4 ${i < 2 ? `border-b ${darkMode ? "border-stone-800" : "border-stone-200"}` : ""}`}>
+                    <span className={`font-serif italic text-2xl shrink-0 ${item.color}`}>{item.label}</span>
+                    <span className={`text-[10px] uppercase tracking-[0.2em] font-semibold ${darkMode ? "text-stone-500" : "text-stone-400"}`}>{item.sub}</span>
                   </div>
-
-                  <div
-                    className={`w-[1px] h-12 ${darkMode ? "bg-stone-700" : "bg-stone-200"}`}
-                  />
-
-                  {/* Compromiso constante */}
-                  <div className="flex flex-col group">
-                    <span
-                      className={`font-serif italic text-3xl transition-colors duration-500 ${
-                        darkMode ? "text-purple-400" : "text-purple-600"
-                      }`}
-                    >
-                      Corazón
-                    </span>
-                    <span
-                      className={`text-[10px] uppercase tracking-[0.2em] font-semibold mt-1 ${
-                        darkMode ? "text-stone-400" : "text-stone-500"
-                      }`}
-                    >
-                      Servicio voluntario
-                    </span>
-                  </div>
-
-                  <div
-                    className={`w-[1px] h-12 ${darkMode ? "bg-stone-700" : "bg-stone-200"}`}
-                  />
-
-                  {/* Enfoque sin distracciones */}
-                  <div className="flex flex-col group">
-                    <span
-                      className={`font-serif italic text-3xl transition-colors duration-500 ${
-                        darkMode ? "text-rose-400" : "text-rose-600"
-                      }`}
-                    >
-                      Claridad
-                    </span>
-                    <span
-                      className={`text-[10px] uppercase tracking-[0.2em] font-semibold mt-1 ${
-                        darkMode ? "text-stone-400" : "text-stone-500"
-                      }`}
-                    >
-                      Mensaje sin barreras
-                    </span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
+        </section>
+
+        {/* NUESTRO EQUIPO */}
+        <section className="max-w-6xl mx-auto space-y-8">
+          <div className="space-y-2 border-b border-stone-200 dark:border-stone-800 pb-6">
+            <div className="flex items-center gap-4">
+              <Users size={24} className={darkMode ? "text-cyan-400" : "text-cyan-600"} />
+              <h3 className={`text-3xl font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}>
+                El equipo detrás
+              </h3>
+            </div>
+            <p className={`text-sm font-light ${darkMode ? "text-stone-500" : "text-stone-400"}`}>
+              Somos 4 y nos turnamos en cada área — audio, proyección, video y redes.
+            </p>
+          </div>
+
+          {integrantes.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+              {integrantes.map((m) => (
+                <div key={m.id} className={`p-6 rounded-[2rem] border flex flex-col items-center text-center gap-3 transition-all duration-500 ${darkMode ? "bg-[#1a1a1a] border-stone-800 hover:border-cyan-500/30" : "bg-white border-stone-100 shadow-sm hover:shadow-md"}`}>
+                  {m.foto_url ? (
+                    <img src={m.foto_url} alt={m.nombre} className="w-20 h-20 rounded-full object-cover border-2 border-cyan-500/20" />
+                  ) : (
+                    <div className={`w-20 h-20 rounded-full overflow-hidden border-2 border-dashed flex items-center justify-center ${darkMode ? "border-stone-700 bg-stone-800" : "border-stone-200 bg-stone-100"}`}>
+                      <span className={`text-3xl font-serif italic ${darkMode ? "text-stone-500" : "text-stone-400"}`}>{m.nombre[0]}</span>
+                    </div>
+                  )}
+                  <div>
+                    <p className={`text-sm font-medium ${darkMode ? "text-stone-200" : "text-stone-800"}`}>{m.nombre}</p>
+                    <p className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 ${darkMode ? "text-cyan-400/70" : "text-cyan-600/80"}`}>{m.rol ?? "Producción IBM"}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className={`p-6 rounded-[2rem] border flex flex-col items-center text-center gap-3 ${darkMode ? "bg-[#1a1a1a] border-stone-800" : "bg-white border-stone-100 shadow-sm"}`}>
+                  <div className={`w-20 h-20 rounded-full overflow-hidden border-2 border-dashed flex items-center justify-center ${darkMode ? "border-stone-700 bg-stone-800" : "border-stone-200 bg-stone-100"}`}>
+                    <User size={28} className="text-stone-400" />
+                  </div>
+                  <div>
+                    <p className={`text-sm font-medium ${darkMode ? "text-stone-200" : "text-stone-800"}`}>Por definir</p>
+                    <p className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 ${darkMode ? "text-cyan-400/70" : "text-cyan-600/80"}`}>Producción IBM</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <p className={`text-[9px] text-center uppercase tracking-widest ${darkMode ? "text-stone-600" : "text-stone-400"}`}>
+            ¿Te interesa servir en producción? — <button onClick={() => window.open("https://wa.me/51956055194", "_blank")} className="underline hover:opacity-70 transition-opacity">Contáctanos</button>
+          </p>
         </section>
 
         {/* PROCESO CREATIVO - COMPACTO */}

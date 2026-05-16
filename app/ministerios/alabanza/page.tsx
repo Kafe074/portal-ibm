@@ -1,7 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import Sidebar from "@/app/components/sidebar";
+import Sidebar from "@/components/Sidebar";
+import { useDarkMode } from "@/hooks/useDarkMode";
+import { supabase } from "@/lib/supabase";
+import type { Integrante } from "@/types";
 import {
   Music,
   ArrowLeft,
@@ -12,11 +15,25 @@ import {
   Heart,
   Star,
   ShieldCheck,
-  Clock, // Añadido para los horarios
+  Clock,
 } from "lucide-react";
 
 export default function AlabanzaPage() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useDarkMode();
+  const [integrantes, setIntegrantes] = useState<Integrante[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from("ministerio_integrantes")
+      .select("*")
+      .in("ministerio", ["alabanza-general", "grace-and-mercy"])
+      .eq("activo", true)
+      .order("ministerio")
+      .order("orden")
+      .then(({ data }) => {
+        if (data) setIntegrantes(data);
+      });
+  }, []);
 
   const bandas = [
     {
@@ -95,10 +112,10 @@ export default function AlabanzaPage() {
     >
       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-      <main className="flex-1 p-10 space-y-20 overflow-y-auto scrollbar-hide">
+      <main className="flex-1 p-6 lg:p-10 space-y-16 lg:space-y-20 overflow-y-auto scrollbar-hide pt-20 lg:pt-10">
         {/* NAVEGACIÓN */}
         <Link
-          href="/"
+          href="/#ministerios"
           className={`inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] transition-all
             ${darkMode ? "text-stone-500 hover:text-stone-200" : "text-stone-400 hover:text-stone-900"}`}
         >
@@ -115,9 +132,10 @@ export default function AlabanzaPage() {
               Ministerio de Alabanza
             </h2>
             <h1
-              className={`text-7xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+              className={`text-5xl lg:text-7xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}
             >
-              Adoración en <br /> Espíritu y Verdad
+              Adoración en <br />
+              <span className={darkMode ? "text-emerald-400" : "text-emerald-600"}>Espíritu y Verdad.</span>
             </h1>
           </div>
           <div
@@ -132,9 +150,9 @@ export default function AlabanzaPage() {
         {/* SECCIÓN DE LAS DOS BANDAS */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {bandas.map((banda) => (
-            <div key={banda.id} className="group relative">
+            <Link key={banda.id} href={`/ministerios/alabanza/${banda.id === 'general' ? 'alabanza-general' : 'grace-and-mercy'}`} className="group relative block">
               <div
-                className={`h-[600px] rounded-[3.5rem] overflow-hidden border relative transition-all duration-700
+                className={`h-[420px] lg:h-[600px] rounded-[3.5rem] overflow-hidden border relative transition-all duration-700
                 ${darkMode ? "border-stone-800 grayscale-[0.2] hover:grayscale-0" : "border-stone-100 shadow-2xl shadow-stone-200/50"}`}
               >
                 <img
@@ -147,7 +165,7 @@ export default function AlabanzaPage() {
                   className={`absolute inset-0 bg-gradient-to-b ${banda.color} opacity-40 group-hover:opacity-60 transition-opacity`}
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-12 space-y-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-8 lg:p-12 space-y-4">
                   <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-white border border-white/20 mb-2">
                     <banda.icon size={22} />
                   </div>
@@ -158,7 +176,7 @@ export default function AlabanzaPage() {
                     >
                       {banda.subtitulo}
                     </span>
-                    <h3 className="text-white text-5xl font-serif italic mt-1">
+                    <h3 className="text-white text-3xl md:text-4xl lg:text-5xl font-serif italic mt-1">
                       {banda.titulo}
                     </h3>
                   </div>
@@ -181,15 +199,20 @@ export default function AlabanzaPage() {
                       </span>
                     </div>
                   </div>
+                  <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                    <span className="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[9px] font-bold uppercase tracking-widest text-white">
+                      Ver equipo →
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </section>
 
         {/* NUEVA SECCIÓN: HORARIOS DE ENSAYO */}
         <section
-          className={`p-12 rounded-[3.5rem] border transition-all ${darkMode ? "bg-stone-900/20 border-stone-800/50" : "bg-[#fafaf9] border-stone-100"
+          className={`p-6 md:p-12 rounded-[3.5rem] border transition-all ${darkMode ? "bg-stone-900/20 border-stone-800/50" : "bg-[#fafaf9] border-stone-100"
             }`}
         >
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
@@ -205,7 +228,7 @@ export default function AlabanzaPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 w-full md:w-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-12 w-full md:w-auto">
               {horarios.map((h, i) => (
                 <div key={i} className="flex gap-4 items-start"> {/* Cambiado a items-start para múltiples líneas */}
                   <div
@@ -257,7 +280,7 @@ export default function AlabanzaPage() {
             {valoresExclencia.map((valor, i) => (
               <div
                 key={i}
-                className={`p-10 rounded-[3rem] border text-center space-y-4 transition-all
+                className={`p-6 md:p-10 rounded-[3rem] border text-center space-y-4 transition-all
                 ${darkMode ? "bg-stone-900/40 border-stone-800" : "bg-[#fafaf9] border-stone-200 shadow-sm"}`}
               >
                 <div
@@ -277,6 +300,77 @@ export default function AlabanzaPage() {
             ))}
           </div>
         </section>
+
+        {/* NUESTRO EQUIPO — datos desde Supabase */}
+        {integrantes.length > 0 && (
+          <section className="space-y-12 pb-10">
+            <div className="text-center space-y-2">
+              <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-stone-200 dark:border-stone-800">
+                <Music size={12} className="text-emerald-500" />
+                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-500">Nuestro Equipo</span>
+              </div>
+              <h2 className={`text-4xl font-serif italic ${darkMode ? "text-stone-200" : "text-stone-800"}`}>
+                Los que lideran la alabanza
+              </h2>
+            </div>
+
+            {/* Alabanza General */}
+            {integrantes.filter((m) => m.ministerio === "alabanza-general").length > 0 && (
+              <div className="space-y-6">
+                <h3 className={`text-[10px] font-black uppercase tracking-[0.4em] text-center ${darkMode ? "text-emerald-500/80" : "text-emerald-600"}`}>
+                  Alabanza General
+                </h3>
+                <div className="flex flex-wrap justify-center gap-6">
+                  {integrantes
+                    .filter((m) => m.ministerio === "alabanza-general")
+                    .map((m) => (
+                      <div key={m.id} className="flex flex-col items-center gap-3 text-center w-28">
+                        {m.foto_url ? (
+                          <img src={m.foto_url} alt={m.nombre} className="w-20 h-20 rounded-full object-cover border-2 border-emerald-500/30" />
+                        ) : (
+                          <div className={`w-20 h-20 rounded-full flex items-center justify-center border-2 border-dashed ${darkMode ? "border-stone-700 bg-stone-800" : "border-stone-200 bg-stone-100"}`}>
+                            <span className={`text-2xl font-serif italic ${darkMode ? "text-stone-400" : "text-stone-500"}`}>{m.nombre[0]}</span>
+                          </div>
+                        )}
+                        <div>
+                          <p className={`text-sm font-medium leading-tight ${darkMode ? "text-stone-200" : "text-stone-800"}`}>{m.nombre}</p>
+                          {m.rol && <p className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 ${darkMode ? "text-emerald-500/70" : "text-emerald-600/80"}`}>{m.rol}</p>}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+
+            {/* Grace & Mercy */}
+            {integrantes.filter((m) => m.ministerio === "grace-and-mercy").length > 0 && (
+              <div className="space-y-6">
+                <h3 className={`text-[10px] font-black uppercase tracking-[0.4em] text-center ${darkMode ? "text-purple-400/80" : "text-purple-600"}`}>
+                  Grace &amp; Mercy
+                </h3>
+                <div className="flex flex-wrap justify-center gap-6">
+                  {integrantes
+                    .filter((m) => m.ministerio === "grace-and-mercy")
+                    .map((m) => (
+                      <div key={m.id} className="flex flex-col items-center gap-3 text-center w-28">
+                        {m.foto_url ? (
+                          <img src={m.foto_url} alt={m.nombre} className="w-20 h-20 rounded-full object-cover border-2 border-purple-500/30" />
+                        ) : (
+                          <div className={`w-20 h-20 rounded-full flex items-center justify-center border-2 border-dashed ${darkMode ? "border-stone-700 bg-stone-800" : "border-stone-200 bg-stone-100"}`}>
+                            <span className={`text-2xl font-serif italic ${darkMode ? "text-stone-400" : "text-stone-500"}`}>{m.nombre[0]}</span>
+                          </div>
+                        )}
+                        <div>
+                          <p className={`text-sm font-medium leading-tight ${darkMode ? "text-stone-200" : "text-stone-800"}`}>{m.nombre}</p>
+                          {m.rol && <p className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 ${darkMode ? "text-purple-400/70" : "text-purple-600/80"}`}>{m.rol}</p>}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
       </main>
     </div>
   );
