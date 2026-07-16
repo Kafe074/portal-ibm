@@ -65,11 +65,6 @@ export default function NoticiasSection({ darkMode }: Props) {
       if (editingId) {
         // Actualizar noticia existente
         await supabase.from("noticias").update(payload).eq("id", editingId);
-        // Si se activa, desactivar las demás
-        if (form.activa) {
-          await supabase.from("noticias").update({ activa: false }).neq("id", editingId);
-          await supabase.from("noticias").update({ activa: true }).eq("id", editingId);
-        }
         // Subir nuevas imágenes adicionales
         if (selectedImages.length > 0) {
           const maxOrden = existingImages.length > 0 ? Math.max(...existingImages.map(i => i.orden)) + 1 : 0;
@@ -83,9 +78,6 @@ export default function NoticiasSection({ darkMode }: Props) {
         }
       } else {
         // Crear nueva noticia
-        if (form.activa && noticias.length > 0) {
-          await supabase.from("noticias").update({ activa: false }).in("id", noticias.map(n => n.id));
-        }
         const { data: noticia, error } = await supabase.from("noticias").insert(payload).select().single();
         if (error || !noticia) return;
         if (selectedImages.length > 0) {
@@ -103,12 +95,7 @@ export default function NoticiasSection({ darkMode }: Props) {
   }
 
   async function toggleModal(id: string, currentActiva: boolean) {
-    if (!currentActiva) {
-      if (noticias.length) await supabase.from("noticias").update({ activa: false }).in("id", noticias.map(n => n.id));
-      await supabase.from("noticias").update({ activa: true }).eq("id", id);
-    } else {
-      await supabase.from("noticias").update({ activa: false }).eq("id", id);
-    }
+    await supabase.from("noticias").update({ activa: !currentActiva }).eq("id", id);
     fetch();
   }
 

@@ -16,7 +16,8 @@ const ICONOS_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
 
 export default function InicioPublico() {
   const [darkMode, setDarkMode] = useDarkMode();
-  const [noticiaActiva, setNoticiaActiva] = useState<any>(null);
+  const [noticiasActivas, setNoticiasActivas] = useState<any[]>([]);
+  const [avisoIndex, setAvisoIndex] = useState(0);
   const [showAviso, setShowAviso] = useState(false);
   const [horarios, setHorarios] = useState<Horario[]>([]);
 
@@ -31,13 +32,16 @@ export default function InicioPublico() {
       .from("noticias")
       .select("*, noticia_imagenes(url, orden)")
       .eq("activa", true)
-      .maybeSingle()
+      .order("fecha", { ascending: false })
       .then(({ data }) => {
-        if (data) {
-          const imagenes = [...(data.noticia_imagenes || [])]
-            .sort((a: any, b: any) => a.orden - b.orden)
-            .map((img: any) => img.url);
-          setNoticiaActiva({ ...data, imagenes });
+        if (data && data.length > 0) {
+          const noticias = data.map((n: any) => ({
+            ...n,
+            imagenes: [...(n.noticia_imagenes || [])]
+              .sort((a: any, b: any) => a.orden - b.orden)
+              .map((img: any) => img.url),
+          }));
+          setNoticiasActivas(noticias);
           setShowAviso(true);
         }
       });
@@ -207,7 +211,7 @@ export default function InicioPublico() {
         <div className="w-full max-w-5xl mx-auto p-6 md:p-12 space-y-16 md:space-y-32">
           {/* Hero Section */}
           <section className="text-center space-y-8 py-6 relative">
-            <div className="space-y-4">
+            <div className="space-y-4 animate-fade-up">
               <div className="flex justify-center mb-8">
                 <img
                   src="/IBM.png"
@@ -231,7 +235,7 @@ export default function InicioPublico() {
               </h1>
             </div>
 
-            <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-col items-center gap-6 animate-fade-up reveal-2">
               <p className="max-w-xs text-[13px] leading-relaxed tracking-wide opacity-70 italic font-serif">
                 "Con una sola misión . Jerusalén, Judea, Samaria y hasta lo
                 ultimo de la tierra ."
@@ -255,7 +259,7 @@ export default function InicioPublico() {
             </div>
           </section>
 
-          <section className="space-y-12">
+          <section className="space-y-12 reveal-scroll">
             <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-stone-400 text-center">
               Nuestras Reuniones
             </h3>
@@ -280,7 +284,7 @@ export default function InicioPublico() {
           </section>
 
           {/* Sección: Historia */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center reveal-scroll">
             <div className="space-y-8 text-left">
               {" "}
               {/* Aumenté un poco el espacio entre elementos */}
@@ -326,7 +330,7 @@ export default function InicioPublico() {
           </section>
 
           {/* SECCIÓN: VISIÓN */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center reveal-scroll">
             <div className="relative order-2 md:order-1 overflow-hidden rounded-[3rem] aspect-[4/5] md:aspect-square border dark:border-stone-900 shadow-2xl isolate">
               <img
                 src={fotosVision[indexVision].url}
@@ -367,7 +371,7 @@ export default function InicioPublico() {
           </section>
 
           {/* SECCIÓN: MISIÓN */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center reveal-scroll">
             <div className="space-y-8 text-left">
               <h2
                 className={`text-4xl lg:text-5xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}
@@ -408,7 +412,7 @@ export default function InicioPublico() {
           </section>
 
           {/* --- SECCIÓN: MINISTERIOS --- */}
-          <section id="ministerios" className="space-y-12">
+          <section id="ministerios" className="space-y-12 reveal-scroll">
             <div className="flex justify-between items-end px-2">
               <div className="space-y-2">
                 <h3 className="text-[9px] font-black uppercase tracking-[0.5em] text-stone-400">
@@ -449,7 +453,7 @@ export default function InicioPublico() {
                   <Link
                     key={i}
                     href={min.link}
-                    className="relative min-w-[80vw] md:min-w-[350px] h-[360px] md:h-[450px] rounded-[3.5rem] overflow-hidden group border dark:border-stone-900 snap-center transition-all duration-700 shadow-lg hover:shadow-2xl"
+                    className="hover-lift relative min-w-[80vw] md:min-w-[350px] h-[360px] md:h-[450px] rounded-[3.5rem] overflow-hidden group border dark:border-stone-900 snap-center shadow-lg hover:shadow-2xl"
                   >
                     <img
                       src={min.img}
@@ -483,7 +487,7 @@ export default function InicioPublico() {
 
 
           {/* Ubicación */}
-          <section className="space-y-10 pb-20">
+          <section className="space-y-10 pb-20 reveal-scroll">
             <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-6">
               <div className="text-center md:text-left space-y-3">
                 <span className="text-[8px] font-black uppercase tracking-widest text-stone-400">
@@ -547,8 +551,11 @@ export default function InicioPublico() {
       </div>
       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-      {/* MODAL DE AVISO — usa la noticia activa de /noticias/data.ts */}
-      {showAviso && noticiaActiva && (
+      {/* MODAL DE AVISO — carrusel de noticias activas */}
+      {showAviso && noticiasActivas.length > 0 && (() => {
+        const noticiaActiva = noticiasActivas[avisoIndex];
+        const varias = noticiasActivas.length > 1;
+        return (
         <div
           className="fixed inset-0 bg-stone-950/60 backdrop-blur-sm flex items-center justify-center z-[250] p-4"
           onClick={() => setShowAviso(false)}
@@ -567,13 +574,37 @@ export default function InicioPublico() {
 
             {/* Primera imagen de la noticia */}
             {noticiaActiva.imagenes.length > 0 && (
-              <div className="overflow-hidden">
+              <div className="overflow-hidden relative">
                 <img
+                  key={noticiaActiva.id}
                   src={noticiaActiva.imagenes[0]}
                   alt="Aviso"
-                  className="w-full h-auto"
+                  className="w-full h-auto animate-in fade-in duration-500"
                 />
+                {varias && (
+                  <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-sm text-white text-[9px] font-bold uppercase tracking-widest">
+                    {avisoIndex + 1} / {noticiasActivas.length}
+                  </div>
+                )}
               </div>
+            )}
+
+            {/* Flechas del carrusel de noticias */}
+            {varias && (
+              <>
+                <button
+                  onClick={() => setAvisoIndex((p) => (p - 1 + noticiasActivas.length) % noticiasActivas.length)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/50 transition-colors"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button
+                  onClick={() => setAvisoIndex((p) => (p + 1) % noticiasActivas.length)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/50 transition-colors"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </>
             )}
 
             {/* Título + Ver más */}
@@ -594,9 +625,27 @@ export default function InicioPublico() {
                 Ver más <ArrowRight size={11} />
               </Link>
             </div>
+
+            {/* Puntos indicadores */}
+            {varias && (
+              <div className="flex justify-center gap-1.5 pb-4 -mt-1">
+                {noticiasActivas.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setAvisoIndex(i)}
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                      i === avisoIndex
+                        ? darkMode ? "bg-stone-100 scale-125" : "bg-stone-900 scale-125"
+                        : darkMode ? "bg-stone-700 hover:bg-stone-500" : "bg-stone-300 hover:bg-stone-500"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      )}
+        );
+      })()}
     </main>
   );
 }
