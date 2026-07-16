@@ -96,7 +96,7 @@ export default function AccionSocialPage() {
             Compromiso Social
           </h2>
           <h1
-            className={`text-4xl md:text-5xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+            className={`text-4xl md:text-5xl font-serif italic tracking-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}
           >
             Amor en <br />
             <span className={darkMode ? "text-blue-400" : "text-blue-600"}>Movimiento.</span>

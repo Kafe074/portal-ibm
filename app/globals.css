@@ -10,6 +10,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* Serif editorial: alimenta todas las clases `font-serif` del portal */
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +21,163 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ligaduras y formas refinadas para los títulos serif */
+.font-serif,
+[class*="font-serif"] {
+  font-feature-settings: "liga" 1, "calt" 1, "kern" 1;
+}
+
+/* Composición tipográfica: cortes de línea equilibrados en títulos
+   y «viudas» evitadas en párrafos. Elegancia editorial en cada página. */
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+
+/* Selección de texto sobria, acorde a la paleta stone */
+::selection {
+  background: #e7e5e4; /* stone-200 */
+  color: #1c1917; /* stone-900 */
+}
+
+/* ───────── Scrollbars ───────── */
+
+/* Oculta por completo la barra (carruseles, listas horizontales) */
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+/* Barra fina y discreta para los contenedores con scroll vertical */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 113, 108, 0.35) transparent; /* stone-500 */
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 113, 108, 0.28);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(120, 113, 108, 0.5);
+}
+
+/* ───────── Entrada y revelado ───────── */
+
+/* Entrada suave de página: se aplica a TODA la web vía <main>.
+   Solo opacidad → cero riesgo de salto de layout en contenedores h-screen. */
+@keyframes page-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+main {
+  animation: page-enter 0.6s ease both;
+}
+
+/* Revelado opcional para heros y bloques destacados */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-fade-up {
+  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-scale-in {
+  animation: scale-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Retrasos para componer entradas escalonadas */
+.reveal-1 { animation-delay: 0.08s; }
+.reveal-2 { animation-delay: 0.18s; }
+.reveal-3 { animation-delay: 0.30s; }
+.reveal-4 { animation-delay: 0.44s; }
+
+/* Revelado al hacer scroll: las secciones suben y aparecen al entrar en
+   pantalla. Solo se activa si el navegador soporta scroll-driven animations
+   y el usuario permite movimiento; si no, el contenido se ve normal. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-scroll {
+      animation: fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 28%;
+    }
+  }
+}
+
+/* Elevación sutil al pasar el cursor para tarjetas y bloques */
+.hover-lift {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease;
+  will-change: transform;
+}
+.hover-lift:hover {
+  transform: translateY(-5px);
+}
+
+/* ───────── Foco accesible ───────── */
+/* Anillo discreto y elegante solo con teclado, no con clic de ratón. */
+:focus-visible {
+  outline: 2px solid rgba(120, 113, 108, 0.55); /* stone-500 */
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Respeta la preferencia de movimiento reducido del sistema */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

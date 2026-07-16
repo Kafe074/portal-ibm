@@ -45,7 +45,7 @@ export default function GraceAndMercyPage() {
             <span className={`text-[10px] font-bold uppercase tracking-[0.5em] ${darkMode ? "text-purple-400/80" : "text-purple-600"}`}>
               Banda Joven · Energía y Pasión
             </span>
-            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
+            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-serif italic leading-tight tracking-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
               Grace <br />
               <span className={darkMode ? "text-purple-400" : "text-purple-600"}>& Mercy.</span>
             </h1>

@@ -21,8 +21,8 @@ import {
 
 const galeria = [
   "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_600/iglesia-portal/ministerios/index/teens",
-  "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_600/iglesia-portal/ministerios/accion-social/ciudad-refugio",
-  "https://res.cloudinary.com/dv5j3lyph/image/upload/f_auto,q_auto,w_600/iglesia-portal/ministerios/index/jovenes",
+  "https://res.cloudinary.com/dv5j3lyph/image/upload/v1784226710/WhatsApp_Image_2026-07-16_at_1.29.51_PM_nlfs2l.jpg",
+  "https://res.cloudinary.com/dv5j3lyph/image/upload/v1784226712/WhatsApp_Image_2026-07-16_at_1.27.20_PM_rgc7sp.jpg",
 ];
 
 export default function AdolescentesPage() {
@@ -50,7 +50,7 @@ export default function AdolescentesPage() {
             <h2 className={`text-[10px] font-black uppercase tracking-[0.5em] px-4 py-1.5 rounded-full inline-block ${darkMode ? "bg-lime-500 text-black" : "bg-lime-500 text-black"}`}>
               Explosión Juvenil
             </h2>
-            <h1 className={`text-6xl lg:text-8xl font-serif italic leading-none ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
+            <h1 className={`text-6xl lg:text-8xl font-serif italic leading-none tracking-tighter ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
               Sin <br />
               <span className="text-lime-500">Límites.</span>
             </h1>

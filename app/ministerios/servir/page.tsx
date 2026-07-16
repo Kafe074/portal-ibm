@@ -47,7 +47,7 @@ export default function ServirPage() {
               Ministerio de Servir
             </h2>
             <h1
-              className={`text-5xl lg:text-7xl font-serif italic leading-[1.1] ${
+              className={`text-5xl lg:text-7xl font-serif italic leading-[1.1] tracking-tight ${
                 darkMode ? "text-stone-100" : "text-stone-900"
               }`}
             >

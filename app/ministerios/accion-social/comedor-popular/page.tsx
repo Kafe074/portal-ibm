@@ -46,7 +46,7 @@ export default function ComedorPopularPage() {
             <h2 className={`text-[10px] font-bold uppercase tracking-[0.4em] ${darkMode ? "text-blue-400/80" : "text-blue-600"}`}>
               Seguridad Alimentaria
             </h2>
-            <h1 className={`text-4xl md:text-6xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
+            <h1 className={`text-4xl md:text-6xl font-serif italic leading-tight tracking-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
               Comedor Popular <br />
               <span className={darkMode ? "text-blue-400" : "text-blue-600"}>Misericordia.</span>
             </h1>

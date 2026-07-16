@@ -67,7 +67,7 @@ export default function Talentos() {
                 <div className="w-full max-w-4xl mx-auto p-6 md:p-12 space-y-24">
 
                     {/* --- HEADER --- */}
-                    <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                    <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 animate-fade-up">
                         <div className="space-y-4 text-left">
                             <span className="text-[8px] uppercase tracking-[0.6em] text-stone-400 font-bold block">
                                 Escuela de Fútbol

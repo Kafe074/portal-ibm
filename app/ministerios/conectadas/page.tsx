@@ -76,7 +76,7 @@ export default function ConectadasPage() {
             <h2 className={`text-[9px] font-bold uppercase tracking-[0.4em] ${darkMode ? "text-rose-400/60" : "text-stone-400"}`}>
               Ministerio de Mujeres
             </h2>
-            <h1 className={`text-5xl lg:text-7xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
+            <h1 className={`text-5xl lg:text-7xl font-serif italic leading-tight tracking-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
               Conectadas en <br />
               <span className={darkMode ? "text-rose-300" : "text-rose-500"}>Gracia y Propósito.</span>
             </h1>

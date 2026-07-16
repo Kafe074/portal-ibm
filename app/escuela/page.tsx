@@ -99,7 +99,7 @@ export default function EscuelaDominical() {
 
         <div className="w-full max-w-4xl mx-auto p-6 md:p-12 space-y-16 md:space-y-32">
           {/* --- HERO CINEMÁTICO --- */}
-          <header className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <header className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center animate-fade-up">
             <div className="space-y-8">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">

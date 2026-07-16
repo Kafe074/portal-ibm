@@ -76,7 +76,7 @@ export default function GeneracionEmergentePage() {
               Comunidad Joven
             </div>
             <h1
-              className={`text-6xl lg:text-7xl font-serif italic leading-none ${darkMode ? "text-white" : "text-stone-900"}`}
+              className={`text-6xl lg:text-7xl font-serif italic leading-none tracking-tighter ${darkMode ? "text-white" : "text-stone-900"}`}
             >
               Generación <br />{" "}
               <span className="text-violet-500">Emergente.</span>

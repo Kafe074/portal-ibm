@@ -91,7 +91,7 @@ export default function ProduccionPage() {
               En Vivo
             </div>
             <h1
-              className={`text-5xl lg:text-6xl font-serif italic ${darkMode ? "text-white" : "text-stone-900"}`}
+              className={`text-5xl lg:text-6xl font-serif italic tracking-tight ${darkMode ? "text-white" : "text-stone-900"}`}
             >
               Excelencia <br /> tras bambalinas.
             </h1>

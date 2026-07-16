@@ -34,7 +34,7 @@ export default function NoticiasPage() {
 
         <div className="w-full max-w-3xl mx-auto p-6 md:p-12 space-y-16 pb-32">
           {/* Encabezado */}
-          <section className="space-y-6">
+          <section className="space-y-6 animate-fade-up">
             <div className="space-y-2">
               <span className="text-[10px] font-black uppercase tracking-[0.6em] text-stone-400 block">
                 Iglesia Brisas del Mantaro

@@ -41,7 +41,7 @@ export default function CursosPublico() {
 
         <div className="w-full max-w-5xl mx-auto p-6 md:p-12 space-y-20">
           {/* Header */}
-          <header className="space-y-6 text-center">
+          <header className="space-y-6 text-center animate-fade-up">
             <div className="flex justify-center">
               <div className={`p-4 rounded-full border ${darkMode ? "border-stone-800" : "border-stone-100 shadow-sm"}`}>
                 <GraduationCap size={32} className="opacity-40" />
@@ -49,7 +49,7 @@ export default function CursosPublico() {
             </div>
             <div className="space-y-2">
               <span className="text-[10px] uppercase tracking-[0.5em] text-stone-400 font-bold block">Cursos IBM</span>
-              <h1 className={`text-4xl md:text-6xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
+              <h1 className={`text-4xl md:text-6xl font-serif italic tracking-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
                 Crecimiento Espiritual
               </h1>
             </div>

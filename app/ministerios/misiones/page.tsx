@@ -65,7 +65,7 @@ export default function MisionesPage() {
             <h2 className={`text-[10px] font-black uppercase tracking-[0.5em] ${darkMode ? "text-stone-500" : "text-stone-400"}`}>
               Evangelismo e Impacto
             </h2>
-            <h1 className={`text-4xl md:text-6xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
+            <h1 className={`text-4xl md:text-6xl font-serif italic leading-tight tracking-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
               Nuestra{" "}
               <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
                 Huella Misionera

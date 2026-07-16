@@ -132,7 +132,7 @@ export default function AlabanzaPage() {
               Ministerio de Alabanza
             </h2>
             <h1
-              className={`text-5xl lg:text-7xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+              className={`text-5xl lg:text-7xl font-serif italic leading-tight tracking-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}
             >
               Adoración en <br />
               <span className={darkMode ? "text-emerald-400" : "text-emerald-600"}>Espíritu y Verdad.</span>

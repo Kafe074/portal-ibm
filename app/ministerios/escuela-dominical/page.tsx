@@ -109,7 +109,7 @@ export default function ExperienciaClasesPage() {
               Propósito Infantil
             </h2>
             <h1
-              className={`text-4xl lg:text-5xl font-serif italic ${darkMode ? "text-stone-100" : "text-stone-900"}`}
+              className={`text-4xl lg:text-5xl font-serif italic tracking-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}
             >
               Pequeños pasos, <br />
               <span className={darkMode ? "text-amber-400" : "text-amber-600"}>gran fe.</span>

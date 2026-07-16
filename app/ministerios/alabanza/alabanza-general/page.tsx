@@ -37,7 +37,7 @@ export default function AlabanzaGeneralPage() {
             <span className={`text-[10px] font-bold uppercase tracking-[0.5em] ${darkMode ? "text-emerald-400/80" : "text-emerald-600"}`}>
               Banda Principal · Domingo General
             </span>
-            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-serif italic leading-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
+            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-serif italic leading-tight tracking-tight ${darkMode ? "text-stone-100" : "text-stone-900"}`}>
               Alabanza <br />
               <span className={darkMode ? "text-emerald-400" : "text-emerald-600"}>General.</span>
             </h1>
